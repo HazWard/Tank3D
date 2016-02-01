@@ -10,6 +10,7 @@ namespace Tank3D
         /// </summary>
         static void Main(string[] args)
         {
+            //Bonjour Équipe
             using (Game1 game = new Game1())
             {
                 game.Run();
