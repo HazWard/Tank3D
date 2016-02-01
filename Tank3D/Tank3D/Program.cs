@@ -1,7 +1,5 @@
 using System;
 
-
-
 namespace AtelierXNA
 {
 #if WINDOWS || XBOX
@@ -19,4 +17,5 @@ namespace AtelierXNA
             }
         }
     }
+#endif
 }
