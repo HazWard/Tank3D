@@ -1,4 +1,6 @@
-ï»¿using System;
+using System;
+
+
 
 namespace AtelierXNA
 {
@@ -10,12 +12,11 @@ namespace AtelierXNA
         /// </summary>
         static void Main(string[] args)
         {
-           using (Atelier game = new Atelier())
+            //Bonjour Équipe
+            using (Atelier game = new Atelier())
             {
                 game.Run();
             }
         }
     }
-#endif
 }
-
