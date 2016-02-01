@@ -38,10 +38,10 @@ namespace AtelierXNA
 
         protected override void Initialize()
         {
-            const float ÉCHELLE_OBJET = 0.01f;
-            Vector3 positionObjet = new Vector3(0, 10, -50);
+            const float ÉCHELLE_OBJET = 0.005f;
+            Vector3 positionObjet = new Vector3(0, 10, 100);
             Vector3 rotationObjet = new Vector3(0, 0, 0); // MathHelper.PiOver2
-
+            Vector3 positionCaméraSubjective = new Vector3(0, 15, 115);
             Vector3 positionCaméra = new Vector3(0, 100, 250);
             Vector3 cibleCaméra = new Vector3(0, 0, -10);
             // Menu------------------------------------------------------------------------------------------------------------------------
@@ -61,14 +61,11 @@ namespace AtelierXNA
             //-------------------------------------------------------------------------------------------------------------------------------
             GestionInput = new InputManager(this);
             Components.Add(GestionInput);
-            CaméraJeu = new CaméraSubjective(this, positionCaméra, cibleCaméra, Vector3.Up, INTERVALLE_MAJ_STANDARD);
+            CaméraJeu = new CaméraSubjective(this, positionCaméraSubjective, positionObjet, Vector3.Up, INTERVALLE_MAJ_STANDARD);
             Components.Add(CaméraJeu);
 
             Components.Add(new Afficheur3D(this));
-            //Components.Add(new Terrain(this, 1f, Vector3.Zero, Vector3.Zero, new Vector3(256, 25, 256), "PetiteCarte", "DétailsTerrain", 5, INTERVALLE_MAJ_STANDARD));
             Components.Add(new Terrain(this, 1f, Vector3.Zero, Vector3.Zero, new Vector3(256, 25, 256), "CarteUn", "DétailsDésert", 3, INTERVALLE_MAJ_STANDARD));
-            //Components.Add(new Terrain(this, 1f, Vector3.Zero, Vector3.Zero, new Vector3(200, 25, 200), "CarteTest", "DétailsTerrain", 5, INTERVALLE_MAJ_STANDARD));
-            Components.Add(new AfficheurFPS(this, "Arial20", Color.Red, INTERVALLE_CALCUL_FPS));
             Components.Add(new ModèleMobile(this, "Tank Texture 1", ÉCHELLE_OBJET, rotationObjet, positionObjet, INTERVALLE_MAJ_STANDARD));
 
             //Services.AddService(typeof(Random), new Random());

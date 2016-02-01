@@ -93,13 +93,17 @@ namespace AtelierXNA
             GestionClavier();
             if (TempsÉcouléDepuisMAJ >= IntervalleMAJ)
             {
-                if (GestionInput.EstEnfoncée(Keys.LeftShift) || GestionInput.EstEnfoncée(Keys.RightShift))
-                {
-                    GérerAccélération();
-                    GérerDéplacement();
-                    GérerRotation();
-                    CréerPointDeVue();
-                }
+                GérerAccélération();
+                GérerDéplacement();
+                //GérerRotation();
+                CréerPointDeVue();
+                //if (GestionInput.EstEnfoncée(Keys.LeftShift) || GestionInput.EstEnfoncée(Keys.RightShift))
+                //{
+                //    GérerAccélération();
+                //    GérerDéplacement();
+                //    GérerRotation();
+                //    CréerPointDeVue();
+                //}
                 TempsÉcouléDepuisMAJ = 0;
             }
             base.Update(gameTime);
