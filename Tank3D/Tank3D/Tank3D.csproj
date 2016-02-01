@@ -80,6 +80,7 @@
     <Compile Include="BoutonDeCommande.cs" />
     <Compile Include="Dialogue.cs" />
     <Compile Include="IActivable.cs" />
+    <Compile Include="Menu.cs" />
     <Compile Include="ModèleMobile.cs" />
     <Compile Include="ObjetDeBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
