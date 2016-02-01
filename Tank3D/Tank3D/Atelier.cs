@@ -14,7 +14,7 @@ namespace AtelierXNA
     public class Atelier : Microsoft.Xna.Framework.Game
     {
         //--------------------------------------------------------------------------
-        const string TITRE = "Les cavernes de feu";
+        const string TITRE = "Tank 3D";
         const int NB_TUILES = 5;
         const int NB_ZONES = NB_TUILES + 1;
         //---------------------------------------------------------------------------
@@ -38,7 +38,7 @@ namespace AtelierXNA
 
         protected override void Initialize()
         {
-            const float ÉCHELLE_OBJET = 0.03f;
+            const float ÉCHELLE_OBJET = 0.01f;
             Vector3 positionObjet = new Vector3(0, 10, -50);
             Vector3 rotationObjet = new Vector3(0, 0, 0); // MathHelper.PiOver2
 
@@ -53,8 +53,6 @@ namespace AtelierXNA
             Rectangle zoneJeu = new Rectangle(margeZoneJeu, margeZoneJeu, dimensionMin, dimensionMin);
             Rectangle zoneTitre = new Rectangle(hauteurÉcran, 0, largeurÉcran - hauteurÉcran, hauteurÉcran / NB_ZONES);
             Rectangle zoneMessage = new Rectangle(hauteurÉcran, hauteurÉcran / NB_ZONES, largeurÉcran - hauteurÉcran, hauteurÉcran / NB_ZONES);
-            Rectangle zoneTrésor = new Rectangle(hauteurÉcran, hauteurÉcran / NB_ZONES * 5, (largeurÉcran - hauteurÉcran) / 4, hauteurÉcran / NB_ZONES);
-            Rectangle zoneVies = new Rectangle(hauteurÉcran + (largeurÉcran - hauteurÉcran) / 4, hauteurÉcran / NB_ZONES * 5, (largeurÉcran - hauteurÉcran) / 2, hauteurÉcran / NB_ZONES);
             Rectangle zoneDialogue = new Rectangle(hauteurÉcran, hauteurÉcran / 3, largeurÉcran - hauteurÉcran, hauteurÉcran / 2);
 
             Components.Add(new TexteCentré(this, TITRE, "Arial20", zoneTitre, Color.Gold, MARGE_TITRE));
@@ -71,7 +69,7 @@ namespace AtelierXNA
             Components.Add(new Terrain(this, 1f, Vector3.Zero, Vector3.Zero, new Vector3(256, 25, 256), "CarteUn", "DétailsDésert", 3, INTERVALLE_MAJ_STANDARD));
             //Components.Add(new Terrain(this, 1f, Vector3.Zero, Vector3.Zero, new Vector3(200, 25, 200), "CarteTest", "DétailsTerrain", 5, INTERVALLE_MAJ_STANDARD));
             Components.Add(new AfficheurFPS(this, "Arial20", Color.Red, INTERVALLE_CALCUL_FPS));
-            Components.Add(new ModèleMobile(this, "ship", ÉCHELLE_OBJET, rotationObjet, positionObjet, INTERVALLE_MAJ_STANDARD));
+            Components.Add(new ModèleMobile(this, "Tank Texture 1", ÉCHELLE_OBJET, rotationObjet, positionObjet, INTERVALLE_MAJ_STANDARD));
 
             //Services.AddService(typeof(Random), new Random());
             Services.AddService(typeof(RessourcesManager<SpriteFont>), new RessourcesManager<SpriteFont>(this, "Fonts"));
@@ -100,7 +98,9 @@ namespace AtelierXNA
 
         protected override void Draw(GameTime gameTime)
         {
+            GestionSprites.Begin();
             GraphicsDevice.Clear(Color.Black);
+            GestionSprites.End();
             base.Draw(gameTime);
         }
     }

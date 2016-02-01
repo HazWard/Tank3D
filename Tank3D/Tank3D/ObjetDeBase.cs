@@ -53,6 +53,9 @@ namespace AtelierXNA
 
         public override void Draw(GameTime gameTime)
         {
+            GraphicsDevice.BlendState = BlendState.Opaque;
+            GraphicsDevice.DepthStencilState = DepthStencilState.Default;
+
             foreach (ModelMesh maille in Modèle.Meshes)
             {
                 Matrix mondeLocal = TransformationsModèle[maille.ParentBone.Index] * GetMonde();
