@@ -60,18 +60,10 @@
     <XnaCompressContent>true</XnaCompressContent>
   </PropertyGroup>
   <ItemGroup>
-<<<<<<< HEAD
     <Reference Include="Atelier 15 - Outils">
-      <HintPath>G:\Atelier 15 - Outils.dll</HintPath>
+      <HintPath>.\Atelier 15 - Outils.dll</HintPath>
     </Reference>
-    <Reference Include="IActivable">
-      <HintPath>F:\Informatique Ateliers\Activité synthèse\AS2014-XNA-2D-Base\AS2015-XNA-2D - Base\AS2015-XNA-2D\AS2015_XNA_2D\IActivable.dll</HintPath>
-=======
-    <Reference Include="Atelier 15 - Outils, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\Downloads\Atelier 15 - Outils.dll</HintPath>
->>>>>>> origin/master
-    </Reference>
+    <Reference Include="Microsoft.QualityTools.Testing.Fakes, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.Xna.Framework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
     <Reference Include="Microsoft.Xna.Framework.Game, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
     <Reference Include="Microsoft.Xna.Framework.Graphics, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
@@ -87,6 +79,7 @@
     <Compile Include="Atelier.cs" />
     <Compile Include="BoutonDeCommande.cs" />
     <Compile Include="Dialogue.cs" />
+    <Compile Include="IActivable.cs" />
     <Compile Include="ModèleMobile.cs" />
     <Compile Include="ObjetDeBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -114,7 +107,7 @@
     </BootstrapperPackage>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
       <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
     <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
@@ -124,7 +117,7 @@
     </BootstrapperPackage>
     <BootstrapperPackage Include="Microsoft.Windows.Installer.4.5">
       <Visible>False</Visible>
-      <ProductName>Windows Installer 4.5</ProductName>
+      <ProductName>Windows Installer 4.5</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
