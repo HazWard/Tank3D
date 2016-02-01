@@ -66,7 +66,6 @@
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <Compile Include="Modèles\ship.fbx">
       <Name>ship</Name>
@@ -99,6 +98,13 @@
     </Compile>
     <Compile Include="Textures\BoutonRouge.png">
       <Name>BoutonRouge</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Textures\FondDialogue.png">
+      <Name>FondDialogue</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
