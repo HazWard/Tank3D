@@ -1,6 +1,6 @@
-using System;
+﻿using System;
 
-namespace Tank3D
+namespace AtelierXNA
 {
 #if WINDOWS || XBOX
     static class Program
@@ -10,7 +10,7 @@ namespace Tank3D
         /// </summary>
         static void Main(string[] args)
         {
-            using (Game1 game = new Game1())
+           using (Atelier game = new Atelier())
             {
                 game.Run();
             }
