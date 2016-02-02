@@ -12,7 +12,7 @@ using Microsoft.Xna.Framework.Media;
 
 namespace AtelierXNA
 {
-    class ModèleMobile : ObjetDeBase
+    class ModèleMobile : ObjetDeBase, IActivable
     {
         
         // Constantes
@@ -61,7 +61,6 @@ namespace AtelierXNA
             base.Update(gameTime);
         }
 
-
         #region Méthodes pour la gestion des déplacements et rotations du modèle
         void CalculerMonde()
         {
@@ -96,6 +95,11 @@ namespace AtelierXNA
         float GérerTouche(Keys touche)
         {
             return GestionInput.EstEnfoncée(touche) ? INCRÉMENT_DÉPLACEMENT : 0;
+        }
+
+        public void ModifierActivation()
+        {
+            base.Enabled = !base.Enabled;
         }
         #endregion
     }

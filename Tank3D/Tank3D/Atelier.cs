@@ -55,8 +55,8 @@ namespace AtelierXNA
             Rectangle zoneMessage = new Rectangle(hauteurÉcran, hauteurÉcran / NB_ZONES, largeurÉcran - hauteurÉcran, hauteurÉcran / NB_ZONES);
             Rectangle zoneDialogue = new Rectangle(hauteurÉcran, hauteurÉcran / 3, largeurÉcran - hauteurÉcran, hauteurÉcran / 2);
 
-            Components.Add(new TexteCentré(this, TITRE, "Arial20", zoneTitre, Color.Gold, MARGE_TITRE));
-            Components.Add(new Dialogue(this, "FondDialogue", "Arial20", zoneDialogue));
+            //Components.Add(new TexteCentré(this, TITRE, "Arial20", zoneTitre, Color.Gold, MARGE_TITRE));
+            //Components.Add(new Dialogue(this, "FondDialogue", "Arial20", zoneDialogue));
 
             //-------------------------------------------------------------------------------------------------------------------------------
             GestionInput = new InputManager(this);
@@ -66,7 +66,7 @@ namespace AtelierXNA
 
             Components.Add(new Afficheur3D(this));
             Components.Add(new Terrain(this, 1f, Vector3.Zero, Vector3.Zero, new Vector3(256, 25, 256), "CarteUn", "DétailsDésert", 3, INTERVALLE_MAJ_STANDARD));
-            Components.Add(new ModèleMobile(this, "Tank Texture 1", ÉCHELLE_OBJET, rotationObjet, positionObjet, INTERVALLE_MAJ_STANDARD));
+            Components.Add(new ModèleMobile(this, "Tank", ÉCHELLE_OBJET, rotationObjet, positionObjet, INTERVALLE_MAJ_STANDARD));
 
             //Services.AddService(typeof(Random), new Random());
             Services.AddService(typeof(RessourcesManager<SpriteFont>), new RessourcesManager<SpriteFont>(this, "Fonts"));

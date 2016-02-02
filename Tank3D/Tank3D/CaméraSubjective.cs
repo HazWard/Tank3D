@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace AtelierXNA
 {
-    public class CaméraSubjective : Caméra
+    public class CaméraSubjective : Caméra, IActivable
     {
         const float INTERVALLE_MAJ_STANDARD = 1f / 60f;
         //const float ACCÉLÉRATION = 0.001f;
@@ -145,7 +145,7 @@ namespace AtelierXNA
             Vector3 nouvellePosition = Position;
             Vector3 nouvelleCible = Cible;
             float déplacementDirection = (GérerTouche(Keys.W) - GérerTouche(Keys.S)) * VitesseTranslation;
-            float déplacementLatéral = (GérerTouche(Keys.A) - GérerTouche(Keys.D)) * VitesseTranslation;
+            //float déplacementLatéral = (GérerTouche(Keys.A) - GérerTouche(Keys.D)) * VitesseTranslation;
             float rotationFinal = Rotation.Y - IncrémentAngleRotation * rotation;
             float posX = déplacement * (float)Math.Sin(rotationFinal);
             float posY = déplacement * (float)Math.Cos(rotationFinal);
@@ -163,7 +163,7 @@ namespace AtelierXNA
 
         private void GérerRotation()
         {
-            float nb = GérerTouche(Keys.Left) - GérerTouche(Keys.Right);
+            float nb = GérerTouche(Keys.D) - GérerTouche(Keys.A);
             if (nb != 0)
             {
                 Direction = Vector3.Transform(Direction, Matrix.CreateFromAxisAngle(OrientationVerticale, (DELTA_LACET * nb) * VitesseRotation));
@@ -186,5 +186,10 @@ namespace AtelierXNA
         //        IntervalleMAJ = MathHelper.Max(INTERVALLE_MAJ_STANDARD, IntervalleMAJ);
         //    }
         //}
+
+        public void ModifierActivation()
+        {
+            base.Enabled = !base.Enabled;
+        }
     }
 }
