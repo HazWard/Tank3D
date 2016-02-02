@@ -16,14 +16,12 @@ namespace AtelierXNA
     {
         
         // Constantes
-        const float FACTEUR_ACCÉLÉRATION = 1f / 60f;
-        const int INCRÉMENT_DÉPLACEMENT = 1;
+        const float INCRÉMENT_DÉPLACEMENT = 0.2f;
         
         // Propriétés
         Vector3 RotationInitiale { get; set; }
         Vector3 PositionInitiale { get; set; }
         float ÉchelleInitiale { get; set; }
-        float Vitesse { get; set; }
         float IntervalleMAJ { get; set; }
         float IncrémentAngleRotation { get; set; }
         float TempsÉcouléDepuisMAJ { get; set; }
@@ -41,7 +39,6 @@ namespace AtelierXNA
         public override void Initialize()
         {
             TempsÉcouléDepuisMAJ = 0;
-            Vitesse = 50f;
             IncrémentAngleRotation = (MathHelper.PiOver2 * IntervalleMAJ);
             base.Initialize();
         }
@@ -76,28 +73,27 @@ namespace AtelierXNA
 
         void GestionTouches()
         {
-            int déplacement = GérerTouche(Keys.W) - GérerTouche(Keys.S);
-            int rotation = GérerTouche(Keys.D) - GérerTouche(Keys.A);
+            float déplacement = GérerTouche(Keys.W) - GérerTouche(Keys.S);
+            float rotation = GérerTouche(Keys.D) - GérerTouche(Keys.A);
             if (déplacement != 0 || rotation != 0)
             {
                 ModificationParamètres(déplacement, rotation);
             }
         }
 
-        void ModificationParamètres(int déplacement, int rotation)
+        void ModificationParamètres(float déplacement, float rotation)
         {
             float rotationFinal = Rotation.Y - IncrémentAngleRotation * rotation;
-            float posX = (déplacement * INCRÉMENT_DÉPLACEMENT) * (float)Math.Sin(rotationFinal);
-            float posY = (déplacement * INCRÉMENT_DÉPLACEMENT) * (float)Math.Cos(rotationFinal);
+            float posX = déplacement * (float)Math.Sin(rotationFinal);
+            float posY = déplacement * (float)Math.Cos(rotationFinal);
             Vector2 déplacementFinal = new Vector2(posX, posY);
-
             Rotation = new Vector3(Rotation.X, rotationFinal, Rotation.Z);
             Position = new Vector3(Position.X - déplacementFinal.X, Position.Y, Position.Z - déplacementFinal.Y);
 
             CalculerMonde();
         }
 
-        int GérerTouche(Keys touche)
+        float GérerTouche(Keys touche)
         {
             return GestionInput.EstEnfoncée(touche) ? INCRÉMENT_DÉPLACEMENT : 0;
         }

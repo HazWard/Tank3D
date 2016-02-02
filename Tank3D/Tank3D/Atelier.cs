@@ -38,7 +38,7 @@ namespace AtelierXNA
 
         protected override void Initialize()
         {
-            const float ÉCHELLE_OBJET = 0.005f;
+            const float ÉCHELLE_OBJET = 0.002f;
             Vector3 positionObjet = new Vector3(0, 10, 100);
             Vector3 rotationObjet = new Vector3(0, 0, 0); // MathHelper.PiOver2
             Vector3 positionCaméraSubjective = new Vector3(0, 15, 115);
@@ -61,7 +61,7 @@ namespace AtelierXNA
             //-------------------------------------------------------------------------------------------------------------------------------
             GestionInput = new InputManager(this);
             Components.Add(GestionInput);
-            CaméraJeu = new CaméraSubjective(this, positionCaméraSubjective, positionObjet, Vector3.Up, INTERVALLE_MAJ_STANDARD);
+            CaméraJeu = new CaméraSubjective(this, positionCaméraSubjective, positionObjet, Vector3.Up, INTERVALLE_MAJ_STANDARD, positionObjet);
             Components.Add(CaméraJeu);
 
             Components.Add(new Afficheur3D(this));
