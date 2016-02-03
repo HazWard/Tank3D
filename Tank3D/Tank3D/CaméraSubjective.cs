@@ -22,7 +22,6 @@ namespace AtelierXNA
         Vector3 Latéral { get; set; }
         Vector3 Alignation { get; set; }
         Vector3 Rotation { get; set; }
-        Vector3 PositionObjet { get; set; }
         float VitesseTranslation { get; set; }
         float VitesseRotation { get; set; }
 
@@ -50,11 +49,11 @@ namespace AtelierXNA
             }
         }
 
-        public CaméraSubjective(Game jeu, Vector3 positionCaméra, Vector3 cible, Vector3 orientation, float intervalleMAJ, Vector3 positionObjet)
+        public CaméraSubjective(Game jeu, Vector3 positionCaméra, Vector3 cible, Vector3 orientation, float intervalleMAJ)
             : base(jeu)
         {
             IntervalleMAJ = intervalleMAJ;
-            PositionObjet = positionObjet;
+            Cible = cible;
             CréerVolumeDeVisualisation(OUVERTURE_OBJECTIF, DISTANCE_PLAN_RAPPROCHÉ, DISTANCE_PLAN_ÉLOIGNÉ);
             CréerPointDeVue(positionCaméra, cible, orientation);
             EstEnZoom = false;
@@ -73,9 +72,9 @@ namespace AtelierXNA
         protected override void CréerPointDeVue()
         {
             Latéral = Vector3.Normalize(Vector3.Cross(OrientationVerticale, Direction));
-            Direction = Vector3.Normalize(Direction);
+            Direction = Vector3.Normalize(Cible - Position);
             OrientationVerticale = Vector3.Normalize(OrientationVerticale);
-            Vue = Matrix.CreateLookAt(Position, PositionObjet, OrientationVerticale);
+            Vue = Matrix.CreateLookAt(Position, Cible, OrientationVerticale);
             GénérerFrustum();
         }
 
@@ -83,7 +82,7 @@ namespace AtelierXNA
         {
             Position = position;
             Cible = cible;
-            Direction = Vector3.Normalize(PositionObjet - Position);
+            Direction = Vector3.Normalize(Cible - Position);
             OrientationVerticale = orientation;
             OrientationVerticale = Vector3.Normalize(OrientationVerticale);
             Latéral = Vector3.Normalize(Vector3.Cross(OrientationVerticale, Direction));
@@ -101,13 +100,6 @@ namespace AtelierXNA
                 GestionTouches();
                 GérerRotation();
                 CréerPointDeVue();
-                //if (GestionInput.EstEnfoncée(Keys.LeftShift) || GestionInput.EstEnfoncée(Keys.RightShift))
-                //{
-                //    GérerAccélération();
-                //    GérerDéplacement();
-                //    GérerRotation();
-                //    CréerPointDeVue();
-                //}
                 TempsÉcouléDepuisMAJ = 0;
             }
             base.Update(gameTime);
@@ -131,7 +123,7 @@ namespace AtelierXNA
             Vector2 déplacementFinal = new Vector2(posX, posY);
             Rotation = new Vector3(Rotation.X, rotationFinal, Rotation.Z);
             Position = new Vector3(Position.X - déplacementFinal.X, Position.Y, Position.Z - déplacementFinal.Y);
-            PositionObjet = new Vector3(PositionObjet.X - déplacementFinal.X, PositionObjet.Y, PositionObjet.Z - déplacementFinal.Y);
+            Cible = new Vector3(Cible.X - déplacementFinal.X, Cible.Y, Cible.Z - déplacementFinal.Y);
 
         }
 
@@ -156,9 +148,9 @@ namespace AtelierXNA
                 nouvellePosition += Vector3.Forward * déplacementDirection;
                 nouvelleCible += Vector3.Forward * déplacementDirection;
             }
-            PositionObjet = new Vector3(Position.X - déplacementFinal.X, Position.Y, Position.Z - déplacementFinal.Y);
+            //Cible = new Vector3(Position.X - déplacementFinal.X, Position.Y, Position.Z - déplacementFinal.Y);
             Position = nouvellePosition;
-            Cible = nouvelleCible;
+            //Cible = nouvelleCible;
         }
 
         private void GérerRotation()

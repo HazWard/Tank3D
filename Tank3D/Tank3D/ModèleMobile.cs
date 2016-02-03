@@ -14,11 +14,10 @@ namespace AtelierXNA
 {
     class ModèleMobile : ObjetDeBase
     {
-        
-        // Constantes
         const float INCRÉMENT_DÉPLACEMENT = 0.2f;
-        
-        // Propriétés
+        Vector3 positionCaméraSubjective = new Vector3(0, 15, 115);
+
+        CaméraSubjective Caméra { get; set; }
         Vector3 RotationInitiale { get; set; }
         Vector3 PositionInitiale { get; set; }
         float ÉchelleInitiale { get; set; }
@@ -34,12 +33,15 @@ namespace AtelierXNA
             RotationInitiale = rotationInitiale;
             PositionInitiale = positionInitiale;
             IntervalleMAJ = intervalleMAJ;
+            Caméra = new CaméraSubjective(jeu, positionCaméraSubjective, PositionInitiale, Vector3.Up, IntervalleMAJ);
+            Game.Components.Add(Caméra);
+            Game.Services.AddService(typeof(Caméra), Caméra);
         }
 
         public override void Initialize()
         {
             TempsÉcouléDepuisMAJ = 0;
-            IncrémentAngleRotation = (MathHelper.PiOver2 * IntervalleMAJ);
+            IncrémentAngleRotation = 2 * (MathHelper.PiOver2 * IntervalleMAJ);
             base.Initialize();
         }
 
@@ -56,6 +58,8 @@ namespace AtelierXNA
             if (TempsÉcouléDepuisMAJ >= IntervalleMAJ)
             {
                 GestionTouches();
+                Caméra.Cible = Position;
+                Caméra.Position = new Vector3(Position.X, Caméra.Position.Y, Position.Z + 15);
                 TempsÉcouléDepuisMAJ = 0;
             }
             base.Update(gameTime);
@@ -75,6 +79,10 @@ namespace AtelierXNA
         {
             float déplacement = GérerTouche(Keys.W) - GérerTouche(Keys.S);
             float rotation = GérerTouche(Keys.D) - GérerTouche(Keys.A);
+            if (déplacement < 0)
+            {
+                rotation = GérerTouche(Keys.A) - GérerTouche(Keys.D);
+            }
             if (déplacement != 0 || rotation != 0)
             {
                 ModificationParamètres(déplacement, rotation);
@@ -89,7 +97,6 @@ namespace AtelierXNA
             Vector2 déplacementFinal = new Vector2(posX, posY);
             Rotation = new Vector3(Rotation.X, rotationFinal, Rotation.Z);
             Position = new Vector3(Position.X - déplacementFinal.X, Position.Y, Position.Z - déplacementFinal.Y);
-
             CalculerMonde();
         }
 
