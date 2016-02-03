@@ -96,8 +96,6 @@
     <Compile Include="Sprite.cs" />
     <Compile Include="Terrain.cs" />
     <Compile Include="TexteCentré.cs" />
-    <Compile Include="TextureDeBase.cs" />
-    <Compile Include="TexturesManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Game.ico" />
