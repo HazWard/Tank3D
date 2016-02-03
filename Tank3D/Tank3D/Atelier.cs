@@ -56,8 +56,8 @@ namespace AtelierXNA
             Rectangle zoneMessage = new Rectangle(hauteurÉcran, hauteurÉcran / NB_ZONES, largeurÉcran - hauteurÉcran, hauteurÉcran / NB_ZONES);
             Rectangle zoneDialogue = new Rectangle(hauteurÉcran, hauteurÉcran / 3, largeurÉcran - hauteurÉcran, hauteurÉcran / 2);
 
-            Components.Add(new TexteCentré(this, TITRE, "Arial20", zoneTitre, Color.Gold, MARGE_TITRE));
-            Components.Add(new Dialogue(this, "FondDialogue", "Arial20", zoneDialogue));
+            //Components.Add(new TexteCentré(this, TITRE, "Arial20", zoneTitre, Color.Gold, MARGE_TITRE));
+            //Components.Add(new Dialogue(this, "FondDialogue", "Arial20", zoneDialogue));
 
             //-------------------------------------------------------------------------------------------------------------------------------
             GestionInput = new InputManager(this);
@@ -75,7 +75,10 @@ namespace AtelierXNA
             Services.AddService(typeof(RessourcesManager<Texture2D>), new RessourcesManager<Texture2D>(this, "Textures"));
             Services.AddService(typeof(RessourcesManager<Model>), new RessourcesManager<Model>(this, "Modèles"));
             Services.AddService(typeof(InputManager), GestionInput);
+
             //Services.AddService(typeof(Caméra), CaméraJeu);
+
+            Services.AddService(typeof(Terrain), TerrainJeu);
             GestionSprites = new SpriteBatch(GraphicsDevice);
             Services.AddService(typeof(SpriteBatch), GestionSprites);
             base.Initialize();

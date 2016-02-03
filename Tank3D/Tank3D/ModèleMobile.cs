@@ -12,12 +12,13 @@ using Microsoft.Xna.Framework.Media;
 
 namespace AtelierXNA
 {
-    class ModèleMobile : ObjetDeBase
+    class ModèleMobile : ObjetDeBase, IActivable
     {
         const float INCRÉMENT_DÉPLACEMENT = 0.2f;
+        const float HAUTEUR_DÉFAULT = 10f;
         Vector3 positionCaméraSubjective = new Vector3(0, 15, 115);
 
-        CaméraSubjective Caméra { get; set; }
+        CaméraSubjective Caméra { get; set; }     
         Vector3 RotationInitiale { get; set; }
         Vector3 PositionInitiale { get; set; }
         float ÉchelleInitiale { get; set; }
@@ -25,6 +26,8 @@ namespace AtelierXNA
         float IncrémentAngleRotation { get; set; }
         float TempsÉcouléDepuisMAJ { get; set; }
         InputManager GestionInput { get; set; }
+        Terrain TerrainJeu { get; set; }
+
 
         public ModèleMobile(Game jeu, string nomModèle, float échelleInitiale, Vector3 rotationInitiale, Vector3 positionInitiale, float intervalleMAJ)
             : base(jeu, nomModèle, échelleInitiale, rotationInitiale, positionInitiale)
@@ -49,6 +52,7 @@ namespace AtelierXNA
         {
             base.LoadContent();
             GestionInput = Game.Services.GetService(typeof(InputManager)) as InputManager;
+            TerrainJeu = Game.Services.GetService(typeof(Terrain)) as Terrain;
         }
 
         public override void Update(GameTime gameTime)
@@ -64,7 +68,6 @@ namespace AtelierXNA
             }
             base.Update(gameTime);
         }
-
 
         #region Méthodes pour la gestion des déplacements et rotations du modèle
         void CalculerMonde()
@@ -97,12 +100,22 @@ namespace AtelierXNA
             Vector2 déplacementFinal = new Vector2(posX, posY);
             Rotation = new Vector3(Rotation.X, rotationFinal, Rotation.Z);
             Position = new Vector3(Position.X - déplacementFinal.X, Position.Y, Position.Z - déplacementFinal.Y);
+            float posXFinal = Position.X - déplacementFinal.X;
+            float posZFinal = Position.Z - déplacementFinal.Y;
+            Console.WriteLine("X: {0} Z: {1}", posXFinal, posZFinal);
+            Position = new Vector3(posXFinal, HAUTEUR_DÉFAULT, posZFinal);
+
             CalculerMonde();
         }
 
         float GérerTouche(Keys touche)
         {
             return GestionInput.EstEnfoncée(touche) ? INCRÉMENT_DÉPLACEMENT : 0;
+        }
+
+        public void ModifierActivation()
+        {
+            base.Enabled = !base.Enabled;
         }
         #endregion
     }

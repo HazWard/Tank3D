@@ -143,6 +143,11 @@ namespace AtelierXNA
             }
         }
 
+        public float GetHauteur(float indiceI, float indiceJ)
+        {
+            return PtsSommets[(int)indiceI, (int)indiceJ].Y;
+        }
+
         public override void Draw(GameTime gameTime)
         {
             EffetDeBase.World = GetMonde();

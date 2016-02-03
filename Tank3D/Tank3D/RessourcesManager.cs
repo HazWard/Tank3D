@@ -7,6 +7,8 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace AtelierXNA
 {
+
+    class RessourceInvalideException : ApplicationException { }
     public class RessourcesManager<T>
     {
         Game Jeu { get; set; }
@@ -29,7 +31,7 @@ namespace AtelierXNA
            }
            else
            {
-               throw new TextureInvalideException();
+               throw new RessourceInvalideException();
            }
         }
 
