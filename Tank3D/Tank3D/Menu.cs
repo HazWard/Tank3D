@@ -20,7 +20,6 @@ namespace AtelierXNA
         Rectangle RectangleDialogue { get; set; }
         Texture2D ImageDeFond { get; set; }
         BoutonDeCommande BtnDémarrer { get; set; }
-        BoutonDeCommande BtnPause { get; set; }
         BoutonDeCommande BtnInstructions { get; set; }
         BoutonDeCommande BtnQuitter { get; set; }
         SpriteBatch GestionSprites { get; set; }
@@ -39,23 +38,18 @@ namespace AtelierXNA
             int hauteurBouton = RectangleDialogue.Height / (NB_ZONES_DIALOGUE + 1);
 
             Vector2 PositionBouton = new Vector2(RectangleDialogue.X + RectangleDialogue.Width / 2f,
-                                                 RectangleDialogue.Y + (NB_ZONES_DIALOGUE - 3) * hauteurBouton);
+                                                 RectangleDialogue.Y + (NB_ZONES_DIALOGUE - 2) * hauteurBouton);
             BtnDémarrer = new BoutonDeCommande(Game, "Démarrer", NomPoliceDeCaractère, "BoutonRouge", "BoutonBleu", PositionBouton, false, GérerPause);
 
             PositionBouton = new Vector2(RectangleDialogue.X + RectangleDialogue.Width / 2f,
-                                                 RectangleDialogue.Y + (NB_ZONES_DIALOGUE - 2) * hauteurBouton);
-            BtnPause = new BoutonDeCommande(Game, "Pause", NomPoliceDeCaractère, "BoutonRouge", "BoutonBleu", PositionBouton, true, GérerPause);
-
-            PositionBouton = new Vector2(RectangleDialogue.X + RectangleDialogue.Width / 2f,
                                      RectangleDialogue.Y + (NB_ZONES_DIALOGUE - 1) * hauteurBouton);
-            BtnInstructions = new BoutonDeCommande(Game, "Instructions", NomPoliceDeCaractère, "BoutonRouge", "BoutonBleu", PositionBouton, true, GérerPause);
+            BtnInstructions = new BoutonDeCommande(Game, "Instructions", NomPoliceDeCaractère, "BoutonRouge", "BoutonBleu", PositionBouton, true, GérerInstructions);
 
             PositionBouton = new Vector2(RectangleDialogue.X + RectangleDialogue.Width / 2f,
                                                  RectangleDialogue.Y + NB_ZONES_DIALOGUE * hauteurBouton);
             BtnQuitter = new BoutonDeCommande(Game, "Quitter", NomPoliceDeCaractère, "BoutonRouge", "BoutonBleu", PositionBouton, true, Quitter);
 
             Game.Components.Add(BtnDémarrer);
-            Game.Components.Add(BtnPause);
             Game.Components.Add(BtnInstructions);
             Game.Components.Add(BtnQuitter);
             base.Initialize();
@@ -80,11 +74,17 @@ namespace AtelierXNA
         public void GérerPause()
         {
             BtnDémarrer.EstActif = !BtnDémarrer.EstActif;
-            BtnPause.EstActif = !BtnPause.EstActif;
             foreach (IActivable composant in Game.Components.Where(composant => composant is IActivable))
             {
                 composant.ModifierActivation();
             }
+        }
+
+        public void GérerInstructions()
+        {
+            BtnInstructions.EstActif = !BtnInstructions.EstActif;
+            // Affichage d'un menu d'instructions
+
         }
 
         public void Quitter()
@@ -95,7 +95,6 @@ namespace AtelierXNA
         public void DésactiverBoutons()
         {
             BtnDémarrer.EstActif = false;
-            BtnPause.EstActif = false;
         }
     }
 }
