@@ -16,6 +16,7 @@ namespace AtelierXNA
     {
         const float INCRÉMENT_DÉPLACEMENT = 0.2f;
         const float HAUTEUR_DÉFAULT = 10f;
+        const float DISTANCE_POURSUITE = 15f;
         Vector3 positionCaméraSubjective = new Vector3(0, 15, 115);
 
         CaméraSubjective Caméra { get; set; }     
@@ -106,7 +107,7 @@ namespace AtelierXNA
             Position = new Vector3(posXFinal, HAUTEUR_DÉFAULT, posZFinal);
 
             Caméra.Cible = Position;
-            Caméra.Position = new Vector3(((float)Math.Sin(rotationFinal) * 15) + Position.X, Caméra.Position.Y, ((float)Math.Cos(rotationFinal) * 15) + Position.Z);
+            Caméra.Position = new Vector3(((float)Math.Sin(rotationFinal) * DISTANCE_POURSUITE) + Position.X, Caméra.Position.Y, ((float)Math.Cos(rotationFinal) * DISTANCE_POURSUITE) + Position.Z);
 
             CalculerMonde();
         }

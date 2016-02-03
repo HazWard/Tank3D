@@ -46,7 +46,7 @@ namespace AtelierXNA
             Vector3 positionCaméra = new Vector3(0, 100, 250);
             Vector3 cibleCaméra = new Vector3(0, 0, -10);
             // Menu------------------------------------------------------------------------------------------------------------------------
-            const float MARGE_TITRE = 0.05f;
+            //const float MARGE_TITRE = 0.05f;
             int largeurÉcran = Window.ClientBounds.Width;
             int hauteurÉcran = Window.ClientBounds.Height;
             int dimensionMin = NB_TUILES * (hauteurÉcran / NB_TUILES);
