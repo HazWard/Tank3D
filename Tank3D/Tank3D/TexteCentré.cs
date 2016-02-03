@@ -78,8 +78,9 @@ namespace AtelierXNA
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         public override void Draw(GameTime gameTime)
         {
-            //GestionSprites.Begin();
+            GestionSprites.Begin();
             GestionSprites.DrawString(Font,TexteÀAfficher, Position, CouleurTexte,0,Origine,Échelle, SpriteEffects.None,1f);
+            GestionSprites.End();
             base.Draw(gameTime);
         }
     }
