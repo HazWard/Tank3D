@@ -17,8 +17,10 @@ namespace AtelierXNA
         const float INCRÉMENT_DÉPLACEMENT = 0.2f;
         const float HAUTEUR_DÉFAULT = 10f;
         const float DISTANCE_POURSUITE = 15f;
+
         Vector3 positionCaméraSubjective = new Vector3(0, 15, 115);
 
+        float HauteurTerrain { get; set; }
         CaméraSubjective Caméra { get; set; }     
         Vector3 RotationInitiale { get; set; }
         Vector3 PositionInitiale { get; set; }
@@ -63,7 +65,6 @@ namespace AtelierXNA
             if (TempsÉcouléDepuisMAJ >= IntervalleMAJ)
             {
                 GestionTouches();
-                
                 TempsÉcouléDepuisMAJ = 0;
             }
             base.Update(gameTime);
@@ -103,8 +104,10 @@ namespace AtelierXNA
             Position = new Vector3(Position.X - déplacementFinal.X, Position.Y, Position.Z - déplacementFinal.Y);
             float posXFinal = Position.X - déplacementFinal.X;
             float posZFinal = Position.Z - déplacementFinal.Y;
-            Console.WriteLine("X: {0} Z: {1} Angle: {2}", posXFinal, posZFinal,rotationFinal);
-            Position = new Vector3(posXFinal, HAUTEUR_DÉFAULT, posZFinal);
+
+            HauteurTerrain = TerrainJeu.GetHauteur(posXFinal, posZFinal);
+            Position = new Vector3(posXFinal, HauteurTerrain + HAUTEUR_DÉFAULT, posZFinal);
+            Console.WriteLine("X: {0} Z: {1} H: {2}", posXFinal, posZFinal, HauteurTerrain);
 
             Caméra.Cible = Position;
             Caméra.Position = new Vector3(((float)Math.Sin(rotationFinal) * DISTANCE_POURSUITE) + Position.X, Caméra.Position.Y, ((float)Math.Cos(rotationFinal) * DISTANCE_POURSUITE) + Position.Z);

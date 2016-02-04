@@ -143,8 +143,11 @@ namespace AtelierXNA
             }
         }
 
-        public float GetHauteur(float indiceI, float indiceJ)
+        public float GetHauteur(float positionI, float positionJ)
         {
+            float indiceI = ((positionI + (Étendue.X / 2)) / Delta.X);
+            float indiceJ = ((positionJ + (Étendue.Z / 2)) / Delta.Z);
+            //CalculerHauteurMoyenne(PtsSommets[(int)indiceI, (int)indiceJ].Y, PtsSommets[(int)indiceI, (int)indiceJ + 1].Y, PtsSommets[(int)indiceI + 1, (int)indiceJ].Y);
             return PtsSommets[(int)indiceI, (int)indiceJ].Y;
         }
 

@@ -39,10 +39,10 @@ namespace AtelierXNA
         protected override void Initialize()
         {
             const float ÉCHELLE_OBJET = 0.002f;
-            Vector3 positionObjet = new Vector3(0, 10, 100);
+            Vector3 positionObjet = new Vector3(0, 10, 0);
             Vector3 positionObjet2 = new Vector3(50, 10,50);
             Vector3 rotationObjet = new Vector3(0, 0, 0); // MathHelper.PiOver2
-            Vector3 positionCaméraSubjective = new Vector3(0, 15, 115);
+            Vector3 positionCaméraSubjective = new Vector3(0, 15, 15);
             Vector3 positionCaméra = new Vector3(0, 100, 250);
             Vector3 cibleCaméra = new Vector3(0, 0, -10);
             // Menu------------------------------------------------------------------------------------------------------------------------
@@ -66,7 +66,9 @@ namespace AtelierXNA
             //Components.Add(CaméraJeu);
 
             Components.Add(new Afficheur3D(this));
-            Components.Add(new Terrain(this, 1f, Vector3.Zero, Vector3.Zero, new Vector3(256, 25, 256), "CarteUn", "DétailsDésert", 3, INTERVALLE_MAJ_STANDARD));
+
+            Terrain TerrainJeu = new Terrain(this, 1f, Vector3.Zero, Vector3.Zero, new Vector3(256, 25, 256), "PetiteCarte", "DétailsDésert", 3, INTERVALLE_MAJ_STANDARD);
+            Components.Add(TerrainJeu);
             Components.Add(new ModèleMobile(this, "Tank", ÉCHELLE_OBJET, rotationObjet, positionObjet, INTERVALLE_MAJ_STANDARD));
             //Components.Add(new ModèleMobile(this, "Tank Texture 1", ÉCHELLE_OBJET, rotationObjet, positionObjet2, INTERVALLE_MAJ_STANDARD));
 
@@ -78,7 +80,7 @@ namespace AtelierXNA
 
             //Services.AddService(typeof(Caméra), CaméraJeu);
 
-            //Services.AddService(typeof(Terrain), TerrainJeu);
+            Services.AddService(typeof(Terrain), TerrainJeu);
             GestionSprites = new SpriteBatch(GraphicsDevice);
             Services.AddService(typeof(SpriteBatch), GestionSprites);
             base.Initialize();
