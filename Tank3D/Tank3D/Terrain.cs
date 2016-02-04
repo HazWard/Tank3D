@@ -147,10 +147,8 @@ namespace AtelierXNA
         {
             // TODO: Utiliser des normales plus tard
             
-            int indiceI = (int)((positionI + Étendue.X / 2) / Delta.X);
+            int indiceI = (int)Math.Abs((positionI + Étendue.X / 2) / Delta.X);
             int indiceJ = (int)Math.Abs((positionJ - Étendue.Z / 2) / Delta.Z);
-
-            Console.WriteLine("\nI: {0} J: {1}", indiceI, indiceJ);
 
             return PtsSommets[indiceI, indiceJ].Y;
         }

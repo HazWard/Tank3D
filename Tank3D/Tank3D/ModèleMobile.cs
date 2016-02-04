@@ -80,21 +80,25 @@ namespace AtelierXNA
             Monde *= Matrix.CreateTranslation(Position);
         }
 
+        /// <summary>
+        /// Méthode servant à gérer les touches entrées par l'utilisateur
+        /// </summary>
         void GestionTouches()
         {
-            float déplacement = GérerTouche(Keys.W) - GérerTouche(Keys.S);
-            float rotation = GérerTouche(Keys.D) - GérerTouche(Keys.A);
-            if (déplacement < 0)
-            {
-                rotation = GérerTouche(Keys.A) - GérerTouche(Keys.D);
-            }
+            int déplacement = GérerTouche(Keys.W) - GérerTouche(Keys.S);
+            int rotation = GérerTouche(Keys.D) - GérerTouche(Keys.A);
             if (déplacement != 0 || rotation != 0)
             {
                 ModificationParamètres(déplacement, rotation);
             }
         }
 
-        void ModificationParamètres(float déplacement, float rotation)
+        /// <summary>
+        /// Méthode modifiant la position et la rotation du modèle
+        /// </summary>
+        /// <param name="déplacement">Déplacement sur les axes X et Z</param>
+        /// <param name="rotation">Rotation sur l'axe des Y (Lacet)</param>
+        void ModificationParamètres(int déplacement, int rotation)
         {
             float rotationFinal = Rotation.Y - IncrémentAngleRotation * rotation;
             float posX = déplacement * (float)Math.Sin(rotationFinal);
@@ -108,7 +112,6 @@ namespace AtelierXNA
 
             HauteurTerrain = TerrainJeu.GetHauteur(posXFinal, posZFinal);
             Position = new Vector3(posXFinal, HauteurTerrain + HAUTEUR_DÉFAULT, posZFinal);
-            Console.WriteLine("X: {0} Z: {1} H: {2}", posXFinal, posZFinal, HauteurTerrain);
 
             Caméra.Cible = Position;
             Caméra.Position = new Vector3(((float)Math.Sin(rotationFinal) * DISTANCE_POURSUITE) + Position.X, Position.Y+HAUTEUR_CAM_DÉFAULT, ((float)Math.Cos(rotationFinal) * DISTANCE_POURSUITE) + Position.Z);
@@ -116,11 +119,19 @@ namespace AtelierXNA
             CalculerMonde();
         }
 
-        float GérerTouche(Keys touche)
+        /// <summary>
+        /// Méthode vérifiant l'état d'une touche
+        /// </summary>
+        /// <param name="touche">Touche enfoncée</param>
+        /// <returns>L'état de la touche (V/F)</returns>
+        int GérerTouche(Keys touche)
         {
-            return GestionInput.EstEnfoncée(touche) ? INCRÉMENT_DÉPLACEMENT : 0;
+            return GestionInput.EstEnfoncée(touche) ? 1 : 0;
         }
 
+        /// <summary>
+        /// Méthode modifiant l'activation (Pause)
+        /// </summary>
         public void ModifierActivation()
         {
             base.Enabled = !base.Enabled;
