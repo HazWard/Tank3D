@@ -25,7 +25,7 @@ namespace AtelierXNA
         float PourcentageNiveauTexture { get; set; }
         BasicEffect EffetDeBase { get; set; }
         RessourcesManager<Texture2D> GestionnaireDeTextures { get; set; }
-        Texture2D CarteTerrain { get; set; }
+        Texture2D CarteTerrain { get; set; } 
         Texture2D TextureTerrain { get; set; }
         Vector3 Origine { get; set; }
         protected VertexPositionTexture[] Sommets { get; set; }
@@ -145,10 +145,14 @@ namespace AtelierXNA
 
         public float GetHauteur(float positionI, float positionJ)
         {
-            float indiceI = ((positionI + (Étendue.X / 2)) / Delta.X);
-            float indiceJ = ((positionJ + (Étendue.Z / 2)) / Delta.Z);
-            //CalculerHauteurMoyenne(PtsSommets[(int)indiceI, (int)indiceJ].Y, PtsSommets[(int)indiceI, (int)indiceJ + 1].Y, PtsSommets[(int)indiceI + 1, (int)indiceJ].Y);
-            return PtsSommets[(int)indiceI, (int)indiceJ].Y;
+            // TODO: Utiliser des normales plus tard
+            
+            int indiceI = (int)((positionI + Étendue.X / 2) / Delta.X);
+            int indiceJ = (int)Math.Abs((positionJ - Étendue.Z / 2) / Delta.Z);
+
+            Console.WriteLine("\nI: {0} J: {1}", indiceI, indiceJ);
+
+            return PtsSommets[indiceI, indiceJ].Y;
         }
 
         public override void Draw(GameTime gameTime)
