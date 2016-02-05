@@ -33,7 +33,7 @@ namespace AtelierXNA
         int NbColonnes { get; set; }
         int NbRangées { get; set; }
         int NbTuiles { get; set; }
-         public Vector3 Delta { get; set; }
+        public Vector3 Delta { get; set; }
 
         // Gestion du HeightMap
         Color[] DataTexture { get; set; }
@@ -60,6 +60,15 @@ namespace AtelierXNA
             InitialiserSommets();
             base.Initialize();
         }
+
+        public int MaxPosition
+        {
+            get
+            {
+                return PtsSommets.GetLength(0);
+            }
+        }
+
 
         void InitialiserDonnéesCarte()
         {
