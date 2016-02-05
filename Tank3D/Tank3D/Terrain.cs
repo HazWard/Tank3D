@@ -18,7 +18,7 @@ namespace AtelierXNA
         const int NB_SOMMETS_PAR_TUILE = 4;
         const float MAX_COULEUR = 255f;
         const float TEXTURE_ADJUST = 0.01f;
-        Vector3 Étendue { get; set; }
+        public Vector3 Étendue { get; private set; }
         string NomCarteTerrain { get; set; }
         string NomTextureTerrain { get; set; }
         int NbNiveauxTexture { get; set; }
@@ -33,7 +33,7 @@ namespace AtelierXNA
         int NbColonnes { get; set; }
         int NbRangées { get; set; }
         int NbTuiles { get; set; }
-        Vector3 Delta { get; set; }
+         public Vector3 Delta { get; set; }
 
         // Gestion du HeightMap
         Color[] DataTexture { get; set; }
@@ -143,14 +143,25 @@ namespace AtelierXNA
             }
         }
 
-        public float GetHauteur(float positionI, float positionJ)
+
+
+        public float GetHauteur(Point indice)
         {
             // TODO: Utiliser des normales plus tard
             
-            int indiceI = (int)Math.Abs((positionI + Étendue.X / 2) / Delta.X);
-            int indiceJ = (int)Math.Abs((positionJ - Étendue.Z / 2) / Delta.Z);
+            return PtsSommets[VérificationExtrêmes(indice.X), VérificationExtrêmes(indice.Y)].Y;
+        }
 
-            return PtsSommets[indiceI, indiceJ].Y;
+        int VérificationExtrêmes(int indice)
+        {
+            int maxPossible = PtsSommets.GetLength(0) - 1;
+            
+            if(indice > maxPossible)
+            {
+                indice = maxPossible;
+            }
+
+            return indice;
         }
 
         public override void Draw(GameTime gameTime)

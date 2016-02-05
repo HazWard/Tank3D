@@ -110,13 +110,33 @@ namespace AtelierXNA
             float posXFinal = Position.X - déplacementFinal.X;
             float posZFinal = Position.Z - déplacementFinal.Y;
 
-            HauteurTerrain = TerrainJeu.GetHauteur(posXFinal, posZFinal);
-            Position = new Vector3(posXFinal, HauteurTerrain + HAUTEUR_DÉFAULT, posZFinal);
+            Point nouvellesCoords = ConvertionCordonnées(posXFinal, posZFinal);
+            HauteurTerrain = TerrainJeu.GetHauteur(nouvellesCoords);
 
-            Caméra.Cible = Position;
-            Caméra.Position = new Vector3(((float)Math.Sin(rotationFinal) * DISTANCE_POURSUITE) + Position.X, Position.Y+HAUTEUR_CAM_DÉFAULT, ((float)Math.Cos(rotationFinal) * DISTANCE_POURSUITE) + Position.Z);
+            if (!EstHorsDesBornes(nouvellesCoords))
+            {
+                Position = new Vector3(posXFinal, HauteurTerrain + HAUTEUR_DÉFAULT, posZFinal);
 
+                Caméra.Cible = Position;
+                Caméra.Position = new Vector3(((float)Math.Sin(rotationFinal) * DISTANCE_POURSUITE) + Position.X, Position.Y + HAUTEUR_CAM_DÉFAULT, ((float)Math.Cos(rotationFinal) * DISTANCE_POURSUITE) + Position.Z);
+            }
+            // Console.WriteLine("X: {0}, Y:{1}, Z: {2}", Position.X, Position.Y, Position.Z);
             CalculerMonde();
+        }
+
+        private bool EstHorsDesBornes(Point coords)
+        {
+            bool estHorsDesBornes = false;
+            
+            return estHorsDesBornes;
+        }
+
+        Point ConvertionCordonnées(float coordX, float coordZ)
+        {
+            int x = (int)Math.Abs((coordX + TerrainJeu.Étendue.X / 2) / TerrainJeu.Delta.X);
+            int y = (int)Math.Abs((coordZ - TerrainJeu.Étendue.Z / 2) / TerrainJeu.Delta.Z);
+
+            return new Point(x, y);
         }
 
         /// <summary>
