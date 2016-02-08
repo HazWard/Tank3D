@@ -18,7 +18,7 @@ namespace AtelierXNA
         const int NB_SOMMETS_PAR_TUILE = 4;
         const float MAX_COULEUR = 255f;
         const float TEXTURE_ADJUST = 0.01f;
-        public Vector3 Étendue { get; private set; }
+        Vector3 Étendue { get; set; }
         string NomCarteTerrain { get; set; }
         string NomTextureTerrain { get; set; }
         int NbNiveauxTexture { get; set; }
@@ -33,7 +33,7 @@ namespace AtelierXNA
         int NbColonnes { get; set; }
         int NbRangées { get; set; }
         int NbTuiles { get; set; }
-        public Vector3 Delta { get; set; }
+        Vector3 Delta { get; set; }
 
         // Gestion du HeightMap
         Color[] DataTexture { get; set; }
@@ -60,15 +60,6 @@ namespace AtelierXNA
             InitialiserSommets();
             base.Initialize();
         }
-
-        public int MaxPosition
-        {
-            get
-            {
-                return PtsSommets.GetLength(0);
-            }
-        }
-
 
         void InitialiserDonnéesCarte()
         {
@@ -151,26 +142,41 @@ namespace AtelierXNA
                 }
             }
         }
-
-
-
-        public float GetHauteur(Point indice)
+        public float GetLargeurLimites(float positionX)
+        {
+            if(positionX > Étendue.X / 2)
+            {
+                positionX = Étendue.X/ 2;
+            }
+            if (positionX < -Étendue.X / 2)
+            {
+                positionX = -Étendue.X/ 2;
+            }
+            return positionX;
+        }
+        public float GetLongueurLimites(float positionZ)
+        {
+            if (positionZ > Étendue.Z / 2)
+            {
+                positionZ = Étendue.Z / 2;
+            }
+            if (positionZ < -Étendue.Z / 2)
+            {
+                positionZ = -Étendue.Z / 2;
+            }
+            return positionZ;
+        }
+        public float GetHauteur(float positionI, float positionJ)
         {
             // TODO: Utiliser des normales plus tard
+            //if (positionI >= (Étendue.X / 2))
+            //{
+            //    positionI = Étendue.X / 2;
+            //}
+            int indiceI = (int)Math.Abs((positionI + (Étendue.X / 2)) / Delta.X);
+            int indiceJ = (int)Math.Abs((positionJ - (Étendue.Z / 2)) / Delta.Z);
             
-            return PtsSommets[VérificationExtrêmes(indice.X), VérificationExtrêmes(indice.Y)].Y;
-        }
-
-        int VérificationExtrêmes(int indice)
-        {
-            int maxPossible = PtsSommets.GetLength(0) - 1;
-            
-            if(indice > maxPossible)
-            {
-                indice = maxPossible;
-            }
-
-            return indice;
+            return PtsSommets[indiceI, indiceJ].Y;
         }
 
         public override void Draw(GameTime gameTime)
