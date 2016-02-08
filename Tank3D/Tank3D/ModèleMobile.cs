@@ -14,12 +14,10 @@ namespace AtelierXNA
 {
     class ModèleMobile : ObjetDeBase, IActivable
     {
-        const float INCRÉMENT_DÉPLACEMENT = 0.2f;
-        //const float HAUTEUR_DÉFAULT = 1f;
-        const float DISTANCE_POURSUITE = 40f;
-        const float HAUTEUR_CAM_DÉFAULT = 20f;
-
-        Vector3 positionCaméraSubjective = new Vector3(0, 25, 140);
+        const float INCRÉMENT_DÉPLACEMENT = 0.1f;
+        const float HAUTEUR_DÉFAULT = 1f;
+        const float DISTANCE_POURSUITE = 15f;
+        const float HAUTEUR_CAM_DÉFAULT = 5f;
 
         float HauteurTerrain { get; set; }
         CaméraSubjective Caméra { get; set; }     
@@ -40,7 +38,8 @@ namespace AtelierXNA
             RotationInitiale = rotationInitiale;
             PositionInitiale = positionInitiale;
             IntervalleMAJ = intervalleMAJ;
-            Caméra = new CaméraSubjective(jeu, positionCaméraSubjective, PositionInitiale, Vector3.Up, IntervalleMAJ);
+            Caméra = new CaméraSubjective(jeu, new Vector3 (PositionInitiale.X, PositionInitiale.Y + HAUTEUR_CAM_DÉFAULT, PositionInitiale.Z + DISTANCE_POURSUITE),
+                                          new Vector3(PositionInitiale.X, PositionInitiale.Y + HAUTEUR_CAM_DÉFAULT, PositionInitiale.Z), Vector3.Up, IntervalleMAJ);
             Game.Components.Add(Caméra);
             Game.Services.AddService(typeof(Caméra), Caméra);
         }
@@ -85,8 +84,8 @@ namespace AtelierXNA
         /// </summary>
         void GestionTouches()
         {
-            int déplacement = GérerTouche(Keys.W) - GérerTouche(Keys.S);
-            int rotation = GérerTouche(Keys.D) - GérerTouche(Keys.A);
+            float déplacement = GérerTouche(Keys.W) - GérerTouche(Keys.S);
+            float rotation = GérerTouche(Keys.D) - GérerTouche(Keys.A);
             if (déplacement != 0 || rotation != 0)
             {
                 ModificationParamètres(déplacement, rotation);
@@ -98,7 +97,7 @@ namespace AtelierXNA
         /// </summary>
         /// <param name="déplacement">Déplacement sur les axes X et Z</param>
         /// <param name="rotation">Rotation sur l'axe des Y (Lacet)</param>
-        void ModificationParamètres(int déplacement, int rotation)
+        void ModificationParamètres(float déplacement, float rotation)
         {
             float rotationFinal = Rotation.Y - IncrémentAngleRotation * rotation;
             float posX = déplacement * (float)Math.Sin(rotationFinal);
@@ -113,9 +112,9 @@ namespace AtelierXNA
             posXFinal = TerrainJeu.GetLargeurLimites(posXFinal);
             posZFinal = TerrainJeu.GetLongueurLimites(posZFinal);
             HauteurTerrain = TerrainJeu.GetHauteur(posXFinal, posZFinal);
-            Position = new Vector3(posXFinal, HauteurTerrain, posZFinal);
+            Position = new Vector3(posXFinal, HauteurTerrain + HAUTEUR_DÉFAULT, posZFinal);
 
-            Caméra.Cible = Position;
+            Caméra.Cible = new Vector3(Position.X, Position.Y + HAUTEUR_CAM_DÉFAULT, Position.Z);
             Caméra.Position = new Vector3(((float)Math.Sin(rotationFinal) * DISTANCE_POURSUITE) + Position.X, Position.Y+HAUTEUR_CAM_DÉFAULT, ((float)Math.Cos(rotationFinal) * DISTANCE_POURSUITE) + Position.Z);
 
             CalculerMonde();
@@ -126,9 +125,9 @@ namespace AtelierXNA
         /// </summary>
         /// <param name="touche">Touche enfoncée</param>
         /// <returns>L'état de la touche (V/F)</returns>
-        int GérerTouche(Keys touche)
+        float GérerTouche(Keys touche)
         {
-            return GestionInput.EstEnfoncée(touche) ? 1 : 0;
+            return GestionInput.EstEnfoncée(touche) ? INCRÉMENT_DÉPLACEMENT : 0;
         }
 
         /// <summary>

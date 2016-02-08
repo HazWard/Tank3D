@@ -10,6 +10,7 @@ namespace AtelierXNA
     public class CaméraSubjective : Caméra, IActivable
     {
         const float INTERVALLE_MAJ_STANDARD = 1f / 60f;
+        const float INCRÉMENT_DÉPLACEMENT = 0.5f;
         //const float ACCÉLÉRATION = 0.001f;
         const float VITESSE_INITIALE_ROTATION = 5f;
         const float VITESSE_INITIALE_TRANSLATION = 0.5f;
@@ -129,7 +130,7 @@ namespace AtelierXNA
 
         private float GérerTouche(Keys touche)
         {
-            return GestionInput.EstEnfoncée(touche) ? 0.2f : 0;
+            return GestionInput.EstEnfoncée(touche) ? INCRÉMENT_DÉPLACEMENT : 0;
         }
 
         private void GérerDéplacement(float déplacement, float rotation)
