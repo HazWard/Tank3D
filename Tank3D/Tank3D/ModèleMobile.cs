@@ -110,6 +110,8 @@ namespace AtelierXNA
             float posXFinal = Position.X - déplacementFinal.X;
             float posZFinal = Position.Z - déplacementFinal.Y;
 
+            posXFinal = TerrainJeu.GetLargeurLimites(posXFinal);
+            posZFinal = TerrainJeu.GetLongueurLimites(posZFinal);
             HauteurTerrain = TerrainJeu.GetHauteur(posXFinal, posZFinal);
             Position = new Vector3(posXFinal, HauteurTerrain + HAUTEUR_DÉFAULT, posZFinal);
 

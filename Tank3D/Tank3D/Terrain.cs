@@ -142,14 +142,40 @@ namespace AtelierXNA
                 }
             }
         }
-
+        public float GetLargeurLimites(float positionX)
+        {
+            if(positionX > Étendue.X / 2)
+            {
+                positionX = Étendue.X/ 2;
+            }
+            if (positionX < -Étendue.X / 2)
+            {
+                positionX = -Étendue.X/ 2;
+            }
+            return positionX;
+        }
+        public float GetLongueurLimites(float positionZ)
+        {
+            if (positionZ > Étendue.Z / 2)
+            {
+                positionZ = Étendue.Z / 2;
+            }
+            if (positionZ < -Étendue.Z / 2)
+            {
+                positionZ = -Étendue.Z / 2;
+            }
+            return positionZ;
+        }
         public float GetHauteur(float positionI, float positionJ)
         {
             // TODO: Utiliser des normales plus tard
+            //if (positionI >= (Étendue.X / 2))
+            //{
+            //    positionI = Étendue.X / 2;
+            //}
+            int indiceI = (int)Math.Abs((positionI + (Étendue.X / 2)) / Delta.X);
+            int indiceJ = (int)Math.Abs((positionJ - (Étendue.Z / 2)) / Delta.Z);
             
-            int indiceI = (int)Math.Abs((positionI + Étendue.X / 2) / Delta.X);
-            int indiceJ = (int)Math.Abs((positionJ - Étendue.Z / 2) / Delta.Z);
-
             return PtsSommets[indiceI, indiceJ].Y;
         }
 
