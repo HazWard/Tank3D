@@ -32,7 +32,6 @@ namespace AtelierXNA
         InputManager GestionInput { get; set; }
         Terrain TerrainJeu { get; set; }
 
-
         public ModèleMobile(Game jeu, string nomModèle, float échelleInitiale, Vector3 rotationInitiale, Vector3 positionInitiale, float intervalleMAJ)
             : base(jeu, nomModèle, échelleInitiale, rotationInitiale, positionInitiale)
         {
@@ -66,9 +65,21 @@ namespace AtelierXNA
             if (TempsÉcouléDepuisMAJ >= IntervalleMAJ)
             {
                 GestionTouches();
+                WriteMeshes();
                 TempsÉcouléDepuisMAJ = 0;
             }
             base.Update(gameTime);
+        }
+
+        private void WriteMeshes()
+        {
+            Console.WriteLine("----- Meshes in the Model ----- \n");
+            
+            foreach (ModelMesh m in Modèle.Meshes)
+            {
+                Console.WriteLine("Name: {0}", m.Name);
+            }
+            Console.WriteLine();
         }
 
         #region Méthodes pour la gestion des déplacements et rotations du modèle
