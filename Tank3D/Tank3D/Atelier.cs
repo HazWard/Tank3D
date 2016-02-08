@@ -33,7 +33,7 @@ namespace AtelierXNA
             Content.RootDirectory = "Content";
             PériphériqueGraphique.SynchronizeWithVerticalRetrace = false;
             IsFixedTimeStep = false;
-            IsMouseVisible = true;
+            IsMouseVisible = false;
         }
 
         protected override void Initialize()
@@ -66,10 +66,10 @@ namespace AtelierXNA
             //Components.Add(CaméraJeu);
 
             Components.Add(new Afficheur3D(this));
-
             Terrain TerrainJeu = new Terrain(this, 1f, Vector3.Zero, Vector3.Zero, new Vector3(256, 25, 256), "PetiteCarte", "DétailsDésert", 3, INTERVALLE_MAJ_STANDARD);
             Components.Add(TerrainJeu);
             Components.Add(new ModèleMobile(this, "Tank", ÉCHELLE_OBJET, rotationObjet, positionObjet, INTERVALLE_MAJ_STANDARD));
+            Components.Add(new Souris(this, "PetiteMire", INTERVALLE_MAJ_STANDARD));
             //Components.Add(new ModèleMobile(this, "Tank Texture 1", ÉCHELLE_OBJET, rotationObjet, positionObjet2, INTERVALLE_MAJ_STANDARD));
 
             //Services.AddService(typeof(Random), new Random());
