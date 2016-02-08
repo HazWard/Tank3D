@@ -30,7 +30,7 @@ namespace AtelierXNA
         public Atelier()
         {
             PériphériqueGraphique = new GraphicsDeviceManager(this);
-            PériphériqueGraphique.IsFullScreen = true;
+            PériphériqueGraphique.IsFullScreen = false;
             Content.RootDirectory = "Content";
             PériphériqueGraphique.SynchronizeWithVerticalRetrace = false;
             IsFixedTimeStep = false;
@@ -39,8 +39,8 @@ namespace AtelierXNA
 
         protected override void Initialize()
         {
-            const float ÉCHELLE_OBJET = 0.002f;
-            Vector3 positionObjet = new Vector3(0, 10, 0);
+            const float ÉCHELLE_OBJET = 0.01f;
+            Vector3 positionObjet = new Vector3(0, 5, 100);
             Vector3 positionObjet2 = new Vector3(50, 10,50);
             Vector3 rotationObjet = new Vector3(0, 0, 0); // MathHelper.PiOver2
             Vector3 positionCaméraSubjective = new Vector3(0, 15, 15);

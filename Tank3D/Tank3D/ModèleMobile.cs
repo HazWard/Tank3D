@@ -15,11 +15,11 @@ namespace AtelierXNA
     class ModèleMobile : ObjetDeBase, IActivable
     {
         const float INCRÉMENT_DÉPLACEMENT = 0.2f;
-        const float HAUTEUR_DÉFAULT = 1f;
-        const float DISTANCE_POURSUITE = 15f;
-        const float HAUTEUR_CAM_DÉFAULT = 5f;
+        //const float HAUTEUR_DÉFAULT = 1f;
+        const float DISTANCE_POURSUITE = 40f;
+        const float HAUTEUR_CAM_DÉFAULT = 20f;
 
-        Vector3 positionCaméraSubjective = new Vector3(0, 15, 115);
+        Vector3 positionCaméraSubjective = new Vector3(0, 25, 140);
 
         float HauteurTerrain { get; set; }
         CaméraSubjective Caméra { get; set; }     
@@ -113,7 +113,7 @@ namespace AtelierXNA
             posXFinal = TerrainJeu.GetLargeurLimites(posXFinal);
             posZFinal = TerrainJeu.GetLongueurLimites(posZFinal);
             HauteurTerrain = TerrainJeu.GetHauteur(posXFinal, posZFinal);
-            Position = new Vector3(posXFinal, HauteurTerrain + HAUTEUR_DÉFAULT, posZFinal);
+            Position = new Vector3(posXFinal, HauteurTerrain, posZFinal);
 
             Caméra.Cible = Position;
             Caméra.Position = new Vector3(((float)Math.Sin(rotationFinal) * DISTANCE_POURSUITE) + Position.X, Position.Y+HAUTEUR_CAM_DÉFAULT, ((float)Math.Cos(rotationFinal) * DISTANCE_POURSUITE) + Position.Z);
