@@ -98,6 +98,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="RessourceDeBase.cs" />
     <Compile Include="RessourcesManager.cs" />
+    <Compile Include="Souris.cs" />
     <Compile Include="Sprite.cs" />
     <Compile Include="Terrain.cs" />
     <Compile Include="TexteCentré.cs" />

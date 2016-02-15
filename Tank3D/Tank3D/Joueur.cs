@@ -25,7 +25,9 @@ namespace AtelierXNA
         InputManager GestionInput { get; set; }
         CaméraSubjective Caméra { get; set; }
         Vector3 RotationYawTour { get; set; }
-        Vector3 ÉchelleTour { get; set; }
+        Vector3 RotationPitchCanon { get; set; }
+        //Vector3 ÉchelleTour { get; set; }
+        Vector3 PositionCanon { get; set; }
         Vector3 PositionTour { get; set; }
         Matrix MondeTour { get; set; }
 
@@ -110,6 +112,16 @@ namespace AtelierXNA
             RotationYawTour=  new Vector3(-MathHelper.PiOver2,RotationYawTour.Y + (IncrémentAngleRotation * 1),180);
             PositionTour = new Vector3(Position.X,Position.Y + 3f, Position.Z);
             MondeTour = TransformationsMeshes(0.12f, RotationYawTour, PositionTour);
+        }
+
+        private void RotationCanon()
+        {
+            // À modifier pour modifier la souris
+            
+            ModelMesh canon = Modèle.Meshes.First(x => x.Name == "Canon");
+            RotationPitchCanon = new Vector3(-MathHelper.PiOver2, RotationPitchCanon.Y + (IncrémentAngleRotation * 1.5f), 180);
+            PositionCanon = new Vector3(Position.X, Position.Y + 3f, Position.Z);
+            MondeTour = TransformationsMeshes(0.12f, RotationPitchCanon, PositionCanon);
         }
 
         bool EstHorsDesBornes(Point coords)
