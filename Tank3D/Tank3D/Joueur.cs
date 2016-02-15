@@ -18,23 +18,28 @@ namespace AtelierXNA
     public class Joueur : ModèleMobile
     {
         // Constantes
-        protected const float DISTANCE_POURSUITE = 15f;
-        protected const float HAUTEUR_CAM_DÉFAULT = 5f;
+        protected const float DISTANCE_POURSUITE = 20f;
+        protected const float HAUTEUR_CAM_DÉFAULT = 10f;
         
         // Propriétés
         InputManager GestionInput { get; set; }
         CaméraSubjective Caméra { get; set; }
         Vector3 RotationYawTour { get; set; }
         Vector3 RotationPitchCanon { get; set; }
-        //Vector3 ÉchelleTour { get; set; }
+        Vector3 ÉchelleTour { get; set; }
+        Vector3 ÉchelleCanon { get; set; }
+        Vector3 ÉchelleRoues { get; set; }
         Vector3 PositionCanon { get; set; }
         Vector3 PositionTour { get; set; }
         Matrix MondeTour { get; set; }
+        float ÉchelleTest { get; set; }
 
         public Joueur(Game jeu, string nomModèle, float échelleInitiale, Vector3 rotationInitiale, Vector3 positionInitiale, float intervalleMAJ)
             : base(jeu, nomModèle, échelleInitiale, rotationInitiale, positionInitiale, intervalleMAJ)
         {
-            Caméra = new CaméraSubjective(jeu, new Vector3(0, 24, 140), positionInitiale, Vector3.Up, IntervalleMAJ);
+            Caméra = new CaméraSubjective(jeu, new Vector3(positionInitiale.X, positionInitiale.Y + HAUTEUR_CAM_DÉFAULT, positionInitiale.Z + DISTANCE_POURSUITE),
+                                               new Vector3(Position.X, Position.Y + 4, Position.Z), 
+                                               Vector3.Up, IntervalleMAJ);
             Game.Components.Add(Caméra);
             Game.Services.AddService(typeof(Caméra), Caméra);
         }
@@ -43,7 +48,10 @@ namespace AtelierXNA
         {
             base.Initialize();
             RotationYawTour = Vector3.Zero;
-            //ÉchelleTour = new Vector3(2f, 1.5f, 1.3f);
+            //ÉchelleTour = new Vector3(0.19f, 0.19f, 0.19f);
+            //ÉchelleCanon = new Vector3(0.89f, 0.89f, 3.15f);
+            //ÉchelleRoues = new Vector3(1.85f, 1.85f, 1.53f);
+            ÉchelleTest = 0.0035f;
         }
 
         protected override void LoadContent()
@@ -99,7 +107,7 @@ namespace AtelierXNA
             {
                 Position = new Vector3(posXFinal, HauteurTerrain + HAUTEUR_DÉFAULT, posZFinal);
                 HauteurTerrain = TerrainJeu.GetHauteur(Position);
-                Caméra.Cible = Position;
+                Caméra.Cible = new Vector3(Position.X, Position.Y + 4, Position.Z);
                 Caméra.Position = new Vector3(((float)Math.Sin(rotationFinal) * DISTANCE_POURSUITE) + Position.X, Position.Y + HAUTEUR_CAM_DÉFAULT, ((float)Math.Cos(rotationFinal) * DISTANCE_POURSUITE) + Position.Z);
             }
 
@@ -109,9 +117,9 @@ namespace AtelierXNA
         private void RotationTour()
         {
             ModelMesh tour = Modèle.Meshes.First(x => x.Name == "Tour");            
-            RotationYawTour=  new Vector3(-MathHelper.PiOver2,RotationYawTour.Y + (IncrémentAngleRotation * 1),180);
-            PositionTour = new Vector3(Position.X,Position.Y + 3f, Position.Z);
-            MondeTour = TransformationsMeshes(0.12f, RotationYawTour, PositionTour);
+            RotationYawTour = new Vector3(-MathHelper.PiOver2, RotationYawTour.Y + IncrémentAngleRotation, -MathHelper.PiOver2);
+            PositionTour = new Vector3(Position.X, Position.Y + 0.3f, Position.Z);
+            MondeTour = TransformationsMeshes(ÉchelleTest, RotationYawTour, PositionTour);
         }
 
         private void RotationCanon()
@@ -121,7 +129,7 @@ namespace AtelierXNA
             ModelMesh canon = Modèle.Meshes.First(x => x.Name == "Canon");
             RotationPitchCanon = new Vector3(-MathHelper.PiOver2, RotationPitchCanon.Y + (IncrémentAngleRotation * 1.5f), 180);
             PositionCanon = new Vector3(Position.X, Position.Y + 3f, Position.Z);
-            MondeTour = TransformationsMeshes(0.12f, RotationPitchCanon, PositionCanon);
+            MondeTour = TransformationsMeshes(Échelle, RotationPitchCanon, PositionCanon);
         }
 
         bool EstHorsDesBornes(Point coords)

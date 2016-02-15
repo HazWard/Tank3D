@@ -30,11 +30,6 @@
     <Reference Include="Microsoft.Xna.Framework.Content.Pipeline.VideoImporters, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=MSIL" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Modèles\Tank.FBX">
-      <Name>Tank</Name>
-      <Importer>FbxImporter</Importer>
-      <Processor>ModelProcessor</Processor>
-    </Compile>
     <Compile Include="Textures\CarteTest.bmp">
       <Name>CarteTest</Name>
       <Importer>TextureImporter</Importer>
@@ -157,8 +152,37 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="Modèles\unicorn.FBX">
-      <Name>unicorn</Name>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Modèles\Veteran Tiger Body.FBX">
+      <Name>Veteran Tiger Body</Name>
+      <Importer>FbxImporter</Importer>
+      <Processor>ModelProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Modèles\Veteran Tiger Desert.FBX">
+      <Name>Veteran Tiger Desert</Name>
+      <Importer>FbxImporter</Importer>
+      <Processor>ModelProcessor</Processor>
+    </Compile>
+    <Compile Include="Modèles\Veteran Tiger Destroyed.FBX">
+      <Name>Veteran Tiger Destroyed</Name>
+      <Importer>FbxImporter</Importer>
+      <Processor>ModelProcessor</Processor>
+    </Compile>
+    <Compile Include="Modèles\Veteran Tiger Forest.FBX">
+      <Name>Veteran Tiger Forest</Name>
+      <Importer>FbxImporter</Importer>
+      <Processor>ModelProcessor</Processor>
+    </Compile>
+    <Compile Include="Modèles\Veteran Tiger NoColor.FBX">
+      <Name>Veteran Tiger NoColor</Name>
+      <Importer>FbxImporter</Importer>
+      <Processor>ModelProcessor</Processor>
+    </Compile>
+    <Compile Include="Modèles\Veteran Tiger Snow.FBX">
+      <Name>Veteran Tiger Snow</Name>
       <Importer>FbxImporter</Importer>
       <Processor>ModelProcessor</Processor>
     </Compile>
