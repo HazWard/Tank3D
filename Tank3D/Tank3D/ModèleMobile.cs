@@ -52,7 +52,7 @@ namespace AtelierXNA
             if (TempsÉcouléDepuisMAJ >= IntervalleMAJ)
             {
                 GestionMouvements();
-                ÉcrireMeshes();
+                //ÉcrireMeshes();
                 TempsÉcouléDepuisMAJ = 0;
             }
             base.Update(gameTime);
@@ -63,7 +63,6 @@ namespace AtelierXNA
             foreach (ModelMesh m in Modèle.Meshes)
             {
                 Console.WriteLine(m.Name);
-                
             }
         }
 

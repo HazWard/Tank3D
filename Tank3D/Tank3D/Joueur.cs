@@ -24,6 +24,9 @@ namespace AtelierXNA
         // Propriétés
         InputManager GestionInput { get; set; }
         CaméraSubjective Caméra { get; set; }
+        Vector3 RotationYawTour { get; set; }
+        Vector3 PositionTour { get; set; }
+        Matrix MondeTour { get; set; }
 
         public Joueur(Game jeu, string nomModèle, float échelleInitiale, Vector3 rotationInitiale, Vector3 positionInitiale, float intervalleMAJ)
             : base(jeu, nomModèle, échelleInitiale, rotationInitiale, positionInitiale, intervalleMAJ)
@@ -36,6 +39,7 @@ namespace AtelierXNA
         public override void Initialize()
         {
             base.Initialize();
+            RotationYawTour = Vector3.Zero;
         }
 
         protected override void LoadContent()
@@ -63,6 +67,8 @@ namespace AtelierXNA
 
         protected override void GestionMouvements()
         {
+            RotationTour();
+            
             int déplacement = GérerTouche(Keys.W) - GérerTouche(Keys.S);
             int rotation = GérerTouche(Keys.D) - GérerTouche(Keys.A);
             if (déplacement != 0 || rotation != 0)
@@ -83,6 +89,8 @@ namespace AtelierXNA
             float posXFinal = Position.X - déplacementFinal.X;
             float posZFinal = Position.Z - déplacementFinal.Y;
 
+            
+
             Point nouvellesCoords = TerrainJeu.ConvertionCoordonnées(new Vector3(posXFinal, 0,posZFinal));
             
             if (!EstHorsDesBornes(nouvellesCoords))
@@ -91,10 +99,17 @@ namespace AtelierXNA
                 HauteurTerrain = TerrainJeu.GetHauteur(Position);
                 Caméra.Cible = Position;
                 Caméra.Position = new Vector3(((float)Math.Sin(rotationFinal) * DISTANCE_POURSUITE) + Position.X, Position.Y + HAUTEUR_CAM_DÉFAULT, ((float)Math.Cos(rotationFinal) * DISTANCE_POURSUITE) + Position.Z);
-
             }
 
             CalculerMonde();
+        }
+
+        private void RotationTour()
+        {
+            ModelMesh tour = Modèle.Meshes.First(x => x.Name == "Tour");            
+            RotationYawTour=  new Vector3(-MathHelper.PiOver2,RotationYawTour.Y + (IncrémentAngleRotation * 1),RotationYawTour.Z);
+            PositionTour = new Vector3(Position.X,Position.Y + 3f, Position.Z);
+            MondeTour = TransformationsMeshes(0.005f, RotationYawTour, PositionTour);
         }
 
         bool EstHorsDesBornes(Point coords)
@@ -107,6 +122,46 @@ namespace AtelierXNA
         int GérerTouche(Keys touche)
         {
             return GestionInput.EstEnfoncée(touche) ? INCRÉMENT_DÉPLACEMENT : 0;
+        }
+
+        private Matrix TransformationsMeshes(float échelle, Vector3 rotation,Vector3 position)
+        {   
+            Matrix monde = Matrix.Identity;
+            monde *= Matrix.CreateScale(échelle);
+            monde *= Matrix.CreateFromYawPitchRoll(rotation.Y, rotation.X, rotation.Z);
+            monde *= Matrix.CreateTranslation(position);
+
+            return monde;
+        }
+
+        public override void Draw(GameTime gameTime)
+        {
+            GraphicsDevice.BlendState = BlendState.Opaque;
+            GraphicsDevice.DepthStencilState = DepthStencilState.Default;
+
+            foreach (ModelMesh maille in Modèle.Meshes)
+            {
+                Matrix mondeLocal;
+                
+                if(maille.Name == "Tour")
+                {
+                    mondeLocal = MondeTour;
+                }
+                else
+                {
+                    mondeLocal = TransformationsModèle[maille.ParentBone.Index] * GetMonde();
+                }
+                
+                foreach (ModelMeshPart portionDeMaillage in maille.MeshParts)
+                {   
+                    BasicEffect effet = (BasicEffect)portionDeMaillage.Effect;
+                    effet.EnableDefaultLighting();
+                    effet.Projection = CaméraJeu.Projection;
+                    effet.View = CaméraJeu.Vue;
+                    effet.World = mondeLocal;
+                }
+                maille.Draw();
+            }
         }
         #endregion
     }
