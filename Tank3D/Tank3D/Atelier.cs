@@ -45,9 +45,6 @@ namespace AtelierXNA
             Vector3 positionAI = new Vector3(-20, 10, 50);
             Vector3 positionTerrain = new Vector3(0, 0, 0);
             Vector3 rotationObjet = new Vector3(0, 0, 0); // MathHelper.PiOver2
-            Vector3 positionCaméraSubjective = new Vector3(0, 15, 15);
-            Vector3 positionCaméra = new Vector3(0, 100, 250);
-            Vector3 cibleCaméra = new Vector3(0, 0, -10);
             // Menu------------------------------------------------------------------------------------------------------------------------
             //const float MARGE_TITRE = 0.05f;
             int largeurÉcran = Window.ClientBounds.Width;
@@ -78,7 +75,7 @@ namespace AtelierXNA
             Joueur joueur = new Joueur(this, "Tank", ÉCHELLE_OBJET, rotationObjet, positionObjet, INTERVALLE_MAJ_STANDARD);
             Components.Add(joueur);
 
-            Components.Add(new AI(this, "ship", ÉCHELLE_OBJET, rotationObjet, positionAI, INTERVALLE_MAJ_STANDARD, joueur));
+            //Components.Add(new AI(this, "ship", ÉCHELLE_OBJET, rotationObjet, positionAI, INTERVALLE_MAJ_STANDARD, joueur));
 
             Services.AddService(typeof(RessourcesManager<SpriteFont>), new RessourcesManager<SpriteFont>(this, "Fonts"));
             Services.AddService(typeof(RessourcesManager<Texture2D>), new RessourcesManager<Texture2D>(this, "Textures"));

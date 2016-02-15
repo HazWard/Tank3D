@@ -18,8 +18,8 @@ namespace AtelierXNA
     public class Joueur : ModèleMobile
     {
         // Constantes
-        protected const float DISTANCE_POURSUITE = 15f;
-        protected const float HAUTEUR_CAM_DÉFAULT = 5f;
+        protected const float DISTANCE_POURSUITE = 50f;
+        protected const float HAUTEUR_CAM_DÉFAULT = 20f;
         
         // Propriétés
         InputManager GestionInput { get; set; }
@@ -28,7 +28,7 @@ namespace AtelierXNA
         public Joueur(Game jeu, string nomModèle, float échelleInitiale, Vector3 rotationInitiale, Vector3 positionInitiale, float intervalleMAJ)
             : base(jeu, nomModèle, échelleInitiale, rotationInitiale, positionInitiale, intervalleMAJ)
         {
-            Caméra = new CaméraSubjective(jeu, new Vector3(0, 24, 140), positionInitiale, Vector3.Up, IntervalleMAJ);
+            Caméra = new CaméraSubjective(jeu, new Vector3(positionInitiale.X, positionInitiale.Y + HAUTEUR_CAM_DÉFAULT, positionInitiale.Z + DISTANCE_POURSUITE), positionInitiale, Vector3.Up, IntervalleMAJ);
             Game.Components.Add(Caméra);
             Game.Services.AddService(typeof(Caméra), Caméra);
         }
@@ -64,15 +64,15 @@ namespace AtelierXNA
 
         protected override void GestionMouvements()
         {
-            int déplacement = GérerTouche(Keys.W) - GérerTouche(Keys.S);
-            int rotation = GérerTouche(Keys.D) - GérerTouche(Keys.A);
+            float déplacement = GérerTouche(Keys.W) - GérerTouche(Keys.S);
+            float rotation = GérerTouche(Keys.D) - GérerTouche(Keys.A);
             if (déplacement != 0 || rotation != 0)
             {
                 ModificationParamètres(déplacement, rotation);
             }
         }
 
-        void ModificationParamètres(int déplacement, int rotation)
+        void ModificationParamètres(float déplacement, float rotation)
         {
             float rotationFinal = Rotation.Y - IncrémentAngleRotation * rotation;
             float posX = déplacement * (float)Math.Sin(rotationFinal);
@@ -93,7 +93,7 @@ namespace AtelierXNA
             CalculerMonde();
         }
 
-        int GérerTouche(Keys touche)
+        float GérerTouche(Keys touche)
         {
             return GestionInput.EstEnfoncée(touche) ? INCRÉMENT_DÉPLACEMENT : 0;
         }
