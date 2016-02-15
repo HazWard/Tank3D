@@ -25,7 +25,7 @@ namespace AtelierXNA
         float PourcentageNiveauTexture { get; set; }
         BasicEffect EffetDeBase { get; set; }
         RessourcesManager<Texture2D> GestionnaireDeTextures { get; set; }
-        Texture2D CarteTerrain { get; set; } 
+        Texture2D CarteTerrain { get; set; }
         Texture2D TextureTerrain { get; set; }
         Vector3 Origine { get; set; }
         protected VertexPositionTexture[] Sommets { get; set; }
@@ -142,41 +142,22 @@ namespace AtelierXNA
                 }
             }
         }
-        public float GetLargeurLimites(float positionX)
-        {
-            if(positionX > Étendue.X / 2)
-            {
-                positionX = Étendue.X/ 2;
-            }
-            if (positionX < -Étendue.X / 2)
-            {
-                positionX = -Étendue.X/ 2;
-            }
-            return positionX;
-        }
-        public float GetLongueurLimites(float positionZ)
-        {
-            if (positionZ > Étendue.Z / 2)
-            {
-                positionZ = Étendue.Z / 2;
-            }
-            if (positionZ < -Étendue.Z / 2)
-            {
-                positionZ = -Étendue.Z / 2;
-            }
-            return positionZ;
-        }
-        public float GetHauteur(float positionI, float positionJ)
+
+        public float GetHauteur(Vector3 coords)
         {
             // TODO: Utiliser des normales plus tard
-            //if (positionI >= (Étendue.X / 2))
-            //{
-            //    positionI = Étendue.X / 2;
-            //}
-            int indiceI = (int)Math.Abs((positionI + (Étendue.X / 2)) / Delta.X);
-            int indiceJ = (int)Math.Abs((positionJ - (Étendue.Z / 2)) / Delta.Z);
-            
-            return PtsSommets[indiceI, indiceJ].Y;
+
+            Point indice = ConvertionCoordonnées(coords);
+
+            return PtsSommets[indice.X, indice.Y].Y;
+        }
+
+        public Point ConvertionCoordonnées(Vector3 coords)
+        {
+            int x = (int)Math.Abs((coords.X + Étendue.X / 2) / Delta.X);
+            int y = (int)Math.Abs((coords.Z - Étendue.Z / 2) / Delta.Z);
+
+            return new Point(x, y);
         }
 
         public override void Draw(GameTime gameTime)
