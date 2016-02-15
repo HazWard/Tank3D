@@ -87,6 +87,7 @@
     <Compile Include="IActivable.cs" />
     <Compile Include="InputManager.cs" />
     <Compile Include="Joueur.cs" />
+    <Compile Include="Menu.cs" />
     <Compile Include="ModèleMobile.cs" />
     <Compile Include="ObjetDeBase.cs" />
     <Compile Include="Plan.cs" />
