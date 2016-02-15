@@ -52,7 +52,6 @@ namespace AtelierXNA
             }
         }
 
-
         #region Méthodes pour la gestion des déplacements et rotations du modèle
         void CalculerMonde()
         {
@@ -84,13 +83,25 @@ namespace AtelierXNA
             float posXFinal = Position.X - déplacementFinal.X;
             float posZFinal = Position.Z - déplacementFinal.Y;
 
-            HauteurTerrain = TerrainJeu.GetHauteur(new Vector3(posXFinal, 0, posZFinal));
-            Position = new Vector3(posXFinal, HauteurTerrain + HAUTEUR_DÉFAULT, posZFinal);
+            Point nouvellesCoords = TerrainJeu.ConvertionCoordonnées(new Vector3(posXFinal, 0,posZFinal));
+            
+            if (!EstHorsDesBornes(nouvellesCoords))
+            {
+                Position = new Vector3(posXFinal, HauteurTerrain + HAUTEUR_DÉFAULT, posZFinal);
+                HauteurTerrain = TerrainJeu.GetHauteur(Position);
+                Caméra.Cible = Position;
+                Caméra.Position = new Vector3(((float)Math.Sin(rotationFinal) * DISTANCE_POURSUITE) + Position.X, Position.Y + HAUTEUR_CAM_DÉFAULT, ((float)Math.Cos(rotationFinal) * DISTANCE_POURSUITE) + Position.Z);
 
-            Caméra.Cible = Position;
-            Caméra.Position = new Vector3(((float)Math.Sin(rotationFinal) * DISTANCE_POURSUITE) + Position.X, Position.Y + HAUTEUR_CAM_DÉFAULT, ((float)Math.Cos(rotationFinal) * DISTANCE_POURSUITE) + Position.Z);
+            }
 
             CalculerMonde();
+        }
+
+        bool EstHorsDesBornes(Point coords)
+        {
+            bool estHorsDesBornes = false;
+
+            return estHorsDesBornes;
         }
 
         int GérerTouche(Keys touche)

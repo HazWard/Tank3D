@@ -52,9 +52,19 @@ namespace AtelierXNA
             if (TempsÉcouléDepuisMAJ >= IntervalleMAJ)
             {
                 GestionMouvements();
+                ÉcrireMeshes();
                 TempsÉcouléDepuisMAJ = 0;
             }
             base.Update(gameTime);
+        }
+
+        private void ÉcrireMeshes()
+        {
+            foreach (ModelMesh m in Modèle.Meshes)
+            {
+                Console.WriteLine(m.Name);
+                
+            }
         }
 
         protected abstract void GestionMouvements();
