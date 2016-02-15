@@ -25,6 +25,7 @@ namespace AtelierXNA
         InputManager GestionInput { get; set; }
         CaméraSubjective Caméra { get; set; }
         Vector3 RotationYawTour { get; set; }
+        Vector3 ÉchelleTour { get; set; }
         Vector3 PositionTour { get; set; }
         Matrix MondeTour { get; set; }
 
@@ -40,6 +41,7 @@ namespace AtelierXNA
         {
             base.Initialize();
             RotationYawTour = Vector3.Zero;
+            //ÉchelleTour = new Vector3(2f, 1.5f, 1.3f);
         }
 
         protected override void LoadContent()
@@ -89,8 +91,6 @@ namespace AtelierXNA
             float posXFinal = Position.X - déplacementFinal.X;
             float posZFinal = Position.Z - déplacementFinal.Y;
 
-            
-
             Point nouvellesCoords = TerrainJeu.ConvertionCoordonnées(new Vector3(posXFinal, 0,posZFinal));
             
             if (!EstHorsDesBornes(nouvellesCoords))
@@ -107,9 +107,9 @@ namespace AtelierXNA
         private void RotationTour()
         {
             ModelMesh tour = Modèle.Meshes.First(x => x.Name == "Tour");            
-            RotationYawTour=  new Vector3(-MathHelper.PiOver2,RotationYawTour.Y + (IncrémentAngleRotation * 1),RotationYawTour.Z);
+            RotationYawTour=  new Vector3(-MathHelper.PiOver2,RotationYawTour.Y + (IncrémentAngleRotation * 1),180);
             PositionTour = new Vector3(Position.X,Position.Y + 3f, Position.Z);
-            MondeTour = TransformationsMeshes(0.005f, RotationYawTour, PositionTour);
+            MondeTour = TransformationsMeshes(0.12f, RotationYawTour, PositionTour);
         }
 
         bool EstHorsDesBornes(Point coords)
