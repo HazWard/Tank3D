@@ -149,7 +149,17 @@ namespace AtelierXNA
 
             Point indice = ConvertionCoordonnées(coords);
 
-            return PtsSommets[indice.X, indice.Y].Y;
+            return PtsSommets[VérificationExtrêmes(indice.X), VérificationExtrêmes(indice.Y)].Y;
+        }
+
+        int VérificationExtrêmes(int indice)
+        {
+            int maxPossible = PtsSommets.GetLength(0) - 1;       
+            if(indice > maxPossible)
+            {
+                indice = maxPossible;
+            }
+            return indice;
         }
 
         public Point ConvertionCoordonnées(Vector3 coords)
