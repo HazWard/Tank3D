@@ -16,7 +16,7 @@ namespace AtelierXNA
     {
         // Constantes
         protected const float FACTEUR_ACCÉLÉRATION = 1f / 60f;
-        protected const float INCRÉMENT_DÉPLACEMENT = 0.5f;
+        protected const int INCRÉMENT_DÉPLACEMENT = 1;
         protected const float HAUTEUR_DÉFAULT = 1f;
 
         // Propriétés
