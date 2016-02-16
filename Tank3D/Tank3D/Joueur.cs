@@ -33,6 +33,7 @@ namespace AtelierXNA
         Vector3 PositionTour { get; set; }
         Matrix MondeTour { get; set; }
         float ÉchelleTest { get; set; }
+        float IncrémentAngleRotationTour { get; set; }
 
         public Joueur(Game jeu, string nomModèle, float échelleInitiale, Vector3 rotationInitiale, Vector3 positionInitiale, float intervalleMAJ)
             : base(jeu, nomModèle, échelleInitiale, rotationInitiale, positionInitiale, intervalleMAJ)
@@ -48,6 +49,7 @@ namespace AtelierXNA
         {
             base.Initialize();
             RotationYawTour = Vector3.Zero;
+            IncrémentAngleRotationTour = IncrémentAngleRotation / 2f;
             //ÉchelleTour = new Vector3(0.19f, 0.19f, 0.19f);
             //ÉchelleCanon = new Vector3(0.89f, 0.89f, 3.15f);
             //ÉchelleRoues = new Vector3(1.85f, 1.85f, 1.53f);
@@ -116,8 +118,10 @@ namespace AtelierXNA
 
         private void RotationTour()
         {
-            ModelMesh tour = Modèle.Meshes.First(x => x.Name == "Tour");            
-            RotationYawTour = new Vector3(-MathHelper.PiOver2, RotationYawTour.Y + IncrémentAngleRotation, -MathHelper.PiOver2);
+            ModelMesh tour = Modèle.Meshes.First(x => x.Name == "Tour");
+            int activation= GérerTouche(Keys.Left) - GérerTouche(Keys.Right);
+
+            RotationYawTour = new Vector3(-MathHelper.PiOver2, RotationYawTour.Y + (IncrémentAngleRotationTour * activation), -MathHelper.PiOver2);
             PositionTour = new Vector3(Position.X, Position.Y + 0.3f, Position.Z);
             MondeTour = TransformationsMeshes(ÉchelleTest, RotationYawTour, PositionTour);
         }
