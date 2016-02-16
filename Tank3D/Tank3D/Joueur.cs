@@ -26,13 +26,17 @@ namespace AtelierXNA
         CaméraSubjective Caméra { get; set; }
         Vector3 RotationYawTour { get; set; }
         Vector3 RotationPitchCanon { get; set; }
-        Vector3 ÉchelleTour { get; set; }
-        Vector3 ÉchelleCanon { get; set; }
-        Vector3 ÉchelleRoues { get; set; }
+        //Vector3 ÉchelleTour { get; set; }
+        //Vector3 ÉchelleCanon { get; set; }
+        //Vector3 ÉchelleRoues { get; set; }
         Vector3 PositionCanon { get; set; }
         Vector3 PositionTour { get; set; }
         Matrix MondeTour { get; set; }
-        float ÉchelleTest { get; set; }
+        Matrix MondeCanon { get; set; }
+        Matrix MondeRoues { get; set; }
+        float ÉchelleTour { get; set; }
+        float ÉchelleCanon { get; set; }
+        float ÉchelleRoues { get; set; }
         float IncrémentAngleRotationTour { get; set; }
 
         public Joueur(Game jeu, string nomModèle, float échelleInitiale, Vector3 rotationInitiale, Vector3 positionInitiale, float intervalleMAJ)
@@ -49,11 +53,14 @@ namespace AtelierXNA
         {
             base.Initialize();
             RotationYawTour = Vector3.Zero;
+            RotationPitchCanon = Vector3.Zero;
             IncrémentAngleRotationTour = IncrémentAngleRotation / 2f;
             //ÉchelleTour = new Vector3(0.19f, 0.19f, 0.19f);
             //ÉchelleCanon = new Vector3(0.89f, 0.89f, 3.15f);
             //ÉchelleRoues = new Vector3(1.85f, 1.85f, 1.53f);
-            ÉchelleTest = 0.0035f;
+            ÉchelleTour = 0.0035f;
+            ÉchelleCanon = 0.005f;
+            ÉchelleRoues = 0.05f;
         }
 
         protected override void LoadContent()
@@ -82,6 +89,7 @@ namespace AtelierXNA
         protected override void GestionMouvements()
         {
             RotationTour();
+            RotationCanon();
             
             int déplacement = GérerTouche(Keys.W) - GérerTouche(Keys.S);
             int rotation = GérerTouche(Keys.D) - GérerTouche(Keys.A);
@@ -118,22 +126,22 @@ namespace AtelierXNA
 
         private void RotationTour()
         {
-            ModelMesh tour = Modèle.Meshes.First(x => x.Name == "Tour");
-            int activation= GérerTouche(Keys.Left) - GérerTouche(Keys.Right);
+            int activation = GérerTouche(Keys.Left) - GérerTouche(Keys.Right);
 
-            RotationYawTour = new Vector3(-MathHelper.PiOver2, RotationYawTour.Y + (IncrémentAngleRotationTour * activation), -MathHelper.PiOver2);
+            RotationYawTour = new Vector3(-MathHelper.PiOver2, RotationYawTour.Y + (IncrémentAngleRotationTour * activation), MathHelper.PiOver2);
             PositionTour = new Vector3(Position.X, Position.Y + 0.3f, Position.Z);
-            MondeTour = TransformationsMeshes(ÉchelleTest, RotationYawTour, PositionTour);
+            MondeTour = TransformationsMeshes(ÉchelleTour, RotationYawTour, PositionTour);
         }
 
         private void RotationCanon()
         {
             // À modifier pour modifier la souris
             
-            ModelMesh canon = Modèle.Meshes.First(x => x.Name == "Canon");
-            RotationPitchCanon = new Vector3(-MathHelper.PiOver2, RotationPitchCanon.Y + (IncrémentAngleRotation * 1.5f), 180);
-            PositionCanon = new Vector3(Position.X, Position.Y + 3f, Position.Z);
-            MondeTour = TransformationsMeshes(Échelle, RotationPitchCanon, PositionCanon);
+            int activation = GérerTouche(Keys.Left) - GérerTouche(Keys.Right);
+
+            RotationPitchCanon = new Vector3(-MathHelper.PiOver2, RotationPitchCanon.Y + (IncrémentAngleRotationTour * activation), MathHelper.PiOver2);
+            PositionCanon = new Vector3(Position.X, Position.Y - 1f, Position.Z);
+            MondeCanon = TransformationsMeshes(ÉchelleCanon, RotationPitchCanon, PositionCanon);
         }
 
         bool EstHorsDesBornes(Point coords)
@@ -173,7 +181,15 @@ namespace AtelierXNA
                 }
                 else
                 {
-                    mondeLocal = TransformationsModèle[maille.ParentBone.Index] * GetMonde();
+                    if (maille.Name == "Canon")
+                    {
+                        mondeLocal = MondeCanon;
+                    }
+                    else
+                    {
+                        //mondeLocal = MondeCanon;
+                        mondeLocal = TransformationsModèle[maille.ParentBone.Index] * GetMonde();
+                    }
                 }
                 
                 foreach (ModelMeshPart portionDeMaillage in maille.MeshParts)
