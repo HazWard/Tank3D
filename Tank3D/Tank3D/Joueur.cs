@@ -133,12 +133,12 @@ namespace AtelierXNA
             float posXFinal = Position.X - déplacementFinal.X;
             float posZFinal = Position.Z - déplacementFinal.Y;
 
-            Point nouvellesCoords = TerrainJeu.ConvertionCoordonnées(new Vector3(posXFinal, 0,posZFinal));
-            
-            if (!EstHorsDesBornes(nouvellesCoords))
+            nouvellesCoordonnées = TerrainJeu.ConvertionCoordonnées(new Vector3(posXFinal, 0, posZFinal));
+            // Vérification de la future position
+            if (!EstHorsDesBornes(nouvellesCoordonnées))
             {
+                HauteurTerrain = TerrainJeu.GetHauteur(nouvellesCoordonnées);
                 Position = new Vector3(posXFinal, HauteurTerrain + HAUTEUR_DÉFAULT, posZFinal);
-                HauteurTerrain = TerrainJeu.GetHauteur(Position);
                 Caméra.Cible = new Vector3(Position.X, Position.Y + 4, Position.Z);
                 Caméra.Position = new Vector3(((float)Math.Sin(rotationFinal) * DISTANCE_POURSUITE) + Position.X, Position.Y + HAUTEUR_CAM_DÉFAULT, ((float)Math.Cos(rotationFinal) * DISTANCE_POURSUITE) + Position.Z);
             }
@@ -158,13 +158,6 @@ namespace AtelierXNA
             RotationPitchCanon = new Vector3(-MathHelper.PiOver2, RotationPitchCanon.Y + (IncrémentAngleRotationTour * DéplacementSouris.X), MathHelper.PiOver2);
             PositionCanon = new Vector3(Position.X, Position.Y - 1f, Position.Z);
             MondeCanon = TransformationsMeshes(ÉchelleCanon, RotationPitchCanon, PositionCanon);
-        }
-
-        bool EstHorsDesBornes(Point coords)
-        {
-            bool estHorsDesBornes = false;
-
-            return estHorsDesBornes;
         }
 
         int GérerTouche(Keys touche)

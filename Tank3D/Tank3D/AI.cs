@@ -62,14 +62,20 @@ namespace AtelierXNA
         void ModificationParamètres()
         {
             float posX = 0 * (float)Math.Sin(Orientation);
-            float posY = -1 * (float)Math.Cos(Orientation);
+            float posY = 1 * (float)Math.Cos(Orientation);
             Vector2 déplacementFinal = new Vector2(posX, posY) * 2f;
 
             float posXFinal = Position.X - déplacementFinal.X;
             float posZFinal = Position.Z - déplacementFinal.Y;
 
-            HauteurTerrain = TerrainJeu.GetHauteur(new Vector3(posXFinal, 0, posZFinal));
-            Position = new Vector3(posXFinal, HauteurTerrain + HAUTEUR_DÉFAULT, posZFinal);
+            nouvellesCoordonnées = TerrainJeu.ConvertionCoordonnées(new Vector3(posXFinal, 0, posZFinal)));
+
+            // Vérification de la future position
+            if (!EstHorsDesBornes(nouvellesCoordonnées))
+            {
+                HauteurTerrain = TerrainJeu.GetHauteur(nouvellesCoordonnées);
+                Position = new Vector3(posXFinal, HauteurTerrain + HAUTEUR_DÉFAULT, posZFinal);
+            }
 
             Rotation = new Vector3(Rotation.X, Orientation, Rotation.Z);
 
