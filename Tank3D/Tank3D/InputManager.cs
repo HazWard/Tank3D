@@ -82,5 +82,9 @@ namespace AtelierXNA
          }
          return EstNouvelleTouche;
       }
+      public MouseState GetAncienÉtatSouris()
+      {
+          return AncienÉtatSouris;
+      }
    }
 }

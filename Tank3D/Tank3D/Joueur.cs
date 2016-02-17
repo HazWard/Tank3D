@@ -22,7 +22,8 @@ namespace AtelierXNA
         protected const float HAUTEUR_CAM_DÉFAULT = 10f;
         
         // Propriétés
-        MouseState Souris { get; set; }
+        MouseState NouvelÉtatSouris { get; set; }
+        MouseState AncienÉtatSouris { get; set; }
         InputManager GestionInput { get; set; }
         CaméraSubjective Caméra { get; set; }
         Vector3 RotationYawTour { get; set; }
@@ -59,7 +60,7 @@ namespace AtelierXNA
             ÉchelleCanon = 0.005f;
             ÉchelleRoues = 0.05f;
             DéplacementSouris = new Vector2(0, 0);
-            Souris = Mouse.GetState();
+            NouvelÉtatSouris = Mouse.GetState();
             Mouse.SetPosition(400, 200);
         }
 
@@ -85,28 +86,58 @@ namespace AtelierXNA
             Monde *= Matrix.CreateFromYawPitchRoll(Rotation.Y, Rotation.X, Rotation.Z);
             Monde *= Matrix.CreateTranslation(Position);
         }
+        //if (currentMouseState != previousMouseState)
+        //{
+        //    deltaX = currentMouseState.X - (Game.GraphicsDevice.Viewport.Width / 2);
+        //    deltaY = currentMouseState.Y - (Game.GraphicsDevice.Viewport.Height / 2);
 
+        //    mouseRotationBuffer.X -= 0.1f * deltaX * dt;
+        //    mouseRotationBuffer.Y -= 0.1f * deltaY * dt;
+
+        //    if (mouseRotationBuffer.Y < MathHelper.ToRadians(-75.0f))
+        //        mouseRotationBuffer.Y = mouseRotationBuffer.Y - (mouseRotationBuffer.Y - MathHelper.ToRadians(-75.0f));
+
+        //    if (mouseRotationBuffer.Y > MathHelper.ToRadians(75.0f))
+        //        mouseRotationBuffer.Y = mouseRotationBuffer.Y - (mouseRotationBuffer.Y - MathHelper.ToRadians(75.0f));
+
+        //    Rotation = new Vector3(-MathHelper.Clamp(mouseRotationBuffer.Y, MathHelper.ToRadians(-75.0f), MathHelper.ToRadians(75.0f)),
+        //        MathHelper.WrapAngle(mouseRotationBuffer.X), 0);
+
+        //    deltaX = 0;
+        //    deltaY = 0;
+        //}
+
+        //Mouse.SetPosition(Game.GraphicsDevice.Viewport.Width / 2, Game.GraphicsDevice.Viewport.Height / 2);
+        //previousMouseState = currentMouseState;
         protected override void GestionMouvements()
         {
-            Souris = Mouse.GetState();
-            Console.WriteLine(Souris.X);
-            Console.WriteLine(Souris.Y);
-            if (Souris.X > Game.Window.ClientBounds.Width / 2)
+            NouvelÉtatSouris = Mouse.GetState();
+            Console.WriteLine(NouvelÉtatSouris.X);
+            Console.WriteLine(NouvelÉtatSouris.Y);
+            if (NouvelÉtatSouris.X > (Game.Window.ClientBounds.Width / 2) + 40)
             {
                 DéplacementSouris = new Vector2(-IncrémentAngleRotation, DéplacementSouris.Y);
             }
-            else
+            if (NouvelÉtatSouris.X < (Game.Window.ClientBounds.Width / 2) - 40)
             {
                 DéplacementSouris = new Vector2(IncrémentAngleRotation, DéplacementSouris.Y);
             }
-            if (Souris.Y > Game.Window.ClientBounds.Height / 2)
+            if ((NouvelÉtatSouris.X < (Game.Window.ClientBounds.Width / 2) + 40 && NouvelÉtatSouris.X > (Game.Window.ClientBounds.Width / 2) - 40))
             {
-                DéplacementSouris = new Vector2(DéplacementSouris.X, DéplacementSouris.Y - IncrémentAngleRotation);
+                DéplacementSouris = new Vector2(0,0);
             }
-            else
-            {
-                DéplacementSouris = new Vector2(DéplacementSouris.X, DéplacementSouris.Y + IncrémentAngleRotation);
-            }
+            //else
+            //{
+            //    DéplacementSouris = new Vector2(IncrémentAngleRotation, DéplacementSouris.Y);
+            //}
+            //if (NouvelÉtatSouris.Y > Game.Window.ClientBounds.Height / 2)
+            //{
+            //    DéplacementSouris = new Vector2(DéplacementSouris.X, DéplacementSouris.Y - IncrémentAngleRotation);
+            //}
+            //else
+            //{
+            //    DéplacementSouris = new Vector2(DéplacementSouris.X, DéplacementSouris.Y + IncrémentAngleRotation);
+            //}
 
             float activation = GérerTouche(Keys.Left) - GérerTouche(Keys.Right);
 

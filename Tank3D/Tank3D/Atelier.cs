@@ -68,6 +68,9 @@ namespace AtelierXNA
             Components.Add(new PlanTexturé(this, 1f, new Vector3(0, MathHelper.Pi, 0), new Vector3(0, 6, 126), new Vector2(256, 50), new Vector2(10, 10), "desertDunes", INTERVALLE_MAJ_STANDARD));
             Components.Add(new PlanTexturé(this, 1f, new Vector3(MathHelper.PiOver2, 0, 0), new Vector3(0, 31, 0), new Vector2(256, 256), new Vector2(10, 10), "ciel", INTERVALLE_MAJ_STANDARD));
             //-------------------------------------------------------------------------------------------------------------------------------
+            //Components.Add(new Sprite(this, "crosshair", new Vector2(Window.ClientBounds.Width / 2, Window.ClientBounds.Height / 2)));
+            //-------------------------------------------------------------------------------------------------------------------------------
+
             GestionInput = new InputManager(this);
             Components.Add(GestionInput);
 
