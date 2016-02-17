@@ -93,7 +93,7 @@ namespace AtelierXNA
             Nouvel…tatSouris = Mouse.GetState();
            
             
-            if (Nouvel…tatSouris.X < (Game.Window.ClientBounds.Width / 2) + 40)
+            if (Nouvel…tatSouris.X > (Game.Window.ClientBounds.Width / 2) + 40)
             {
                 DÈplacementSouris = new Vector2(-IncrÈmentAngleRotation, DÈplacementSouris.Y);
             }
