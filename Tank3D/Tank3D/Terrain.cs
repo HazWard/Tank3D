@@ -35,6 +35,11 @@ namespace AtelierXNA
         int NbTuiles { get; set; }
         Vector3 Delta { get; set; }
 
+        public int Extrêmes
+        {
+            get { return PtsSommets.GetLength(0) -1; }
+        }
+
         // Gestion du HeightMap
         Color[] DataTexture { get; set; }
 
@@ -143,15 +148,15 @@ namespace AtelierXNA
             }
         }
 
-        public float GetHauteur(Vector3 coords)
+        public float GetHauteur(Point coords)
         {
             // TODO: Utiliser des normales plus tard
 
-            Point indice = ConvertionCoordonnées(coords);
-
-            return PtsSommets[VérificationExtrêmes(indice.X), VérificationExtrêmes(indice.Y)].Y;
+            return PtsSommets[VérificationExtrêmes(coords.X), VérificationExtrêmes(coords.Y)].Y;
         }
 
+        #region Gestion des bornes
+        // Vérification peu nécessaire
         int VérificationExtrêmes(int indice)
         {
             int maxPossible = PtsSommets.GetLength(0) - 1;       
@@ -169,6 +174,7 @@ namespace AtelierXNA
 
             return new Point(x, y);
         }
+        #endregion
 
         public override void Draw(GameTime gameTime)
         {

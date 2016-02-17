@@ -25,6 +25,7 @@ namespace AtelierXNA
         protected Terrain TerrainJeu { get; set; }
         protected float HauteurTerrain { get; set; }
         protected float IntervalleMAJ { get; set; }
+        protected Point nouvellesCoords { get; set; }
 
         public ModèleMobile(Game jeu, string nomModèle, float échelleInitiale, Vector3 rotationInitiale, Vector3 positionInitiale, float intervalleMAJ)
             : base(jeu, nomModèle, échelleInitiale, rotationInitiale, positionInitiale)
@@ -67,5 +68,18 @@ namespace AtelierXNA
         }
 
         protected abstract void GestionMouvements();
+
+        protected bool EstHorsDesBornes(Point coords)
+        {
+            bool estHorsDesBornes = false;
+
+            if (coords.X >= TerrainJeu.Extrêmes - 5 || coords.Y >= TerrainJeu.Extrêmes - 5 || 
+                coords.X <= 5 || coords.Y <= 5)
+            {
+                estHorsDesBornes = true;
+            }
+
+            return estHorsDesBornes;
+        }
     }
 }
