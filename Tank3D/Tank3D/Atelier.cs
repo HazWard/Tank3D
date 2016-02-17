@@ -73,7 +73,7 @@ namespace AtelierXNA
 
             Components.Add(new Afficheur3D(this));
 
-            Terrain TerrainJeu = new Terrain(this, 1f, Vector3.Zero, Vector3.Zero, new Vector3(256, 25, 256), "Flat", "DétailsDésertSable", 3, INTERVALLE_MAJ_STANDARD);
+            Terrain TerrainJeu = new Terrain(this, 1f, Vector3.Zero, Vector3.Zero, new Vector3(256, 25, 256), "FlatGéant", "DétailsDésertSable", 3, INTERVALLE_MAJ_STANDARD);
             Components.Add(TerrainJeu);
             Joueur joueur = new Joueur(this, "Veteran Tiger Body", ÉCHELLE_OBJET, rotationObjet, positionObjet, INTERVALLE_MAJ_STANDARD);
             Components.Add(joueur);

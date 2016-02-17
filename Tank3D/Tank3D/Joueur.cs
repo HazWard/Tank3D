@@ -135,7 +135,7 @@ namespace AtelierXNA
 
             Vector2 déplacementFinal = new Vector2(posX, posY);
             Rotation = new Vector3(Rotation.X, rotationFinal, Rotation.Z);
-            Position = new Vector3(Position.X - déplacementFinal.X, Position.Y, Position.Z - déplacementFinal.Y);
+            //Position = new Vector3(Position.X - déplacementFinal.X, Position.Y, Position.Z - déplacementFinal.Y);
             float posXFinal = Position.X - déplacementFinal.X;
             float posZFinal = Position.Z - déplacementFinal.Y;
 
@@ -144,6 +144,7 @@ namespace AtelierXNA
             if (!EstHorsDesBornes(nouvellesCoords))
             {
                 Position = new Vector3(posXFinal, HauteurTerrain + HAUTEUR_DÉFAULT, posZFinal);
+                Console.WriteLine(nouvellesCoords.ToString());
                 HauteurTerrain = TerrainJeu.GetHauteur(nouvellesCoords);
                 //Caméra.Cible = new Vector3(Position.X, Position.Y + 4, Position.Z);
                 //Caméra.Position = new Vector3(((float)Math.Sin(RotationYawTour.Y) * DISTANCE_POURSUITE) + Position.X, Position.Y + HAUTEUR_CAM_DÉFAULT, ((float)Math.Cos(rotationFinal) * DISTANCE_POURSUITE) + Position.Z);

@@ -73,7 +73,8 @@ namespace AtelierXNA
         {
             bool estHorsDesBornes = false;
 
-            if (coords.X >= TerrainJeu.Extrêmes && coords.Y >= TerrainJeu.Extrêmes)
+            if (coords.X >= TerrainJeu.Extrêmes - 5 || coords.Y >= TerrainJeu.Extrêmes - 5 || 
+                coords.X <= 5 || coords.Y <= 5)
             {
                 estHorsDesBornes = true;
             }
