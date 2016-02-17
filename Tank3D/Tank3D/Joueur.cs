@@ -22,15 +22,15 @@ namespace AtelierXNA
         protected const float HAUTEUR_CAM_DÉFAULT = 10f;
         
         // Propriétés
+        MouseState Souris { get; set; }
         InputManager GestionInput { get; set; }
         CaméraSubjective Caméra { get; set; }
         Vector3 RotationYawTour { get; set; }
         Vector3 RotationPitchCanon { get; set; }
-        //Vector3 ÉchelleTour { get; set; }
-        //Vector3 ÉchelleCanon { get; set; }
-        //Vector3 ÉchelleRoues { get; set; }
         Vector3 PositionCanon { get; set; }
         Vector3 PositionTour { get; set; }
+        Vector2 AnciennePositionSouris { get; set; }
+        Vector2 DéplacementSouris { get; set; }
         Matrix MondeTour { get; set; }
         Matrix MondeCanon { get; set; }
         Matrix MondeRoues { get; set; }
@@ -55,12 +55,12 @@ namespace AtelierXNA
             RotationYawTour = Vector3.Zero;
             RotationPitchCanon = Vector3.Zero;
             IncrémentAngleRotationTour = IncrémentAngleRotation / 2f;
-            //ÉchelleTour = new Vector3(0.19f, 0.19f, 0.19f);
-            //ÉchelleCanon = new Vector3(0.89f, 0.89f, 3.15f);
-            //ÉchelleRoues = new Vector3(1.85f, 1.85f, 1.53f);
             ÉchelleTour = 0.0035f;
             ÉchelleCanon = 0.005f;
             ÉchelleRoues = 0.05f;
+            DéplacementSouris = new Vector2(0, 0);
+            Souris = Mouse.GetState();
+            Mouse.SetPosition(400, 200);
         }
 
         protected override void LoadContent()
@@ -88,8 +88,30 @@ namespace AtelierXNA
 
         protected override void GestionMouvements()
         {
-            RotationTour();
-            RotationCanon();
+            Souris = Mouse.GetState();
+            Console.WriteLine(Souris.X);
+            Console.WriteLine(Souris.Y);
+            if (Souris.X > Game.Window.ClientBounds.Width / 2)
+            {
+                DéplacementSouris = new Vector2(DéplacementSouris.X - IncrémentAngleRotation, DéplacementSouris.Y);
+            }
+            else
+            {
+                DéplacementSouris = new Vector2(DéplacementSouris.X + IncrémentAngleRotation, DéplacementSouris.Y);
+            }
+            if (Souris.Y > Game.Window.ClientBounds.Height / 2)
+            {
+                DéplacementSouris = new Vector2(DéplacementSouris.X, DéplacementSouris.Y - IncrémentAngleRotation);
+            }
+            else
+            {
+                DéplacementSouris = new Vector2(DéplacementSouris.X, DéplacementSouris.Y + IncrémentAngleRotation);
+            }
+
+            int activation = GérerTouche(Keys.Left) - GérerTouche(Keys.Right);
+
+            RotationTour(activation);
+            RotationCanon(activation);
             
             int déplacement = GérerTouche(Keys.W) - GérerTouche(Keys.S);
             int rotation = GérerTouche(Keys.D) - GérerTouche(Keys.A);
@@ -124,22 +146,16 @@ namespace AtelierXNA
             CalculerMonde();
         }
 
-        private void RotationTour()
+        private void RotationTour(float activation)
         {
-            int activation = GérerTouche(Keys.Left) - GérerTouche(Keys.Right);
-
-            RotationYawTour = new Vector3(-MathHelper.PiOver2, RotationYawTour.Y + (IncrémentAngleRotationTour * activation), MathHelper.PiOver2);
+            RotationYawTour = new Vector3(-MathHelper.PiOver2, RotationYawTour.Y + (IncrémentAngleRotationTour * DéplacementSouris.X), MathHelper.PiOver2);
             PositionTour = new Vector3(Position.X, Position.Y + 0.3f, Position.Z);
             MondeTour = TransformationsMeshes(ÉchelleTour, RotationYawTour, PositionTour);
         }
 
-        private void RotationCanon()
+        private void RotationCanon(float activation)
         {
-            // À modifier pour modifier la souris
-            
-            int activation = GérerTouche(Keys.Left) - GérerTouche(Keys.Right);
-
-            RotationPitchCanon = new Vector3(-MathHelper.PiOver2, RotationPitchCanon.Y + (IncrémentAngleRotationTour * activation), MathHelper.PiOver2);
+            RotationPitchCanon = new Vector3(-MathHelper.PiOver2, RotationPitchCanon.Y + (IncrémentAngleRotationTour * DéplacementSouris.X), MathHelper.PiOver2);
             PositionCanon = new Vector3(Position.X, Position.Y - 1f, Position.Z);
             MondeCanon = TransformationsMeshes(ÉchelleCanon, RotationPitchCanon, PositionCanon);
         }
