@@ -68,12 +68,12 @@ namespace AtelierXNA
             float posXFinal = Position.X - déplacementFinal.X;
             float posZFinal = Position.Z - déplacementFinal.Y;
 
-            nouvellesCoordonnées = TerrainJeu.ConvertionCoordonnées(new Vector3(posXFinal, 0, posZFinal)));
+            nouvellesCoords = TerrainJeu.ConvertionCoordonnées(new Vector3(posXFinal, 0, posZFinal)));
 
             // Vérification de la future position
-            if (!EstHorsDesBornes(nouvellesCoordonnées))
+            if (!EstHorsDesBornes(nouvellesCoords))
             {
-                HauteurTerrain = TerrainJeu.GetHauteur(nouvellesCoordonnées);
+                HauteurTerrain = TerrainJeu.GetHauteur(nouvellesCoords);
                 Position = new Vector3(posXFinal, HauteurTerrain + HAUTEUR_DÉFAULT, posZFinal);
             }
 

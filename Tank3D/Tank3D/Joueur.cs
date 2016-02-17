@@ -138,12 +138,12 @@ namespace AtelierXNA
             float posXFinal = Position.X - déplacementFinal.X;
             float posZFinal = Position.Z - déplacementFinal.Y;
 
-            Point nouvellesCoords = TerrainJeu.ConvertionCoordonnées(new Vector3(posXFinal, 0,posZFinal));
+            nouvellesCoords = TerrainJeu.ConvertionCoordonnées(new Vector3(posXFinal, 0,posZFinal));
             
             if (!EstHorsDesBornes(nouvellesCoords))
             {
                 Position = new Vector3(posXFinal, HauteurTerrain + HAUTEUR_DÉFAULT, posZFinal);
-                HauteurTerrain = TerrainJeu.GetHauteur(Position);
+                HauteurTerrain = TerrainJeu.GetHauteur(nouvellesCoords);
                 //Caméra.Cible = new Vector3(Position.X, Position.Y + 4, Position.Z);
                 //Caméra.Position = new Vector3(((float)Math.Sin(RotationYawTour.Y) * DISTANCE_POURSUITE) + Position.X, Position.Y + HAUTEUR_CAM_DÉFAULT, ((float)Math.Cos(rotationFinal) * DISTANCE_POURSUITE) + Position.Z);
             }
@@ -163,13 +163,6 @@ namespace AtelierXNA
             RotationPitchCanon = new Vector3(-MathHelper.PiOver2, RotationPitchCanon.Y + (IncrémentAngleRotation * DéplacementSouris.X), MathHelper.PiOver2);
             PositionCanon = new Vector3(Position.X, Position.Y - 1f, Position.Z);
             MondeCanon = TransformationsMeshes(ÉchelleCanon, RotationPitchCanon, PositionCanon);
-        }
-
-        bool EstHorsDesBornes(Point coords)
-        {
-            bool estHorsDesBornes = false;
-
-            return estHorsDesBornes;
         }
 
         float GérerTouche(Keys touche)
@@ -200,17 +193,13 @@ namespace AtelierXNA
                 {
                     mondeLocal = MondeTour;
                 }
+                else if (maille.Name == "Canon")
+                {
+                        mondeLocal = MondeCanon;
+                }
                 else
                 {
-                    if (maille.Name == "Canon")
-                    {
-                        mondeLocal = MondeCanon;
-                    }
-                    else
-                    {
-                        //mondeLocal = MondeCanon;
-                        mondeLocal = TransformationsModèle[maille.ParentBone.Index] * GetMonde();
-                    }
+                    mondeLocal = TransformationsModèle[maille.ParentBone.Index] * GetMonde();
                 }
                 
                 foreach (ModelMeshPart portionDeMaillage in maille.MeshParts)
