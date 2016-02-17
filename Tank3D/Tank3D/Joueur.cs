@@ -103,15 +103,19 @@ namespace AtelierXNA
             }
             if ((Nouvel…tatSouris.X < (Game.Window.ClientBounds.Width / 2) + 40 && Nouvel…tatSouris.X > (Game.Window.ClientBounds.Width / 2) - 40))
             {
-                DÈplacementSouris = new Vector2(0,0);
+                DÈplacementSouris = new Vector2(0, DÈplacementSouris.Y);
 	        }
-            if (Nouvel…tatSouris.Y > Game.Window.ClientBounds.Height / 2)
+            if (Nouvel…tatSouris.Y > (Game.Window.ClientBounds.Height / 2) - 40)
             {
                 DÈplacementSouris = new Vector2(DÈplacementSouris.X, -IncrÈmentAngleRotation);
             }
-            else
+            if (Nouvel…tatSouris.Y < (Game.Window.ClientBounds.Height / 2) + 40)
             {
-                DÈplacementSouris = new Vector2(DÈplacementSouris.X, IncrÈmentAngleRotation);
+                DÈplacementSouris = new Vector2(DÈplacementSouris.X, +IncrÈmentAngleRotation);
+            }
+            if ((Nouvel…tatSouris.Y < (Game.Window.ClientBounds.Height / 2) + 40 && Nouvel…tatSouris.Y > (Game.Window.ClientBounds.Height / 2) - 40))
+            {
+                DÈplacementSouris = new Vector2(DÈplacementSouris.X, 0);
             }
             
             float activation = GÈrerTouche(Keys.Left) - GÈrerTouche(Keys.Right);
@@ -134,7 +138,7 @@ namespace AtelierXNA
 
         void ModificationParamËtres(float dÈplacement, float rotation)
         {
-            float rotationFinal = Rotation.Y - IncrÈmentAngleRotation * rotation;
+            float rotationFinal = Rotation.Y - (IncrÈmentAngleRotation * rotation) / 3f;
             float posX = dÈplacement * (float)Math.Sin(rotationFinal);
             float posY = dÈplacement * (float)Math.Cos(rotationFinal);
 
@@ -156,7 +160,7 @@ namespace AtelierXNA
 
         private void RotationTour(float activation)
         {
-            RotationYawTour = new Vector3(RotationYawTour.X, RotationYawTour.Y + (IncrÈmentAngleRotation * DÈplacementSouris.X), RotationYawTour.Z);
+            RotationYawTour = new Vector3(RotationYawTour.X, RotationYawTour.Y + 2 * (IncrÈmentAngleRotation * DÈplacementSouris.X), RotationYawTour.Z);
             PositionTour = new Vector3(Position.X, Position.Y + 0.3f, Position.Z);
             MondeTour = TransformationsMeshes(…chelleTour, RotationYawTour, PositionTour);
         }
@@ -164,9 +168,9 @@ namespace AtelierXNA
         private void RotationCanon(float activation)
         {
             RotationPitchCanon = new Vector3(RotationPitchCanon.X + (IncrÈmentAngleRotation * DÈplacementSouris.Y),
-                                             RotationPitchCanon.Y + (IncrÈmentAngleRotation * DÈplacementSouris.X), RotationPitchCanon.Z);
+                                             RotationPitchCanon.Y + 2 * (IncrÈmentAngleRotation * DÈplacementSouris.X), RotationPitchCanon.Z);
             Console.WriteLine(RotationPitchCanon.X);
-            if (RotationPitchCanon.X > -1.3 || RotationPitchCanon.X < -MathHelper.PiOver2)
+            if (RotationPitchCanon.X > -1.3 || RotationPitchCanon.X < -1.7)
             {
                 RotationPitchCanon = new Vector3(RotationPitchCanon.X - (IncrÈmentAngleRotation * DÈplacementSouris.Y),
                                                  RotationPitchCanon.Y, RotationPitchCanon.Z);
