@@ -152,7 +152,6 @@ namespace AtelierXNA
             if (!EstHorsDesBornes(nouvellesCoords))
             {
                 Position = new Vector3(posXFinal, HauteurTerrain + HAUTEUR_DÉFAULT, posZFinal);
-                Console.WriteLine(nouvellesCoords.ToString());
                 HauteurTerrain = TerrainJeu.GetHauteur(nouvellesCoords);
             }
             CalculerMonde();
@@ -169,7 +168,6 @@ namespace AtelierXNA
         {
             RotationPitchCanon = new Vector3(RotationPitchCanon.X + (IncrémentAngleRotation * DéplacementSouris.Y),
                                              RotationPitchCanon.Y + 2 * (IncrémentAngleRotation * DéplacementSouris.X), RotationPitchCanon.Z);
-            Console.WriteLine(RotationPitchCanon.X);
             if (RotationPitchCanon.X > -1.3 || RotationPitchCanon.X < -1.7)
             {
                 RotationPitchCanon = new Vector3(RotationPitchCanon.X - (IncrémentAngleRotation * DéplacementSouris.Y),

@@ -17,6 +17,8 @@ namespace AtelierXNA
     /// </summary>
     public class AI : ModèleMobile
     {
+        const float INCRÉMENT_DÉPLACEMENT_AI = 0.1f;
+
         Joueur Cible { get; set; }
         float Orientation { get; set; }
 
@@ -25,17 +27,6 @@ namespace AtelierXNA
         {
             Cible = cible;
         }
-
-        public override void Initialize()
-        {
-            base.Initialize();
-        }
-
-        protected override void LoadContent()
-        {
-            base.LoadContent();
-        }
-
 
         #region Méthodes pour la gestion des déplacements et rotations du modèle
         void CalculerMonde()
@@ -48,36 +39,54 @@ namespace AtelierXNA
 
         protected override void GestionMouvements()
         {
-            Orientation = AjustementDéplacements(Cible.Coordonnées);
-            ModificationParamètres();
+            ModificationParamètres(CalculOrientation(Cible.Coordonnées));
         }
 
-        float AjustementDéplacements(Vector2 cible)
+        float CalculOrientation(Vector2 cible)
         {
             Vector2 direction = Vector2.Normalize(new Vector2(Position.X - cible.X, Position.Z - cible.Y));
-            float orientation = (float)Math.Atan(direction.Y / direction.X);
+            float coeff = 0;
+            if (direction.X <= 0)
+            {
+                if (direction.Y <= 0)
+                {
+                    coeff = MathHelper.Pi;
+                }
+                else
+                {
+                    coeff = MathHelper.PiOver2;
+                }
+            }
+            else
+            {
+                if (direction.Y <= 0)
+                {
+                    coeff = 3 * MathHelper.PiOver2;
+                }
+            }
+            float orientation = coeff + (float)Math.Atan(direction.X / direction.Y);
+
             return orientation;
         }
 
-        void ModificationParamètres()
+        void ModificationParamètres(float orientation)
         {
-            float posX = 0 * (float)Math.Sin(Orientation);
-            float posY = -1 * (float)Math.Cos(Orientation);
-            Vector2 déplacementFinal = new Vector2(posX, posY) * 2f;
+            float posX = INCRÉMENT_DÉPLACEMENT_AI * (float)Math.Sin(orientation);
+            float posY = INCRÉMENT_DÉPLACEMENT_AI * (float)Math.Cos(orientation);
+            Vector2 déplacementFinal = new Vector2(posX, posY);
 
             float posXFinal = Position.X - déplacementFinal.X;
             float posZFinal = Position.Z - déplacementFinal.Y;
 
             nouvellesCoords = TerrainJeu.ConvertionCoordonnées(new Vector3(posXFinal, 0, posZFinal));
 
-            // Vérification de la future position
             if (!EstHorsDesBornes(nouvellesCoords))
             {
                 HauteurTerrain = TerrainJeu.GetHauteur(nouvellesCoords);
                 Position = new Vector3(posXFinal, HauteurTerrain + HAUTEUR_DÉFAULT, posZFinal);
             }
 
-            Rotation = new Vector3(Rotation.X, Orientation, Rotation.Z);
+            Rotation = new Vector3(Rotation.X, orientation, Rotation.Z);
 
             CalculerMonde();
         }
