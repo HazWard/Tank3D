@@ -1,7 +1,4 @@
-﻿//
-// Auteur : Vincent Echelard
-//
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
@@ -24,12 +21,13 @@ namespace AtelierXNA
         Texture2D ImageDeFond { get; set; }
         BoutonDeCommande BtnDémarrer { get; set; }
         BoutonDeCommande BtnPause { get; set; }
+        BoutonDeCommande BtnInstructions { get; set; }
         BoutonDeCommande BtnQuitter { get; set; }
         SpriteBatch GestionSprites { get; set; }
         RessourcesManager<Texture2D> GestionnaireDeTextures { get; set; }
 
         public Dialogue(Game jeu, string nomImageFond, String nomPoliceDeCaractère, Rectangle rectangleDialogue)
-            : base(jeu)
+           : base(jeu)
         {
             NomImageFond = nomImageFond;
             NomPoliceDeCaractère = nomPoliceDeCaractère;
@@ -41,12 +39,16 @@ namespace AtelierXNA
             int hauteurBouton = RectangleDialogue.Height / (NB_ZONES_DIALOGUE + 1);
 
             Vector2 PositionBouton = new Vector2(RectangleDialogue.X + RectangleDialogue.Width / 2f,
-                                                 RectangleDialogue.Y + (NB_ZONES_DIALOGUE - 2) * hauteurBouton);
+                                                 RectangleDialogue.Y + (NB_ZONES_DIALOGUE - 3) * hauteurBouton);
             BtnDémarrer = new BoutonDeCommande(Game, "Démarrer", NomPoliceDeCaractère, "BoutonRouge", "BoutonBleu", PositionBouton, false, GérerPause);
 
             PositionBouton = new Vector2(RectangleDialogue.X + RectangleDialogue.Width / 2f,
-                                                 RectangleDialogue.Y + (NB_ZONES_DIALOGUE - 1) * hauteurBouton);
+                                                 RectangleDialogue.Y + (NB_ZONES_DIALOGUE - 2) * hauteurBouton);
             BtnPause = new BoutonDeCommande(Game, "Pause", NomPoliceDeCaractère, "BoutonRouge", "BoutonBleu", PositionBouton, true, GérerPause);
+
+            PositionBouton = new Vector2(RectangleDialogue.X + RectangleDialogue.Width / 2f,
+                                     RectangleDialogue.Y + (NB_ZONES_DIALOGUE - 1) * hauteurBouton);
+            BtnInstructions = new BoutonDeCommande(Game, "Instructions", NomPoliceDeCaractère, "BoutonRouge", "BoutonBleu", PositionBouton, true, GérerPause);
 
             PositionBouton = new Vector2(RectangleDialogue.X + RectangleDialogue.Width / 2f,
                                                  RectangleDialogue.Y + NB_ZONES_DIALOGUE * hauteurBouton);
@@ -54,6 +56,7 @@ namespace AtelierXNA
 
             Game.Components.Add(BtnDémarrer);
             Game.Components.Add(BtnPause);
+            Game.Components.Add(BtnInstructions);
             Game.Components.Add(BtnQuitter);
             base.Initialize();
         }
@@ -69,7 +72,7 @@ namespace AtelierXNA
         public override void Draw(GameTime gameTime)
         {
             GestionSprites.Begin();
-            GestionSprites.Draw(ImageDeFond, RectangleDialogue, Color.White);
+            GestionSprites.Draw(ImageDeFond, new Rectangle(RectangleDialogue.X,RectangleDialogue.Y - 10 ,RectangleDialogue.Width, RectangleDialogue.Height),Color.White);
             GestionSprites.End();
             base.Draw(gameTime);
         }
