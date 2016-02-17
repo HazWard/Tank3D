@@ -37,7 +37,8 @@ namespace AtelierXNA
         float ÉchelleTour { get; set; }
         float ÉchelleCanon { get; set; }
         float ÉchelleRoues { get; set; }
-        float IncrémentAngleRotationTour { get; set; }
+        float IncrémentAngleRotationX { get; set; }
+        float IncrémentAngleRotationY { get; set; }
 
         public Joueur(Game jeu, string nomModèle, float échelleInitiale, Vector3 rotationInitiale, Vector3 positionInitiale, float intervalleMAJ)
             : base(jeu, nomModèle, échelleInitiale, rotationInitiale, positionInitiale, intervalleMAJ)
@@ -52,9 +53,9 @@ namespace AtelierXNA
         public override void Initialize()
         {
             base.Initialize();
-            RotationYawTour = Vector3.Zero;
-            RotationPitchCanon = Vector3.Zero;
-            IncrémentAngleRotationTour = IncrémentAngleRotation / 2f;
+            RotationYawTour = new Vector3(-MathHelper.PiOver2, 0, MathHelper.PiOver2);
+            RotationPitchCanon = new Vector3(-MathHelper.PiOver2, 0, MathHelper.PiOver2);
+            IncrémentAngleRotationX = 2f * IncrémentAngleRotation;
             ÉchelleTour = 0.0035f;
             ÉchelleCanon = 0.005f;
             ÉchelleRoues = 0.05f;
@@ -89,8 +90,8 @@ namespace AtelierXNA
         protected override void GestionMouvements()
         {
             Souris = Mouse.GetState();
-            Console.WriteLine(Souris.X);
-            Console.WriteLine(Souris.Y);
+            //Console.WriteLine(Souris.X);
+            //Console.WriteLine(Souris.Y);
             if (Souris.X > Game.Window.ClientBounds.Width / 2)
             {
                 DéplacementSouris = new Vector2(-IncrémentAngleRotation, DéplacementSouris.Y);
@@ -101,11 +102,11 @@ namespace AtelierXNA
             }
             if (Souris.Y > Game.Window.ClientBounds.Height / 2)
             {
-                DéplacementSouris = new Vector2(DéplacementSouris.X, DéplacementSouris.Y - IncrémentAngleRotation);
+                DéplacementSouris = new Vector2(DéplacementSouris.X, -IncrémentAngleRotation);
             }
             else
             {
-                DéplacementSouris = new Vector2(DéplacementSouris.X, DéplacementSouris.Y + IncrémentAngleRotation);
+                DéplacementSouris = new Vector2(DéplacementSouris.X, IncrémentAngleRotation);
             }
 
             float activation = GérerTouche(Keys.Left) - GérerTouche(Keys.Right);
@@ -147,20 +148,26 @@ namespace AtelierXNA
                 //Caméra.Cible = new Vector3(Position.X, Position.Y + 4, Position.Z);
                 //Caméra.Position = new Vector3(((float)Math.Sin(RotationYawTour.Y) * DISTANCE_POURSUITE) + Position.X, Position.Y + HAUTEUR_CAM_DÉFAULT, ((float)Math.Cos(rotationFinal) * DISTANCE_POURSUITE) + Position.Z);
             }
-
             CalculerMonde();
         }
 
         private void RotationTour(float activation)
         {
-            RotationYawTour = new Vector3(-MathHelper.PiOver2, RotationYawTour.Y + (IncrémentAngleRotation * DéplacementSouris.X), MathHelper.PiOver2);
+            RotationYawTour = new Vector3(RotationYawTour.X, RotationYawTour.Y + (IncrémentAngleRotation * DéplacementSouris.X), RotationYawTour.Z);
             PositionTour = new Vector3(Position.X, Position.Y + 0.3f, Position.Z);
             MondeTour = TransformationsMeshes(ÉchelleTour, RotationYawTour, PositionTour);
         }
 
         private void RotationCanon(float activation)
         {
-            RotationPitchCanon = new Vector3(-MathHelper.PiOver2, RotationPitchCanon.Y + (IncrémentAngleRotation * DéplacementSouris.X), MathHelper.PiOver2);
+            RotationPitchCanon = new Vector3(RotationPitchCanon.X + (IncrémentAngleRotation * DéplacementSouris.Y),
+                                             RotationPitchCanon.Y + (IncrémentAngleRotation * DéplacementSouris.X), RotationPitchCanon.Z);
+            Console.WriteLine(RotationPitchCanon.X);
+            if (RotationPitchCanon.X > -1.3 || RotationPitchCanon.X < -MathHelper.PiOver2)
+            {
+                RotationPitchCanon = new Vector3(RotationPitchCanon.X - (IncrémentAngleRotation * DéplacementSouris.Y),
+                                                 RotationPitchCanon.Y, RotationPitchCanon.Z);
+            }
             PositionCanon = new Vector3(Position.X, Position.Y - 1f, Position.Z);
             MondeCanon = TransformationsMeshes(ÉchelleCanon, RotationPitchCanon, PositionCanon);
         }
