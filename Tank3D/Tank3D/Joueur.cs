@@ -87,39 +87,13 @@ namespace AtelierXNA
             Monde *= Matrix.CreateFromYawPitchRoll(Rotation.Y, Rotation.X, Rotation.Z);
             Monde *= Matrix.CreateTranslation(Position);
         }
-        //if (currentMouseState != previousMouseState)
-        //{
-        //    deltaX = currentMouseState.X - (Game.GraphicsDevice.Viewport.Width / 2);
-        //    deltaY = currentMouseState.Y - (Game.GraphicsDevice.Viewport.Height / 2);
-
-        //    mouseRotationBuffer.X -= 0.1f * deltaX * dt;
-        //    mouseRotationBuffer.Y -= 0.1f * deltaY * dt;
-
-        //    if (mouseRotationBuffer.Y < MathHelper.ToRadians(-75.0f))
-        //        mouseRotationBuffer.Y = mouseRotationBuffer.Y - (mouseRotationBuffer.Y - MathHelper.ToRadians(-75.0f));
-
-        //    if (mouseRotationBuffer.Y > MathHelper.ToRadians(75.0f))
-        //        mouseRotationBuffer.Y = mouseRotationBuffer.Y - (mouseRotationBuffer.Y - MathHelper.ToRadians(75.0f));
-
-        //    Rotation = new Vector3(-MathHelper.Clamp(mouseRotationBuffer.Y, MathHelper.ToRadians(-75.0f), MathHelper.ToRadians(75.0f)),
-        //        MathHelper.WrapAngle(mouseRotationBuffer.X), 0);
-
-        //    deltaX = 0;
-        //    deltaY = 0;
-        //}
-
-        //Mouse.SetPosition(Game.GraphicsDevice.Viewport.Width / 2, Game.GraphicsDevice.Viewport.Height / 2);
-        //previousMouseState = currentMouseState;
+       
         protected override void GestionMouvements()
         {
             NouvelÉtatSouris = Mouse.GetState();
-            Console.WriteLine(NouvelÉtatSouris.X);
-            Console.WriteLine(NouvelÉtatSouris.Y);
-            //if (NouvelÉtatSouris.X > (Game.Window.ClientBounds.Width / 2) + 40)
-            //Souris = Mouse.GetState();
-            //Console.WriteLine(Souris.X);
-            //Console.WriteLine(Souris.Y);
-            if (Souris.X > Game.Window.ClientBounds.Width / 2)
+           
+            
+            if (NouvelÉtatSouris.X < (Game.Window.ClientBounds.Width / 2) + 40)
             {
                 DéplacementSouris = new Vector2(-IncrémentAngleRotation, DéplacementSouris.Y);
             }
@@ -130,8 +104,8 @@ namespace AtelierXNA
             if ((NouvelÉtatSouris.X < (Game.Window.ClientBounds.Width / 2) + 40 && NouvelÉtatSouris.X > (Game.Window.ClientBounds.Width / 2) - 40))
             {
                 DéplacementSouris = new Vector2(0,0);
-	    }
-            if (Souris.Y > Game.Window.ClientBounds.Height / 2)
+	        }
+            if (NouvelÉtatSouris.Y > Game.Window.ClientBounds.Height / 2)
             {
                 DéplacementSouris = new Vector2(DéplacementSouris.X, -IncrémentAngleRotation);
             }
@@ -139,19 +113,7 @@ namespace AtelierXNA
             {
                 DéplacementSouris = new Vector2(DéplacementSouris.X, IncrémentAngleRotation);
             }
-            //else
-            //{
-            //    DéplacementSouris = new Vector2(IncrémentAngleRotation, DéplacementSouris.Y);
-            //}
-            //if (NouvelÉtatSouris.Y > Game.Window.ClientBounds.Height / 2)
-            //{
-            //    DéplacementSouris = new Vector2(DéplacementSouris.X, DéplacementSouris.Y - IncrémentAngleRotation);
-            //}
-            //else
-            //{
-            //    DéplacementSouris = new Vector2(DéplacementSouris.X, DéplacementSouris.Y + IncrémentAngleRotation);
-            //}
-
+            
             float activation = GérerTouche(Keys.Left) - GérerTouche(Keys.Right);
 
             RotationTour(activation);
@@ -178,7 +140,6 @@ namespace AtelierXNA
 
             Vector2 déplacementFinal = new Vector2(posX, posY);
             Rotation = new Vector3(Rotation.X, rotationFinal, Rotation.Z);
-            //Position = new Vector3(Position.X - déplacementFinal.X, Position.Y, Position.Z - déplacementFinal.Y);
             float posXFinal = Position.X - déplacementFinal.X;
             float posZFinal = Position.Z - déplacementFinal.Y;
 
@@ -189,8 +150,6 @@ namespace AtelierXNA
                 Position = new Vector3(posXFinal, HauteurTerrain + HAUTEUR_DÉFAULT, posZFinal);
                 Console.WriteLine(nouvellesCoords.ToString());
                 HauteurTerrain = TerrainJeu.GetHauteur(nouvellesCoords);
-                //Caméra.Cible = new Vector3(Position.X, Position.Y + 4, Position.Z);
-                //Caméra.Position = new Vector3(((float)Math.Sin(RotationYawTour.Y) * DISTANCE_POURSUITE) + Position.X, Position.Y + HAUTEUR_CAM_DÉFAULT, ((float)Math.Cos(rotationFinal) * DISTANCE_POURSUITE) + Position.Z);
             }
             CalculerMonde();
         }
