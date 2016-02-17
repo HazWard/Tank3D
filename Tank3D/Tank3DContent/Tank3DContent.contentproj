@@ -67,6 +67,23 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Modèles\ship.fbx">
+      <Name>ship</Name>
+      <Importer>FbxImporter</Importer>
+      <Processor>ModelProcessor</Processor>
+    </Compile>
+    <Compile Include="Modèles\ship_tex.tga">
+      <Name>ship_tex</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Modèles\unicorn.FBX">
+      <Name>unicorn</Name>
+      <Importer>FbxImporter</Importer>
+      <Processor>ModelProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
     <Compile Include="Fonts\Arial20.spritefont">
       <Name>Arial20</Name>
       <Importer>FontDescriptionImporter</Importer>
@@ -93,98 +110,10 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Textures\CielÉtoilé.png">
-      <Name>CielÉtoilé</Name>
+    <Compile Include="Textures\FondMenu.png">
+      <Name>FondMenu</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Textures\desertDunes.png">
-      <Name>desertDunes</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Textures\ciel.png">
-      <Name>ciel</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Textures\desertDunesRéflexion.png">
-      <Name>desertDunesRéflexion</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Textures\DétailsDésertSable.png">
-      <Name>DétailsDésertSable</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Modèles\desert fbx.FBX">
-      <Name>desert fbx</Name>
-      <Importer>FbxImporter</Importer>
-      <Processor>ModelProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Modèles\sand tex.jpg">
-      <Name>sand tex</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Modèles\ship.fbx">
-      <Name>ship</Name>
-      <Importer>FbxImporter</Importer>
-      <Processor>ModelProcessor</Processor>
-    </Compile>
-    <Compile Include="Modèles\ship_tex.tga">
-      <Name>ship_tex</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Modèles\Veteran Tiger Body.FBX">
-      <Name>Veteran Tiger Body</Name>
-      <Importer>FbxImporter</Importer>
-      <Processor>ModelProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Modèles\Veteran Tiger Desert.FBX">
-      <Name>Veteran Tiger Desert</Name>
-      <Importer>FbxImporter</Importer>
-      <Processor>ModelProcessor</Processor>
-    </Compile>
-    <Compile Include="Modèles\Veteran Tiger Destroyed.FBX">
-      <Name>Veteran Tiger Destroyed</Name>
-      <Importer>FbxImporter</Importer>
-      <Processor>ModelProcessor</Processor>
-    </Compile>
-    <Compile Include="Modèles\Veteran Tiger Forest.FBX">
-      <Name>Veteran Tiger Forest</Name>
-      <Importer>FbxImporter</Importer>
-      <Processor>ModelProcessor</Processor>
-    </Compile>
-    <Compile Include="Modèles\Veteran Tiger NoColor.FBX">
-      <Name>Veteran Tiger NoColor</Name>
-      <Importer>FbxImporter</Importer>
-      <Processor>ModelProcessor</Processor>
-    </Compile>
-    <Compile Include="Modèles\Veteran Tiger Snow.FBX">
-      <Name>Veteran Tiger Snow</Name>
-      <Importer>FbxImporter</Importer>
-      <Processor>ModelProcessor</Processor>
     </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />
