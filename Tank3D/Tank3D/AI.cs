@@ -48,21 +48,39 @@ namespace AtelierXNA
 
         protected override void GestionMouvements()
         {
-            Orientation = AjustementDéplacements(Cible.Coordonnées);
-            ModificationParamètres();
+            ModificationParamètres(CalculOrientation(Cible.Coordonnées));
         }
 
-        float AjustementDéplacements(Vector2 cible)
+        float CalculOrientation(Vector2 cible)
         {
             Vector2 direction = Vector2.Normalize(new Vector2(Position.X - cible.X, Position.Z - cible.Y));
-            float orientation = (float)Math.Atan(direction.Y / direction.X);
+            float coeff = 1f;
+            if (direction.X <= 0)
+            {
+                if (direction.Y <= 0)
+                {
+                    coeff = MathHelper.Pi;
+                }
+                else
+                {
+                    coeff = MathHelper.PiOver2;
+                }
+            }
+            else
+            {
+                if (direction.Y <= 0)
+                {
+                    coeff = 3 * MathHelper.PiOver2;
+                }
+            }
+            float orientation = coeff + (float)Math.Atan(direction.X / direction.Y);
             return orientation;
         }
 
-        void ModificationParamètres()
+        void ModificationParamètres(float orientation)
         {
-            float posX = 0 * (float)Math.Sin(Orientation);
-            float posY = -1 * (float)Math.Cos(Orientation);
+            float posX = 0 * (float)Math.Sin(orientation);
+            float posY = -1 * (float)Math.Cos(orientation);
             Vector2 déplacementFinal = new Vector2(posX, posY) * 2f;
 
             float posXFinal = Position.X - déplacementFinal.X;
@@ -70,7 +88,6 @@ namespace AtelierXNA
 
             nouvellesCoords = TerrainJeu.ConvertionCoordonnées(new Vector3(posXFinal, 0, posZFinal));
 
-            // Vérification de la future position
             if (!EstHorsDesBornes(nouvellesCoords))
             {
                 HauteurTerrain = TerrainJeu.GetHauteur(nouvellesCoords);
