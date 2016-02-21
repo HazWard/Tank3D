@@ -96,6 +96,7 @@
     <Compile Include="PlanTexturé.cs" />
     <Compile Include="PrimitiveDeBase.cs" />
     <Compile Include="PrimitiveDeBaseAnimée.cs" />
+    <Compile Include="Projectile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="RessourceDeBase.cs" />
