@@ -22,6 +22,7 @@ namespace AtelierXNA
         protected const float HAUTEUR_CAM_DÉFAULT = 10f;
         
         // Propriétés
+        Game Jeu { get; set; }
         MouseState NouvelÉtatSouris { get; set; }
         MouseState AncienÉtatSouris { get; set; }
         InputManager GestionInput { get; set; }
@@ -48,12 +49,12 @@ namespace AtelierXNA
         public Joueur(Game jeu, string nomModèle, float échelleInitiale, Vector3 rotationInitiale, Vector3 positionInitiale, float intervalleMAJ)
             : base(jeu, nomModèle, échelleInitiale, rotationInitiale, positionInitiale, intervalleMAJ)
         {
+            Jeu = jeu;
             Caméra = new CaméraSubjective(jeu, new Vector3(positionInitiale.X, positionInitiale.Y + HAUTEUR_CAM_DÉFAULT, positionInitiale.Z + DISTANCE_POURSUITE),
                                                new Vector3(Position.X, Position.Y + 4, Position.Z), 
                                                Vector3.Up, IntervalleMAJ);
             Game.Components.Add(Caméra);
             Game.Services.AddService(typeof(Caméra), Caméra);
-            ProjectileTank = new Projectile(jeu, "projektil", 1, Vector3.Zero, Position, IntervalleMAJ);
         }
 
         public override void Initialize()
@@ -95,16 +96,15 @@ namespace AtelierXNA
        
         protected override void GestionMouvements()
         {
+            NouvelÉtatSouris = Mouse.GetState();
             GéstionSouris();
             GestionProjectile();
-            
             RotationTour();
             RotationCanon();
-
+            
             Caméra.Cible = new Vector3(Position.X, Position.Y + 4, Position.Z);
-            Caméra.Position = new Vector3(((float)Math.Sin(RotationYawTour.Y) * DISTANCE_POURSUITE) + Position.X,
-                                            Position.Y + HAUTEUR_CAM_DÉFAULT,
-                                            ((float)Math.Cos(RotationYawTour.Y) * DISTANCE_POURSUITE) + Position.Z);
+            Caméra.Position = new Vector3(((float)Math.Sin(RotationYawTour.Y) * DISTANCE_POURSUITE) + Position.X, Position.Y + HAUTEUR_CAM_DÉFAULT,
+                                          ((float)Math.Cos(RotationYawTour.Y) * DISTANCE_POURSUITE) + Position.Z);
             
             float déplacement = GérerTouche(Keys.W) - GérerTouche(Keys.S);
             float rotation = GérerTouche(Keys.D) - GérerTouche(Keys.A);
@@ -157,8 +157,6 @@ namespace AtelierXNA
 
         void GéstionSouris()
         {
-            NouvelÉtatSouris = Mouse.GetState();
-
             if (NouvelÉtatSouris.X > (Game.Window.ClientBounds.Width / 2) + 40)
             {
                 DéplacementSouris = new Vector2(-IncrémentAngleRotation, DéplacementSouris.Y);
@@ -187,9 +185,10 @@ namespace AtelierXNA
 
         void GestionProjectile()
         {
-            NouvelÉtatSouris = Mouse.GetState();
-            if (GestionInput.EstNouveauClicGauche())
+            if (GestionInput.EstAncienClicGauche())
             {
+                Console.WriteLine("Tir");
+                ProjectileTank = new Projectile(Jeu, "Projectile", 0.1f, new Vector3(0, RotationPitchCanon.Y, RotationPitchCanon.Z), PositionCanon, IntervalleMAJ);
                 Game.Components.Add(ProjectileTank);
             }
         }

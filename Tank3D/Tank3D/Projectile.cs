@@ -22,9 +22,18 @@ namespace AtelierXNA
 
         }
 
-        bool EstDétruit()
+        public bool EstDétruit()
         {
-            return Position.Y < TerrainJeu.GetHauteur(new Point((int)Position.X, (int)Position.Z));
+            bool estDétruit = false;
+            if (Position.Y < TerrainJeu.GetHauteur(new Point((int)Position.X, (int)Position.Z)))
+            {
+                estDétruit = true;
+            }
+            if (EstHorsDesBornes(new Point((int) Position.X, (int) Position.Z)))
+            {
+                estDétruit = true;
+            }
+            return estDétruit;
         }
 
         #region Méthodes pour la gestion des déplacements et rotations du modèle
@@ -38,27 +47,26 @@ namespace AtelierXNA
 
         protected override void GestionMouvements()
         {
-            ModificationParamètres(Rotation.Y);
+            ModificationParamètres();
         }
 
-        void ModificationParamètres(float orientation)
+        void ModificationParamètres()
         {
-            float posX = INCRÉMENT_DÉPLACEMENT_PROJECTILE * (float)Math.Sin(orientation);
-            float posY = INCRÉMENT_DÉPLACEMENT_PROJECTILE * (float)Math.Cos(orientation);
+            float posX = INCRÉMENT_DÉPLACEMENT_PROJECTILE * (float)Math.Sin(Rotation.Y);
+            float posY = INCRÉMENT_DÉPLACEMENT_PROJECTILE * (float)Math.Cos(Rotation.Y);
             Vector2 déplacementFinal = new Vector2(posX, posY);
             float posXFinal = Position.X - déplacementFinal.X;
             float posZFinal = Position.Z - déplacementFinal.Y;
-
+            
             nouvellesCoords = TerrainJeu.ConvertionCoordonnées(new Vector3(posXFinal, 0, posZFinal));
 
             if (!EstHorsDesBornes(nouvellesCoords))
             {
-                HauteurTerrain = TerrainJeu.GetHauteur(nouvellesCoords);
-                Position = new Vector3(posXFinal, HauteurTerrain + HAUTEUR_DÉFAULT, posZFinal);
+                Position = new Vector3(posXFinal, Position.Y, posZFinal);
+                Rotation = new Vector3(Rotation.X, Rotation.Y, Rotation.Z + 0.2f);
             }
-
-            Rotation = new Vector3(Rotation.X, orientation, Rotation.Z);
-
+            //Position = new Vector3(posXFinal, Position.Y, posZFinal);
+            //Rotation = new Vector3(Rotation.X, Rotation.Y, Rotation.Z + 0.2f);
             CalculerMonde();
         }
         #endregion
