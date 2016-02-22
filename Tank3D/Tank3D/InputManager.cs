@@ -9,9 +9,8 @@ namespace AtelierXNA
       Keys[] AnciennesTouches { get; set; }
       Keys[] NouvellesTouches { get; set; }
       KeyboardState ÉtatClavier { get; set; }
-      MouseState ÉtatSouris { get; set; }
-      MouseState NouvelÉtatSouris { get; set; }
-      MouseState AncienÉtatSouris { get; set; }
+      public MouseState NouvelÉtatSouris { get; set; }
+      public MouseState AncienÉtatSouris { get; set; }
 
       public InputManager(Game game)
          : base(game)
@@ -31,8 +30,7 @@ namespace AtelierXNA
          NouvellesTouches = ÉtatClavier.GetPressedKeys();
 
          AncienÉtatSouris = NouvelÉtatSouris;
-         ÉtatSouris = Mouse.GetState();
-         NouvelÉtatSouris = ÉtatSouris;
+         NouvelÉtatSouris = Mouse.GetState();
          base.Update(gameTime);
       }
 
@@ -46,23 +44,25 @@ namespace AtelierXNA
       }
       public bool EstAncienClicDroit()
       {
-          return ÉtatSouris.RightButton == ButtonState.Pressed && !EstSourisActive;
+          return NouvelÉtatSouris.RightButton == ButtonState.Pressed && !EstSourisActive;
       }
       public bool EstAncienClicGauche()
       {
-          return ÉtatSouris.LeftButton == ButtonState.Pressed && !EstSourisActive;
+          return NouvelÉtatSouris.LeftButton == ButtonState.Pressed && !EstSourisActive;
       }
       public bool EstNouveauClicDroit()
       {
-          return ÉtatSouris.RightButton == ButtonState.Pressed && EstSourisActive;
+          return NouvelÉtatSouris.RightButton == ButtonState.Pressed &&
+                 AncienÉtatSouris.RightButton == ButtonState.Released;
       }
       public bool EstNouveauClicGauche()
       {
-          return ÉtatSouris.LeftButton == ButtonState.Pressed && EstSourisActive;
+          return NouvelÉtatSouris.LeftButton == ButtonState.Pressed &&
+                 AncienÉtatSouris.LeftButton == ButtonState.Released;
       }
       public Point GetPositionSouris()
       {
-         return new Point(ÉtatSouris.X, ÉtatSouris.Y);
+         return new Point(NouvelÉtatSouris.X, NouvelÉtatSouris.Y);
       }
 
       public bool EstEnfoncée(Keys touche)

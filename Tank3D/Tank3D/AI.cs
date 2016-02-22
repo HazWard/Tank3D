@@ -27,6 +27,18 @@ namespace AtelierXNA
         {
             Cible = cible;
         }
+        public override void Update(GameTime gameTime)
+        {
+            float TempsÉcoulé = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            TempsÉcouléDepuisMAJ += TempsÉcoulé;
+
+            if (TempsÉcouléDepuisMAJ >= IntervalleMAJ)
+            {
+                GestionMouvements();
+                TempsÉcouléDepuisMAJ = 0;
+            }
+            base.Update(gameTime);
+        }
 
         #region Méthodes pour la gestion des déplacements et rotations du modèle
         void CalculerMonde()
@@ -37,7 +49,7 @@ namespace AtelierXNA
             Monde *= Matrix.CreateTranslation(Position);
         }
 
-        protected override void GestionMouvements()
+        protected void GestionMouvements()
         {
             ModificationParamètres(CalculOrientation(Cible.Coordonnées));
         }
