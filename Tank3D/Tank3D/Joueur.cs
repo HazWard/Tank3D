@@ -20,7 +20,7 @@ namespace AtelierXNA
         // Constantes
         protected const float DISTANCE_POURSUITE = 20f;
         protected const float HAUTEUR_CAM_DÉFAULT = 10f;
-        
+
         // Propriétés
         Game Jeu { get; set; }
         CaméraSubjective Caméra { get; set; }
@@ -39,8 +39,6 @@ namespace AtelierXNA
         float ÉchelleTour { get; set; }
         float ÉchelleCanon { get; set; }
         float ÉchelleRoues { get; set; }
-<<<<<<< HEAD
-=======
         float IncrémentAngleRotationX { get; set; }
         float IncrémentAngleRotationY { get; set; }
         public Vector2 Coordonnées
@@ -50,14 +48,13 @@ namespace AtelierXNA
                 return new Vector2(Position.X, Position.Z);
             }
         }
->>>>>>> origin/master
 
         public Joueur(Game jeu, string nomModèle, float échelleInitiale, Vector3 rotationInitiale, Vector3 positionInitiale, float intervalleMAJ)
             : base(jeu, nomModèle, échelleInitiale, rotationInitiale, positionInitiale, intervalleMAJ)
         {
             Jeu = jeu;
             Caméra = new CaméraSubjective(jeu, new Vector3(positionInitiale.X, positionInitiale.Y + HAUTEUR_CAM_DÉFAULT, positionInitiale.Z + DISTANCE_POURSUITE),
-                                               new Vector3(Position.X, Position.Y + 4, Position.Z), 
+                                               new Vector3(Position.X, Position.Y + 4, Position.Z),
                                                Vector3.Up, IntervalleMAJ);
             Game.Components.Add(Caméra);
             Game.Services.AddService(typeof(Caméra), Caméra);
@@ -71,11 +68,6 @@ namespace AtelierXNA
             ÉchelleTour = 0.0035f;
             ÉchelleCanon = 0.005f;
             ÉchelleRoues = 0.05f;
-<<<<<<< HEAD
-            NouvelÉtatSouris = Mouse.GetState();
-=======
-            DéplacementSouris = new Vector2(0, 0);
->>>>>>> origin/master
             Mouse.SetPosition(400, 200);
         }
 
@@ -83,6 +75,7 @@ namespace AtelierXNA
         {
             base.LoadContent();
         }
+
         public override void Update(GameTime gameTime)
         {
             float TempsÉcoulé = (float)gameTime.ElapsedGameTime.TotalSeconds;
@@ -101,7 +94,6 @@ namespace AtelierXNA
             base.Update(gameTime);
         }
 
-
         #region Méthodes pour la gestion des déplacements et rotations du modèle
         void CalculerMonde()
         {
@@ -110,23 +102,19 @@ namespace AtelierXNA
             Monde *= Matrix.CreateFromYawPitchRoll(Rotation.Y, Rotation.X, Rotation.Z);
             Monde *= Matrix.CreateTranslation(Position);
         }
-       
+
         protected void GestionMouvements()
         {
-<<<<<<< HEAD
-            NouvelÉtatSouris = Mouse.GetState();
-=======
-            GéstionSouris();
->>>>>>> origin/master
             GestionProjectile();
+            GestionSouris();
             RotationTour();
             RotationCanon();
-            
+
             Caméra.Cible = new Vector3(Position.X, Position.Y + 4, Position.Z);
             Caméra.Position
                 = new Vector3(((float)Math.Sin(RotationYawTour.Y) * DISTANCE_POURSUITE) + Position.X, Position.Y + HAUTEUR_CAM_DÉFAULT,
                                           ((float)Math.Cos(RotationYawTour.Y) * DISTANCE_POURSUITE) + Position.Z);
-            
+
             float déplacement = GérerTouche(Keys.W) - GérerTouche(Keys.S);
             float rotation = GérerTouche(Keys.D) - GérerTouche(Keys.A);
             if (déplacement != 0 || rotation != 0)
@@ -146,8 +134,8 @@ namespace AtelierXNA
             float posXFinal = Position.X - déplacementFinal.X;
             float posZFinal = Position.Z - déplacementFinal.Y;
 
-            nouvellesCoords = TerrainJeu.ConvertionCoordonnées(new Vector3(posXFinal, 0,posZFinal));
-            
+            nouvellesCoords = TerrainJeu.ConvertionCoordonnées(new Vector3(posXFinal, 0, posZFinal));
+
             if (!EstHorsDesBornes(nouvellesCoords))
             {
                 Position = new Vector3(posXFinal, HauteurTerrain + HAUTEUR_DÉFAULT, posZFinal);
@@ -176,44 +164,20 @@ namespace AtelierXNA
             }
             PositionCanon = new Vector3(Position.X, Position.Y - 1f, Position.Z);
             MondeCanon = TransformationsMeshes(ÉchelleCanon, RotationPitchCanon, PositionCanon);
-            DeltaRotationCanon = new Vector2(0,0);
+            //DeltaRotationCanon = new Vector2(0, 0);
         }
 
         void GestionSouris()
         {
-<<<<<<< HEAD
-            if (NouvelÉtatSouris != AncienÉtatSouris)
-=======
-            if (GestionInput.NouvelÉtatSouris.X > (Game.Window.ClientBounds.Width / 2) + 40)
+            if (GestionInput.NouvelÉtatSouris != GestionInput.AncienÉtatSouris)
             {
-                DéplacementSouris = new Vector2(-IncrémentAngleRotation, DéplacementSouris.Y);
+                DeltaRotationCanon = new Vector2(GestionInput.NouvelÉtatSouris.X - (Game.GraphicsDevice.Viewport.Width / 2), GestionInput.NouvelÉtatSouris.Y - (Game.GraphicsDevice.Viewport.Height / 2));
             }
-            if (GestionInput.NouvelÉtatSouris.X < (Game.Window.ClientBounds.Width / 2) - 40)
-            {
-                DéplacementSouris = new Vector2(IncrémentAngleRotation, DéplacementSouris.Y);
-            }
-            if ((GestionInput.NouvelÉtatSouris.X < (Game.Window.ClientBounds.Width / 2) + 40 && GestionInput.NouvelÉtatSouris.X > (Game.Window.ClientBounds.Width / 2) - 40))
-            {
-                DéplacementSouris = new Vector2(0, DéplacementSouris.Y);
-            }
-            if (GestionInput.NouvelÉtatSouris.Y > (Game.Window.ClientBounds.Height / 2) - 40)
->>>>>>> origin/master
-            {
-                DeltaRotationCanon = new Vector2(NouvelÉtatSouris.X - (Game.GraphicsDevice.Viewport.Width / 2), NouvelÉtatSouris.Y - (Game.GraphicsDevice.Viewport.Height / 2));
-            }
-<<<<<<< HEAD
-            if ((NouvelÉtatSouris.X < (Game.Window.ClientBounds.Width / 2) + 20 && NouvelÉtatSouris.X > (Game.Window.ClientBounds.Width / 2) - 20))
-=======
-            if (GestionInput.NouvelÉtatSouris.Y < (Game.Window.ClientBounds.Height / 2) + 40)
->>>>>>> origin/master
+            if ((GestionInput.NouvelÉtatSouris.X < (Game.Window.ClientBounds.Width / 2) + 20 && GestionInput.NouvelÉtatSouris.X > (Game.Window.ClientBounds.Width / 2) - 20))
             {
                 DeltaRotationCanon = new Vector2(0, DeltaRotationCanon.Y);
             }
-<<<<<<< HEAD
-            if ((NouvelÉtatSouris.Y < (Game.Window.ClientBounds.Height / 2) + 20 && NouvelÉtatSouris.Y > (Game.Window.ClientBounds.Height / 2) - 20))
-=======
-            if ((GestionInput.NouvelÉtatSouris.Y < (Game.Window.ClientBounds.Height / 2) + 40 && GestionInput.NouvelÉtatSouris.Y > (Game.Window.ClientBounds.Height / 2) - 40))
->>>>>>> origin/master
+            if ((GestionInput.NouvelÉtatSouris.Y < (Game.Window.ClientBounds.Height / 2) + 20 && GestionInput.NouvelÉtatSouris.Y > (Game.Window.ClientBounds.Height / 2) - 20))
             {
                 DeltaRotationCanon = new Vector2(DeltaRotationCanon.X, 0);
             }
@@ -234,8 +198,8 @@ namespace AtelierXNA
             return GestionInput.EstEnfoncée(touche) ? INCRÉMENT_DÉPLACEMENT : 0;
         }
 
-        Matrix TransformationsMeshes(float échelle, Vector3 rotation,Vector3 position)
-        {   
+        Matrix TransformationsMeshes(float échelle, Vector3 rotation, Vector3 position)
+        {
             Matrix monde = Matrix.Identity;
             monde *= Matrix.CreateScale(échelle);
             monde *= Matrix.CreateFromYawPitchRoll(rotation.Y, rotation.X, rotation.Z);
@@ -252,22 +216,22 @@ namespace AtelierXNA
             foreach (ModelMesh maille in Modèle.Meshes)
             {
                 Matrix mondeLocal;
-                
-                if(maille.Name == "Tour")
+
+                if (maille.Name == "Tour")
                 {
                     mondeLocal = MondeTour;
                 }
                 else if (maille.Name == "Canon")
                 {
-                        mondeLocal = MondeCanon;
+                    mondeLocal = MondeCanon;
                 }
                 else
                 {
                     mondeLocal = TransformationsModèle[maille.ParentBone.Index] * GetMonde();
                 }
-                
+
                 foreach (ModelMeshPart portionDeMaillage in maille.MeshParts)
-                {   
+                {
                     BasicEffect effet = (BasicEffect)portionDeMaillage.Effect;
                     effet.EnableDefaultLighting();
                     effet.Projection = CaméraJeu.Projection;
