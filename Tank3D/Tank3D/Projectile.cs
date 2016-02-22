@@ -21,18 +21,22 @@ namespace AtelierXNA
         {
 
         }
+        public override void Update(GameTime gameTime)
+        {
+            float TempsÉcoulé = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            TempsÉcouléDepuisMAJ += TempsÉcoulé;
+
+            if (TempsÉcouléDepuisMAJ >= IntervalleMAJ)
+            {
+                GestionMouvements();
+                TempsÉcouléDepuisMAJ = 0;
+            }
+            base.Update(gameTime);
+        }
 
         public bool EstDétruit()
         {
             bool estDétruit = false;
-            if (Position.Y < TerrainJeu.GetHauteur(new Point((int)Position.X, (int)Position.Z)))
-            {
-                estDétruit = true;
-            }
-            if (EstHorsDesBornes(new Point((int) Position.X, (int) Position.Z)))
-            {
-                estDétruit = true;
-            }
             return estDétruit;
         }
 
@@ -45,7 +49,7 @@ namespace AtelierXNA
             Monde *= Matrix.CreateTranslation(Position);
         }
 
-        protected override void GestionMouvements()
+        protected void GestionMouvements()
         {
             ModificationParamètres();
         }

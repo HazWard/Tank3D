@@ -23,9 +23,6 @@ namespace AtelierXNA
         
         // PropriÈtÈs
         Game Jeu { get; set; }
-        MouseState Nouvel…tatSouris { get; set; }
-        MouseState Ancien…tatSouris { get; set; }
-        InputManager GestionInput { get; set; }
         CamÈraSubjective CamÈra { get; set; }
         Projectile ProjectileTank { get; set; }
         Vector3 RotationYawTour { get; set; }
@@ -45,6 +42,13 @@ namespace AtelierXNA
         float …chelleRoues { get; set; }
         float IncrÈmentAngleRotationX { get; set; }
         float IncrÈmentAngleRotationY { get; set; }
+        public Vector2 CoordonnÈes
+        {
+            get
+            {
+                return new Vector2(Position.X, Position.Z);
+            }
+        }
 
         public Joueur(Game jeu, string nomModËle, float ÈchelleInitiale, Vector3 rotationInitiale, Vector3 positionInitiale, float intervalleMAJ)
             : base(jeu, nomModËle, ÈchelleInitiale, rotationInitiale, positionInitiale, intervalleMAJ)
@@ -67,23 +71,31 @@ namespace AtelierXNA
             …chelleCanon = 0.005f;
             …chelleRoues = 0.05f;
             DÈplacementSouris = new Vector2(0, 0);
-            Nouvel…tatSouris = Mouse.GetState();
             Mouse.SetPosition(400, 200);
         }
 
         protected override void LoadContent()
         {
             base.LoadContent();
-            GestionInput = Game.Services.GetService(typeof(InputManager)) as InputManager;
+        }
+        public override void Update(GameTime gameTime)
+        {
+            float Temps…coulÈ = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            Temps…coulÈDepuisMAJ += Temps…coulÈ;
+            A…tÈCliquÈ = GestionInput.EstNouveauClicGauche();
+            if (A…tÈCliquÈ)
+            {
+                GestionProjectile();
+            }
+
+            if (Temps…coulÈDepuisMAJ >= IntervalleMAJ)
+            {
+                GestionMouvements();
+                Temps…coulÈDepuisMAJ = 0;
+            }
+            base.Update(gameTime);
         }
 
-        public Vector2 CoordonnÈes
-        {
-            get
-            {
-                return new Vector2(Position.X, Position.Z);
-            }
-        }
 
         #region MÈthodes pour la gestion des dÈplacements et rotations du modËle
         void CalculerMonde()
@@ -94,9 +106,8 @@ namespace AtelierXNA
             Monde *= Matrix.CreateTranslation(Position);
         }
        
-        protected override void GestionMouvements()
+        protected void GestionMouvements()
         {
-            Nouvel…tatSouris = Mouse.GetState();
             GÈstionSouris();
             GestionProjectile();
             RotationTour();
@@ -157,27 +168,27 @@ namespace AtelierXNA
 
         void GÈstionSouris()
         {
-            if (Nouvel…tatSouris.X > (Game.Window.ClientBounds.Width / 2) + 40)
+            if (GestionInput.Nouvel…tatSouris.X > (Game.Window.ClientBounds.Width / 2) + 40)
             {
                 DÈplacementSouris = new Vector2(-IncrÈmentAngleRotation, DÈplacementSouris.Y);
             }
-            if (Nouvel…tatSouris.X < (Game.Window.ClientBounds.Width / 2) - 40)
+            if (GestionInput.Nouvel…tatSouris.X < (Game.Window.ClientBounds.Width / 2) - 40)
             {
                 DÈplacementSouris = new Vector2(IncrÈmentAngleRotation, DÈplacementSouris.Y);
             }
-            if ((Nouvel…tatSouris.X < (Game.Window.ClientBounds.Width / 2) + 40 && Nouvel…tatSouris.X > (Game.Window.ClientBounds.Width / 2) - 40))
+            if ((GestionInput.Nouvel…tatSouris.X < (Game.Window.ClientBounds.Width / 2) + 40 && GestionInput.Nouvel…tatSouris.X > (Game.Window.ClientBounds.Width / 2) - 40))
             {
                 DÈplacementSouris = new Vector2(0, DÈplacementSouris.Y);
             }
-            if (Nouvel…tatSouris.Y > (Game.Window.ClientBounds.Height / 2) - 40)
+            if (GestionInput.Nouvel…tatSouris.Y > (Game.Window.ClientBounds.Height / 2) - 40)
             {
                 DÈplacementSouris = new Vector2(DÈplacementSouris.X, -IncrÈmentAngleRotation);
             }
-            if (Nouvel…tatSouris.Y < (Game.Window.ClientBounds.Height / 2) + 40)
+            if (GestionInput.Nouvel…tatSouris.Y < (Game.Window.ClientBounds.Height / 2) + 40)
             {
                 DÈplacementSouris = new Vector2(DÈplacementSouris.X, +IncrÈmentAngleRotation);
             }
-            if ((Nouvel…tatSouris.Y < (Game.Window.ClientBounds.Height / 2) + 40 && Nouvel…tatSouris.Y > (Game.Window.ClientBounds.Height / 2) - 40))
+            if ((GestionInput.Nouvel…tatSouris.Y < (Game.Window.ClientBounds.Height / 2) + 40 && GestionInput.Nouvel…tatSouris.Y > (Game.Window.ClientBounds.Height / 2) - 40))
             {
                 DÈplacementSouris = new Vector2(DÈplacementSouris.X, 0);
             }
@@ -185,10 +196,10 @@ namespace AtelierXNA
 
         void GestionProjectile()
         {
-            if (GestionInput.EstAncienClicGauche())
+            if (A…tÈCliquÈ)
             {
-                Console.WriteLine("Tir");
-                ProjectileTank = new Projectile(Jeu, "Projectile", 0.1f, new Vector3(0, RotationPitchCanon.Y, RotationPitchCanon.Z), PositionCanon, IntervalleMAJ);
+                Console.WriteLine("{0}", RotationPitchCanon.X);
+                ProjectileTank = new Projectile(Jeu, "Projectile", 0.1f, new Vector3(2 * RotationPitchCanon.X + MathHelper.Pi, RotationPitchCanon.Y, RotationPitchCanon.Z), PositionCanon, IntervalleMAJ);
                 Game.Components.Add(ProjectileTank);
             }
         }

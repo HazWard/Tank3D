@@ -20,12 +20,14 @@ namespace AtelierXNA
         protected const float HAUTEUR_DÉFAULT = 1f;
 
         // Propriétés
+        protected InputManager GestionInput { get; set; }
         protected float IncrémentAngleRotation { get; set; }
         protected float TempsÉcouléDepuisMAJ { get; set; }
         protected Terrain TerrainJeu { get; set; }
         protected float HauteurTerrain { get; set; }
         protected float IntervalleMAJ { get; set; }
         protected Point nouvellesCoords { get; set; }
+        protected bool AÉtéCliqué { get; set; }
 
         public ModèleMobile(Game jeu, string nomModèle, float échelleInitiale, Vector3 rotationInitiale, Vector3 positionInitiale, float intervalleMAJ)
             : base(jeu, nomModèle, échelleInitiale, rotationInitiale, positionInitiale)
@@ -44,18 +46,11 @@ namespace AtelierXNA
         {
             base.LoadContent();
             TerrainJeu = Game.Services.GetService(typeof(Terrain)) as Terrain;
+            GestionInput = Game.Services.GetService(typeof(InputManager)) as InputManager;
         }
 
         public override void Update(GameTime gameTime)
         {
-            float TempsÉcoulé = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            TempsÉcouléDepuisMAJ += TempsÉcoulé;
-            if (TempsÉcouléDepuisMAJ >= IntervalleMAJ)
-            {
-                GestionMouvements();
-                //ÉcrireMeshes();
-                TempsÉcouléDepuisMAJ = 0;
-            }
             base.Update(gameTime);
         }
 
@@ -66,8 +61,6 @@ namespace AtelierXNA
                 Console.WriteLine(m.Name);
             }
         }
-
-        protected abstract void GestionMouvements();
 
         protected bool EstHorsDesBornes(Point coords)
         {
