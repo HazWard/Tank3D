@@ -34,8 +34,7 @@ namespace AtelierXNA
         Vector3 PositionCanon { get; set; }
         Vector3 PositionTour { get; set; }
         Vector3 PositionProjectile { get; set; }
-        Vector2 AnciennePositionSouris { get; set; }
-        Vector2 DÈplacementSouris { get; set; }
+        Vector2 DeltaRotationCanon { get; set; }
         Matrix MondeTour { get; set; }
         Matrix MondeCanon { get; set; }
         Matrix MondeRoues { get; set; }
@@ -43,8 +42,6 @@ namespace AtelierXNA
         float …chelleTour { get; set; }
         float …chelleCanon { get; set; }
         float …chelleRoues { get; set; }
-        float IncrÈmentAngleRotationX { get; set; }
-        float IncrÈmentAngleRotationY { get; set; }
 
         public Joueur(Game jeu, string nomModËle, float ÈchelleInitiale, Vector3 rotationInitiale, Vector3 positionInitiale, float intervalleMAJ)
             : base(jeu, nomModËle, ÈchelleInitiale, rotationInitiale, positionInitiale, intervalleMAJ)
@@ -62,11 +59,9 @@ namespace AtelierXNA
             base.Initialize();
             RotationYawTour = new Vector3(-MathHelper.PiOver2, 0, MathHelper.PiOver2);
             RotationPitchCanon = new Vector3(-MathHelper.PiOver2, 0, MathHelper.PiOver2);
-            IncrÈmentAngleRotationX = 2f * IncrÈmentAngleRotation;
             …chelleTour = 0.0035f;
             …chelleCanon = 0.005f;
             …chelleRoues = 0.05f;
-            DÈplacementSouris = new Vector2(0, 0);
             Nouvel…tatSouris = Mouse.GetState();
             Mouse.SetPosition(400, 200);
         }
@@ -97,13 +92,13 @@ namespace AtelierXNA
         protected override void GestionMouvements()
         {
             Nouvel…tatSouris = Mouse.GetState();
-            GÈstionSouris();
             GestionProjectile();
             RotationTour();
             RotationCanon();
             
             CamÈra.Cible = new Vector3(Position.X, Position.Y + 4, Position.Z);
-            CamÈra.Position = new Vector3(((float)Math.Sin(RotationYawTour.Y) * DISTANCE_POURSUITE) + Position.X, Position.Y + HAUTEUR_CAM_D…FAULT,
+            CamÈra.Position
+                = new Vector3(((float)Math.Sin(RotationYawTour.Y) * DISTANCE_POURSUITE) + Position.X, Position.Y + HAUTEUR_CAM_D…FAULT,
                                           ((float)Math.Cos(RotationYawTour.Y) * DISTANCE_POURSUITE) + Position.Z);
             
             float dÈplacement = GÈrerTouche(Keys.W) - GÈrerTouche(Keys.S);
@@ -137,49 +132,40 @@ namespace AtelierXNA
 
         void RotationTour()
         {
-            RotationYawTour = new Vector3(RotationYawTour.X, RotationYawTour.Y + 2 * (IncrÈmentAngleRotation * DÈplacementSouris.X), RotationYawTour.Z);
+            GestionSouris();
+            RotationYawTour = new Vector3(RotationYawTour.X, RotationYawTour.Y + 2 * (-0.00005f * DeltaRotationCanon.X), RotationYawTour.Z);
             PositionTour = new Vector3(Position.X, Position.Y + 0.3f, Position.Z);
             MondeTour = TransformationsMeshes(…chelleTour, RotationYawTour, PositionTour);
         }
-
         void RotationCanon()
         {
-            RotationPitchCanon = new Vector3(RotationPitchCanon.X + (IncrÈmentAngleRotation * DÈplacementSouris.Y),
-                                             RotationPitchCanon.Y + 2 * (IncrÈmentAngleRotation * DÈplacementSouris.X), RotationPitchCanon.Z);
+            GestionSouris();
+
+            RotationPitchCanon = new Vector3(RotationPitchCanon.X + (-0.00005f * DeltaRotationCanon.Y),
+                                             RotationPitchCanon.Y + 2 * (-0.00005f * DeltaRotationCanon.X), RotationPitchCanon.Z);
             if (RotationPitchCanon.X > -1.3 || RotationPitchCanon.X < -1.7)
             {
-                RotationPitchCanon = new Vector3(RotationPitchCanon.X - (IncrÈmentAngleRotation * DÈplacementSouris.Y),
+                RotationPitchCanon = new Vector3(RotationPitchCanon.X - (-0.00005f * DeltaRotationCanon.Y),
                                                  RotationPitchCanon.Y, RotationPitchCanon.Z);
             }
             PositionCanon = new Vector3(Position.X, Position.Y - 1f, Position.Z);
             MondeCanon = TransformationsMeshes(…chelleCanon, RotationPitchCanon, PositionCanon);
+            DeltaRotationCanon = new Vector2(0,0);
         }
 
-        void GÈstionSouris()
+        void GestionSouris()
         {
-            if (Nouvel…tatSouris.X > (Game.Window.ClientBounds.Width / 2) + 40)
+            if (Nouvel…tatSouris != Ancien…tatSouris)
             {
-                DÈplacementSouris = new Vector2(-IncrÈmentAngleRotation, DÈplacementSouris.Y);
+                DeltaRotationCanon = new Vector2(Nouvel…tatSouris.X - (Game.GraphicsDevice.Viewport.Width / 2), Nouvel…tatSouris.Y - (Game.GraphicsDevice.Viewport.Height / 2));
             }
-            if (Nouvel…tatSouris.X < (Game.Window.ClientBounds.Width / 2) - 40)
+            if ((Nouvel…tatSouris.X < (Game.Window.ClientBounds.Width / 2) + 20 && Nouvel…tatSouris.X > (Game.Window.ClientBounds.Width / 2) - 20))
             {
-                DÈplacementSouris = new Vector2(IncrÈmentAngleRotation, DÈplacementSouris.Y);
+                DeltaRotationCanon = new Vector2(0, DeltaRotationCanon.Y);
             }
-            if ((Nouvel…tatSouris.X < (Game.Window.ClientBounds.Width / 2) + 40 && Nouvel…tatSouris.X > (Game.Window.ClientBounds.Width / 2) - 40))
+            if ((Nouvel…tatSouris.Y < (Game.Window.ClientBounds.Height / 2) + 20 && Nouvel…tatSouris.Y > (Game.Window.ClientBounds.Height / 2) - 20))
             {
-                DÈplacementSouris = new Vector2(0, DÈplacementSouris.Y);
-            }
-            if (Nouvel…tatSouris.Y > (Game.Window.ClientBounds.Height / 2) - 40)
-            {
-                DÈplacementSouris = new Vector2(DÈplacementSouris.X, -IncrÈmentAngleRotation);
-            }
-            if (Nouvel…tatSouris.Y < (Game.Window.ClientBounds.Height / 2) + 40)
-            {
-                DÈplacementSouris = new Vector2(DÈplacementSouris.X, +IncrÈmentAngleRotation);
-            }
-            if ((Nouvel…tatSouris.Y < (Game.Window.ClientBounds.Height / 2) + 40 && Nouvel…tatSouris.Y > (Game.Window.ClientBounds.Height / 2) - 40))
-            {
-                DÈplacementSouris = new Vector2(DÈplacementSouris.X, 0);
+                DeltaRotationCanon = new Vector2(DeltaRotationCanon.X, 0);
             }
         }
 
