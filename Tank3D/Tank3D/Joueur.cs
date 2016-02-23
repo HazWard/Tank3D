@@ -65,7 +65,7 @@ namespace AtelierXNA
         {
             base.Initialize();
             RotationYawTour = new Vector3(-MathHelper.PiOver2, 0, MathHelper.PiOver2);
-            RotationPitchCanon = new Vector3(-MathHelper.PiOver2, 0, MathHelper.PiOver2);
+            RotationPitchCanon = new Vector3(-MathHelper.PiOver2, 0.02f, MathHelper.PiOver2);
             ÉchelleTour = 0.0035f;
             ÉchelleCanon = 0.005f;
             ÉchelleRoues = 0.05f;
@@ -112,9 +112,8 @@ namespace AtelierXNA
             RotationCanon();
 
             Caméra.Cible = new Vector3(Position.X, Position.Y + 4, Position.Z);
-            Caméra.Position
-                = new Vector3(((float)Math.Sin(RotationYawTour.Y) * DISTANCE_POURSUITE) + Position.X, Position.Y + HAUTEUR_CAM_DÉFAULT,
-                                          ((float)Math.Cos(RotationYawTour.Y) * DISTANCE_POURSUITE) + Position.Z);
+            Caméra.Position= new Vector3(((float)Math.Sin(RotationYawTour.Y) * DISTANCE_POURSUITE) + Position.X, Position.Y + HAUTEUR_CAM_DÉFAULT,
+                                         ((float)Math.Cos(RotationYawTour.Y) * DISTANCE_POURSUITE) + Position.Z);
 
             float déplacement = GérerTouche(Keys.W) - GérerTouche(Keys.S);
             float rotation = GérerTouche(Keys.D) - GérerTouche(Keys.A);
@@ -156,7 +155,6 @@ namespace AtelierXNA
         void RotationCanon()
         {
             GestionSouris();
-
             RotationPitchCanon = new Vector3(RotationPitchCanon.X + (-0.00005f * DeltaRotationCanon.Y),
                                              RotationPitchCanon.Y + 2 * (-0.00005f * DeltaRotationCanon.X), RotationPitchCanon.Z);
             if (RotationPitchCanon.X > -1.3 || RotationPitchCanon.X < -1.7)
@@ -191,6 +189,9 @@ namespace AtelierXNA
             {
                 //Console.WriteLine("{0}", RotationPitchCanon.X);
                 ProjectileTank = new Projectile(Jeu, "Projectile", 0.1f, new Vector3(2 * RotationPitchCanon.X + MathHelper.Pi, RotationPitchCanon.Y, RotationPitchCanon.Z), PositionCanon, IntervalleMAJ);
+                ProjectileTank = new Projectile(Jeu, "Projectile", 0.1f, 
+                                                new Vector3(2 * RotationPitchCanon.X + MathHelper.Pi, RotationPitchCanon.Y, RotationPitchCanon.Z),
+                                                new Vector3(PositionCanon.X, PositionCanon.Y + 4.6f, PositionCanon.Z), IntervalleMAJ);
                 Game.Components.Add(ProjectileTank);
             }
         }

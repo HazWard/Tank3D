@@ -14,7 +14,10 @@ namespace AtelierXNA
 {
     class Projectile:ModèleMobile
     {
-        const float INCRÉMENT_DÉPLACEMENT_PROJECTILE = 0.5f;
+        const float AccélérationGravitationelle = -0.98f;
+        const float VitesseDépart = 2f;
+        float IncrémentDéplacementProjectile { get; set; }
+        float IncrémentHauteurProjectile { get; set; }
 
         public Projectile(Game jeu, string nomModèle, float échelleInitiale, Vector3 rotationInitiale, Vector3 positionInitiale, float intervalleMAJ)
             : base(jeu, nomModèle, échelleInitiale, rotationInitiale, positionInitiale, intervalleMAJ)
@@ -32,6 +35,13 @@ namespace AtelierXNA
                 TempsÉcouléDepuisMAJ = 0;
             }
             base.Update(gameTime);
+        }
+
+        protected override void LoadContent()
+        {
+            IncrémentDéplacementProjectile = ((float)Math.Cos(Rotation.X) * VitesseDépart) * 2;
+            IncrémentHauteurProjectile = ((float)Math.Sin(Rotation.X) * VitesseDépart) / 2;
+            base.LoadContent();
         }
 
         public bool EstDétruit()
@@ -56,22 +66,28 @@ namespace AtelierXNA
 
         void ModificationParamètres()
         {
-            float posX = INCRÉMENT_DÉPLACEMENT_PROJECTILE * (float)Math.Sin(Rotation.Y);
-            float posY = INCRÉMENT_DÉPLACEMENT_PROJECTILE * (float)Math.Cos(Rotation.Y);
+            float posX = IncrémentDéplacementProjectile * (float)Math.Sin(Rotation.Y);
+            float posY = IncrémentDéplacementProjectile * (float)Math.Cos(Rotation.Y);
             Vector2 déplacementFinal = new Vector2(posX, posY);
             float posXFinal = Position.X - déplacementFinal.X;
             float posZFinal = Position.Z - déplacementFinal.Y;
+            
+            GestionForces();
             
             nouvellesCoords = TerrainJeu.ConvertionCoordonnées(new Vector3(posXFinal, 0, posZFinal));
 
             if (!EstHorsDesBornes(nouvellesCoords))
             {
-                Position = new Vector3(posXFinal, Position.Y, posZFinal);
-                Rotation = new Vector3(Rotation.X, Rotation.Y, Rotation.Z + 0.2f);
+                Position = new Vector3(posXFinal, Position.Y + IncrémentHauteurProjectile, posZFinal);
+                Rotation = new Vector3(Rotation.X - 0.01f, Rotation.Y, Rotation.Z + 0.2f);
             }
-            //Position = new Vector3(posXFinal, Position.Y, posZFinal);
-            //Rotation = new Vector3(Rotation.X, Rotation.Y, Rotation.Z + 0.2f);
+
             CalculerMonde();
+        }
+
+        void GestionForces()
+        {
+            IncrémentHauteurProjectile -= 0.02f;
         }
         #endregion
     }

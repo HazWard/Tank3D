@@ -68,18 +68,16 @@ namespace AtelierXNA
             Components.Add(new PlanTexturé(this, 1f, new Vector3(0, MathHelper.Pi, 0), new Vector3(0, 6, 126), new Vector2(256, 50), new Vector2(10, 10), "desertDunes", INTERVALLE_MAJ_STANDARD));
             Components.Add(new PlanTexturé(this, 1f, new Vector3(MathHelper.PiOver2, 0, 0), new Vector3(0, 31, 0), new Vector2(256, 256), new Vector2(10, 10), "ciel", INTERVALLE_MAJ_STANDARD));
             //-------------------------------------------------------------------------------------------------------------------------------
-           
-            //-------------------------------------------------------------------------------------------------------------------------------
 
             GestionInput = new InputManager(this);
             Components.Add(GestionInput);
 
             Components.Add(new Afficheur3D(this));
 
-            Terrain TerrainJeu = new Terrain(this, 1f, Vector3.Zero, Vector3.Zero, new Vector3(256, 25, 256), "PetiteCarte", "DétailsDésertSable", 3, INTERVALLE_MAJ_STANDARD);
+            Terrain TerrainJeu = new Terrain(this, 1f, Vector3.Zero, Vector3.Zero, new Vector3(256, 25, 256), "Flat", "DétailsDésertSable", 3, INTERVALLE_MAJ_STANDARD);
             Components.Add(TerrainJeu);
+            Components.Add(new Sprite(this, "crosshairBon", new Vector2(Window.ClientBounds.Width / 2, Window.ClientBounds.Height / 2), 0.2f));
             Joueur joueur = new Joueur(this, "Veteran Tiger Body", ÉCHELLE_OBJET, rotationObjet, positionObjet, INTERVALLE_MAJ_STANDARD);
-            Components.Add(new Sprite(this, "crosshairBon", new Vector2(Window.ClientBounds.Width / 2, Window.ClientBounds.Height / 2),0.2f));
             Components.Add(joueur);
 
             // Components.Add(new AI(this, "Veteran Tiger NoColor", ÉCHELLE_OBJET, rotationObjet, positionAI, INTERVALLE_MAJ_STANDARD, joueur));

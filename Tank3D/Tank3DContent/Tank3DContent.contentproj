@@ -35,6 +35,11 @@
       <Importer>FbxImporter</Importer>
       <Processor>ModelProcessor</Processor>
     </Compile>
+    <Compile Include="Modèles\Veteran Tiger Body.FBX">
+      <Name>Veteran Tiger Body</Name>
+      <Importer>FbxImporter</Importer>
+      <Processor>ModelProcessor</Processor>
+    </Compile>
     <Compile Include="Textures\CarteTest.bmp">
       <Name>CarteTest</Name>
       <Importer>TextureImporter</Importer>
@@ -105,11 +110,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Modèles\Veteran Tiger Body.FBX">
-      <Name>Veteran Tiger Body</Name>
-      <Importer>FbxImporter</Importer>
-      <Processor>ModelProcessor</Processor>
-    </Compile>
     <Compile Include="Modèles\Veteran Tiger Desert.FBX">
       <Name>Veteran Tiger Desert</Name>
       <Importer>FbxImporter</Importer>
