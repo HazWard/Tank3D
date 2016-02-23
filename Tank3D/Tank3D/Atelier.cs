@@ -82,7 +82,7 @@ namespace AtelierXNA
             Components.Add(new Sprite(this, "crosshairBon", new Vector2(Window.ClientBounds.Width / 2, Window.ClientBounds.Height / 2),0.2f));
             Components.Add(joueur);
 
-            Components.Add(new AI(this, "Veteran Tiger NoColor", ÉCHELLE_OBJET, rotationObjet, positionAI, INTERVALLE_MAJ_STANDARD, joueur));
+            // Components.Add(new AI(this, "Veteran Tiger NoColor", ÉCHELLE_OBJET, rotationObjet, positionAI, INTERVALLE_MAJ_STANDARD, joueur));
 
             Services.AddService(typeof(RessourcesManager<SpriteFont>), new RessourcesManager<SpriteFont>(this, "Fonts"));
             Services.AddService(typeof(RessourcesManager<Texture2D>), new RessourcesManager<Texture2D>(this, "Textures"));
