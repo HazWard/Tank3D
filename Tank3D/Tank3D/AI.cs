@@ -18,13 +18,17 @@ namespace AtelierXNA
     public class AI : ModèleMobile
     {
         const float INCRÉMENT_DÉPLACEMENT_AI = 0.1f;
+        const float EST_PROCHE = 50f;
 
         Joueur Cible { get; set; }
-        float Orientation { get; set; }
+        float Distance { get; set; }
+        ModèleMobile ProjectileTank { get; set; }
+        Game Jeu { get; set; }
 
         public AI(Game jeu, string nomModèle, float échelleInitiale, Vector3 rotationInitiale, Vector3 positionInitiale, float intervalleMAJ, Joueur cible)
             : base(jeu, nomModèle, échelleInitiale, rotationInitiale, positionInitiale, intervalleMAJ)
         {
+            Jeu = jeu;
             Cible = cible;
         }
         public override void Update(GameTime gameTime)
@@ -32,8 +36,13 @@ namespace AtelierXNA
             float TempsÉcoulé = (float)gameTime.ElapsedGameTime.TotalSeconds;
             TempsÉcouléDepuisMAJ += TempsÉcoulé;
 
+            Distance = new Vector2(Position.X - Cible.Coordonnées.X, Position.Z - Cible.Coordonnées.Y).Length();
             if (TempsÉcouléDepuisMAJ >= IntervalleMAJ)
             {
+                if (Distance <= EST_PROCHE)
+                {
+                    GestionProjectile();
+                }
                 GestionMouvements();
                 TempsÉcouléDepuisMAJ = 0;
             }
@@ -41,6 +50,12 @@ namespace AtelierXNA
         }
 
         #region Méthodes pour la gestion des déplacements et rotations du modèle
+        void GestionProjectile()
+        {
+            ProjectileTank = new Projectile(Jeu, "Projectile", 0.1f, Rotation, Position, IntervalleMAJ);
+            Game.Components.Add(ProjectileTank);
+        }
+        
         void CalculerMonde()
         {
             Monde = Matrix.Identity;
