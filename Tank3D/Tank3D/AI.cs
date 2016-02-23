@@ -24,12 +24,14 @@ namespace AtelierXNA
         float Distance { get; set; }
         ModèleMobile ProjectileTank { get; set; }
         Game Jeu { get; set; }
+        int CadenceDeTir { get; set; }
 
         public AI(Game jeu, string nomModèle, float échelleInitiale, Vector3 rotationInitiale, Vector3 positionInitiale, float intervalleMAJ, Joueur cible)
             : base(jeu, nomModèle, échelleInitiale, rotationInitiale, positionInitiale, intervalleMAJ)
         {
             Jeu = jeu;
             Cible = cible;
+            CadenceDeTir = 0;
         }
         public override void Update(GameTime gameTime)
         {
@@ -43,6 +45,7 @@ namespace AtelierXNA
                 {
                     GestionProjectile();
                 }
+                ++CadenceDeTir;
                 GestionMouvements();
                 TempsÉcouléDepuisMAJ = 0;
             }
@@ -52,8 +55,11 @@ namespace AtelierXNA
         #region Méthodes pour la gestion des déplacements et rotations du modèle
         void GestionProjectile()
         {
-            ProjectileTank = new Projectile(Jeu, "Projectile", 0.1f, Rotation, Position, IntervalleMAJ);
-            Game.Components.Add(ProjectileTank);
+            if (CadenceDeTir % 10 == 0)
+            {
+                ProjectileTank = new Projectile(Jeu, "Projectile", 0.1f, Rotation, Position, IntervalleMAJ);
+                Game.Components.Add(ProjectileTank);
+            }
         }
         
         void CalculerMonde()
@@ -71,7 +77,7 @@ namespace AtelierXNA
 
         float CalculOrientation(Vector2 cible)
         {
-            Vector2 direction = Vector2.Normalize(new Vector2(Position.X - cible.X, Position.Z - cible.Y));
+            Vector2 direction = new Vector2(Position.X - cible.X, Position.Z - cible.Y);
             float coeff = 0;
             if (direction.X <= 0)
             {
