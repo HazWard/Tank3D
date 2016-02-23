@@ -39,7 +39,7 @@ namespace AtelierXNA
 
         protected override void LoadContent()
         {
-            IncrémentDéplacementProjectile = (float)Math.Cos(Rotation.X) * VitesseDépart;
+            IncrémentDéplacementProjectile = ((float)Math.Cos(Rotation.X) * VitesseDépart) * 2;
             IncrémentHauteurProjectile = ((float)Math.Sin(Rotation.X) * VitesseDépart) / 2;
             base.LoadContent();
         }
