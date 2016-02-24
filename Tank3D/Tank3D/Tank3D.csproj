@@ -77,10 +77,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Afficheur3D.cs" />
+    <Compile Include="AfficheurFPS.cs" />
     <Compile Include="AI.cs" />
     <Compile Include="ArrièrePlan.cs" />
     <Compile Include="Atelier.cs" />
     <Compile Include="BoutonDeCommande.cs" />
+    <Compile Include="CalculateurFPS.cs" />
     <Compile Include="Caméra.cs" />
     <Compile Include="CaméraFixe.cs" />
     <Compile Include="CaméraSubjective.cs" />

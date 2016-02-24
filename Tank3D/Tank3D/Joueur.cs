@@ -155,7 +155,7 @@ namespace AtelierXNA
             GestionSouris();
             RotationPitchCanon = new Vector3(RotationPitchCanon.X + (-0.00005f * DeltaRotationCanon.Y),
                                              RotationPitchCanon.Y + 2 * (-0.00005f * DeltaRotationCanon.X), RotationPitchCanon.Z);
-            if (RotationPitchCanon.X > -1.3 || RotationPitchCanon.X < -1.7)
+            if (RotationPitchCanon.X > -1.3 || RotationPitchCanon.X < -1.8)
             {
                 RotationPitchCanon = new Vector3(RotationPitchCanon.X - (-0.00005f * DeltaRotationCanon.Y),
                                                  RotationPitchCanon.Y, RotationPitchCanon.Z);
@@ -190,6 +190,11 @@ namespace AtelierXNA
                                                 new Vector3(PositionCanon.X, PositionCanon.Y + 4.6f, PositionCanon.Z), IntervalleMAJ);
                 Game.Components.Add(ProjectileTank);
             }
+        }
+        public bool EstDétruit()
+        {
+            bool estDétruit = false;
+            return estDétruit;
         }
 
         float GérerTouche(Keys touche)
