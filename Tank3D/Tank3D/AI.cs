@@ -22,10 +22,27 @@ namespace AtelierXNA
         
 
         Joueur Cible { get; set; }
+        bool estDétruit { get; set; }
         float Distance { get; set; }
         int Compteur { get; set; }
         ModèleMobile ProjectileTank { get; set; }
         Game Jeu { get; set; }
+        public Vector3 GetPosition
+        {
+            get
+            {
+                return Position;
+            }
+            private set { }
+        }
+        public Vector3 GetRotation
+        {
+            get
+            {
+                return Rotation;
+            }
+            private set { }
+        }
 
         public AI(Game jeu, string nomModèle, float échelleInitiale, Vector3 rotationInitiale, Vector3 positionInitiale, float intervalleMAJ, Joueur cible)
             : base(jeu, nomModèle, échelleInitiale, rotationInitiale, positionInitiale, intervalleMAJ)
@@ -46,11 +63,21 @@ namespace AtelierXNA
                 {
                     GestionProjectile();
                 }
+                
                 GestionMouvements();
                 Compteur++;
                 TempsÉcouléDepuisMAJ = 0;
             }
             base.Update(gameTime);
+        }
+        public bool EstDétruit()
+        {
+            estDétruit = false;
+            if (Compteur == 1000)
+            {
+                estDétruit = true;
+            }
+            return estDétruit;
         }
 
         #region Méthodes pour la gestion des déplacements et rotations du modèle

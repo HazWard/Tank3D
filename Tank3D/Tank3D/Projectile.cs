@@ -73,7 +73,7 @@ namespace AtelierXNA
             float posZFinal = Position.Z - déplacementFinal.Y;
             
             GestionForces();
-            
+
             nouvellesCoords = TerrainJeu.ConvertionCoordonnées(new Vector3(posXFinal, 0, posZFinal));
 
             if (!EstHorsDesBornes(nouvellesCoords))
