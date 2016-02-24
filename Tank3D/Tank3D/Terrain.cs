@@ -157,30 +157,34 @@ namespace AtelierXNA
 
         #region Calculs pour les normales
 
-        public Vector4 GetNormale (Point coords)
+        public Vector2 GetNormale (Point coords)
         {
             Vector3 vecteurA = PtsSommets[coords.X, coords.Y + 1] - PtsSommets[coords.X, coords.Y];
-            Vector3 vecteurB = PtsSommets[coords.X, coords.Y] - PtsSommets[coords.X + 1, coords.Y];
+            Vector3 vecteurB = PtsSommets[coords.X + 1, coords.Y] - PtsSommets[coords.X, coords.Y];
 
-            Vector3 normale = Vector3.Normalize(Vector3.Cross(vecteurA, vecteurB));
+            Vector3 normale = Vector3.Normalize(Vector3.Cross(vecteurB, vecteurA));
 
-            float angle = MathHelper.ToDegrees(AngleEntreDeuxVecteurs(normale, Vector3.UnitY));
+            float angle = AngleEntreDeuxVecteurs(Vector3.Normalize(normale), Vector3.UnitY);
 
             Console.WriteLine("--------------------");
-            Console.WriteLine("Vecteur A: {0}\nVecteur B: {1}\nNormale: {2}\nAngle: {3}", vecteurA.ToString(), vecteurB.ToString(), normale.ToString(), angle);
+            Console.WriteLine("Angle: {0}", angle);
 
-            return new Vector4(normale.X, normale.Y, normale.Z, angle);
+            return new Vector2(0, angle);
         }
 
-        float AngleEntreDeuxVecteurs(Vector3 vecteurU, Vector3 vecteurV)
+        float AngleEntreDeuxVecteurs(Vector3 vecteurN, Vector3 vecteurV)
         {
-            float expU = vecteurU.X * vecteurU.X + vecteurU.Y * vecteurU.Y + vecteurU.Z * vecteurU.Z;
-            float normeU = (float)Math.Sqrt(expU);
+            // Pour des vecteurs normalisés
+            
+            /*
+            float expN = vecteurN.X * vecteurN.X + vecteurN.Y * vecteurN.Y + vecteurN.Z * vecteurN.Z;
+            float normeN = (float)Math.Sqrt(expN);
 
             float expV = vecteurV.X * vecteurV.X + vecteurV.Y * vecteurV.Y + vecteurV.Z * vecteurV.Z;
             float normeV = (float)Math.Sqrt(expV);
+            */
 
-            float valeur = Vector3.Dot(vecteurU, vecteurV) / (normeU * normeV);
+            float valeur = Vector3.Dot(vecteurN, vecteurV);
 
             return (float)Math.Acos(valeur);
         }

@@ -41,7 +41,7 @@ namespace AtelierXNA
         float ÉchelleRoues { get; set; }
         float IncrémentAngleRotationX { get; set; }
         float IncrémentAngleRotationY { get; set; }
-        Vector4 Normale { get; set; }
+        Vector2 AnglesNormales { get; set; }
         public Vector2 Coordonnées
         {
             get
@@ -140,7 +140,9 @@ namespace AtelierXNA
             {
                 HauteurTerrain = TerrainJeu.GetHauteur(nouvellesCoords);
                 Position = new Vector3(posXFinal, HauteurTerrain + HAUTEUR_DÉFAULT, posZFinal);
-                Normale = TerrainJeu.GetNormale(nouvellesCoords);
+                AnglesNormales = TerrainJeu.GetNormale(nouvellesCoords);
+
+                Rotation = new Vector3(AnglesNormales.Y, Rotation.Y, Rotation.Z);
             }
             CalculerMonde();
         }
@@ -148,7 +150,7 @@ namespace AtelierXNA
         void RotationTour()
         {
             GestionSouris();
-            RotationYawTour = new Vector3(RotationYawTour.X, RotationYawTour.Y + 2 * (-0.00005f * DeltaRotationCanon.X), RotationYawTour.Z);
+            RotationYawTour = new Vector3(-MathHelper.PiOver2 + AnglesNormales.Y, RotationYawTour.Y + 2 * (-0.00005f * DeltaRotationCanon.X), RotationYawTour.Z);
             PositionTour = new Vector3(Position.X, Position.Y + 0.3f, Position.Z);
             MondeTour = TransformationsMeshes(ÉchelleTour, RotationYawTour, PositionTour);
         }

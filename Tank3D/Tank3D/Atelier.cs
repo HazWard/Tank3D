@@ -105,11 +105,6 @@ namespace AtelierXNA
         protected override void Update(GameTime gameTime)
         {
             GérerClavier();
-            if (TankEnnemi.EstDétruit())
-            {
-                Components.Add(new ObjetDeBase(this, "Veteran Tiger Forest", ÉCHELLE_OBJET, TankEnnemi.GetRotation, TankEnnemi.GetPosition));
-                Components.Remove(TankEnnemi);
-            }
             base.Update(gameTime);
         }
 
