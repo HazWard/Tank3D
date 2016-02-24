@@ -81,12 +81,19 @@ namespace AtelierXNA
                 Position = new Vector3(posXFinal, Position.Y + IncrémentHauteurProjectile, posZFinal);
                 Rotation = new Vector3(Rotation.X - 0.01f, Rotation.Y, Rotation.Z + 0.2f);
             }
-            else
-            {
-                this.Visible = false;
-            }
+
+            EffacerProjectile(EstHorsDesBornes(nouvellesCoords));
 
             CalculerMonde();
+        }
+
+        private void EffacerProjectile(bool sortie)
+        {
+            if (Position.Y <= 0 || sortie)
+            {
+                Game.Components.Remove(this);
+                Console.WriteLine("Projectile effacé!");
+            }
         }
 
         void GestionForces()
