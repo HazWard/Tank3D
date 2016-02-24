@@ -41,6 +41,7 @@ namespace AtelierXNA
         float ÉchelleRoues { get; set; }
         float IncrémentAngleRotationX { get; set; }
         float IncrémentAngleRotationY { get; set; }
+        Vector4 Normale { get; set; }
         public Vector2 Coordonnées
         {
             get
@@ -137,8 +138,9 @@ namespace AtelierXNA
 
             if (!EstHorsDesBornes(nouvellesCoords))
             {
-                Position = new Vector3(posXFinal, HauteurTerrain + HAUTEUR_DÉFAULT, posZFinal);
                 HauteurTerrain = TerrainJeu.GetHauteur(nouvellesCoords);
+                Position = new Vector3(posXFinal, HauteurTerrain + HAUTEUR_DÉFAULT, posZFinal);
+                Normale = TerrainJeu.GetNormale(nouvellesCoords);
             }
             CalculerMonde();
         }
@@ -185,6 +187,8 @@ namespace AtelierXNA
         {
             if (AÉtéCliqué)
             {
+                //Console.WriteLine("{0}", RotationPitchCanon.X);
+                ProjectileTank = new Projectile(Jeu, "Projectile", 0.1f, new Vector3(2 * RotationPitchCanon.X + MathHelper.Pi, RotationPitchCanon.Y, RotationPitchCanon.Z), PositionCanon, IntervalleMAJ);
                 ProjectileTank = new Projectile(Jeu, "Projectile", 0.1f, 
                                                 new Vector3(2 * RotationPitchCanon.X + MathHelper.Pi, RotationPitchCanon.Y, RotationPitchCanon.Z),
                                                 new Vector3(PositionCanon.X, PositionCanon.Y + 4.6f, PositionCanon.Z), IntervalleMAJ);
