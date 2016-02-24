@@ -19,19 +19,20 @@ namespace AtelierXNA
     {
         const float INCRÉMENT_DÉPLACEMENT_AI = 0.1f;
         const float EST_PROCHE = 50f;
+        
 
         Joueur Cible { get; set; }
         float Distance { get; set; }
+        int Compteur { get; set; }
         ModèleMobile ProjectileTank { get; set; }
         Game Jeu { get; set; }
-        int CadenceDeTir { get; set; }
 
         public AI(Game jeu, string nomModèle, float échelleInitiale, Vector3 rotationInitiale, Vector3 positionInitiale, float intervalleMAJ, Joueur cible)
             : base(jeu, nomModèle, échelleInitiale, rotationInitiale, positionInitiale, intervalleMAJ)
         {
             Jeu = jeu;
             Cible = cible;
-            CadenceDeTir = 0;
+            Compteur = 0;
         }
         public override void Update(GameTime gameTime)
         {
@@ -41,12 +42,12 @@ namespace AtelierXNA
             Distance = new Vector2(Position.X - Cible.Coordonnées.X, Position.Z - Cible.Coordonnées.Y).Length();
             if (TempsÉcouléDepuisMAJ >= IntervalleMAJ)
             {
-                if (Distance <= EST_PROCHE)
+                if (Distance <= EST_PROCHE && Compteur % 100 == 0)
                 {
                     GestionProjectile();
                 }
-                ++CadenceDeTir;
                 GestionMouvements();
+                Compteur++;
                 TempsÉcouléDepuisMAJ = 0;
             }
             base.Update(gameTime);
@@ -55,11 +56,9 @@ namespace AtelierXNA
         #region Méthodes pour la gestion des déplacements et rotations du modèle
         void GestionProjectile()
         {
-            if (CadenceDeTir % 10 == 0)
-            {
-                ProjectileTank = new Projectile(Jeu, "Projectile", 0.1f, Rotation, Position, IntervalleMAJ);
-                Game.Components.Add(ProjectileTank);
-            }
+            ProjectileTank = new Projectile(Jeu, "Projectile", 0.1f, Rotation, 
+                                            new Vector3(Position.X, Position.Y + 4f, Position.Z), IntervalleMAJ);
+            Game.Components.Add(ProjectileTank);
         }
         
         void CalculerMonde()
@@ -77,7 +76,7 @@ namespace AtelierXNA
 
         float CalculOrientation(Vector2 cible)
         {
-            Vector2 direction = new Vector2(Position.X - cible.X, Position.Z - cible.Y);
+            Vector2 direction = Vector2.Normalize(new Vector2(Position.X - cible.X, Position.Z - cible.Y));
             float coeff = 0;
             if (direction.X <= 0)
             {
