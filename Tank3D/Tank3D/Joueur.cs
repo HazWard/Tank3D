@@ -189,7 +189,7 @@ namespace AtelierXNA
         {
             if (AÉtéCliqué)
             {
-                //Console.WriteLine("{0}", RotationPitchCanon.X);
+                Console.WriteLine(Position);
                 ProjectileTank = new Projectile(Jeu, "Projectile", 0.1f, new Vector3(2 * RotationPitchCanon.X + MathHelper.Pi, RotationPitchCanon.Y, RotationPitchCanon.Z), PositionCanon, IntervalleMAJ);
                 ProjectileTank = new Projectile(Jeu, "Projectile", 0.1f, 
                                                 new Vector3(2 * RotationPitchCanon.X + MathHelper.Pi, RotationPitchCanon.Y, RotationPitchCanon.Z),

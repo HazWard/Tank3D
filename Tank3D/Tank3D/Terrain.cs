@@ -18,7 +18,7 @@ namespace AtelierXNA
         const int NB_SOMMETS_PAR_TUILE = 4;
         const float MAX_COULEUR = 255f;
         const float TEXTURE_ADJUST = 0.01f;
-        Vector3 Étendue { get; set; }
+        public Vector3 Étendue { get; set; }
         string NomCarteTerrain { get; set; }
         string NomTextureTerrain { get; set; }
         int NbNiveauxTexture { get; set; }
@@ -51,6 +51,7 @@ namespace AtelierXNA
             NbNiveauxTexture = nbNiveauxTexture;
             NomTextureTerrain = nomTextureTerrain;
             Étendue = étendue;
+            Console.WriteLine(Étendue);
         }
 
         public override void Initialize()
@@ -166,8 +167,8 @@ namespace AtelierXNA
 
             float angle = AngleEntreDeuxVecteurs(Vector3.Normalize(normale), Vector3.UnitY);
 
-            Console.WriteLine("--------------------");
-            Console.WriteLine("Angle: {0}", angle);
+            //Console.WriteLine("--------------------");
+            //Console.WriteLine("Angle: {0}", angle);
 
             return new Vector2(0, angle);
         }
