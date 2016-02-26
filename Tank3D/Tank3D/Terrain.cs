@@ -165,12 +165,14 @@ namespace AtelierXNA
 
             Vector3 normale = Vector3.Normalize(Vector3.Cross(vecteurB, vecteurA));
 
-            float angle = AngleEntreDeuxVecteurs(Vector3.Normalize(normale), Vector3.UnitY);
+            float angleX = (float)Math.Atan2(normale.X, normale.Y);
+            float angleY = (float)Math.Atan2(normale.Z, normale.Y);
 
-            //Console.WriteLine("--------------------");
-            //Console.WriteLine("Angle: {0}", angle);
+            Console.WriteLine("--------------------");
+            Console.WriteLine("Angle en X: {0}", angleX);
+            Console.WriteLine("Angle en Y: {0}", angleY);
 
-            return new Vector2(0, angle);
+            return new Vector2(-angleX, angleY);
         }
 
         float AngleEntreDeuxVecteurs(Vector3 vecteurN, Vector3 vecteurV)

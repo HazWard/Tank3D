@@ -24,7 +24,8 @@ namespace AtelierXNA
         protected float IncrémentAngleRotation { get; set; }
         protected float TempsÉcouléDepuisMAJ { get; set; }
         protected Terrain TerrainJeu { get; set; }
-        protected float HauteurTerrain { get; set; }
+        protected float NouvelleHauteurTerrain { get; set; }
+        protected float AncienneHauteurTerrain { get; set; }
         protected float IntervalleMAJ { get; set; }
         protected Point nouvellesCoords { get; set; }
         protected bool AÉtéCliqué { get; set; }

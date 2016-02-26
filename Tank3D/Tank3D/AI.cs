@@ -141,8 +141,8 @@ namespace AtelierXNA
 
             if (!EstHorsDesBornes(nouvellesCoords))
             {
-                HauteurTerrain = TerrainJeu.GetHauteur(nouvellesCoords);
-                Position = new Vector3(posXFinal, HauteurTerrain + HAUTEUR_DÉFAULT, posZFinal);
+                NouvelleHauteurTerrain = TerrainJeu.GetHauteur(nouvellesCoords);
+                Position = new Vector3(posXFinal, NouvelleHauteurTerrain + HAUTEUR_DÉFAULT, posZFinal);
             }
 
             Rotation = new Vector3(Rotation.X, orientation, Rotation.Z);

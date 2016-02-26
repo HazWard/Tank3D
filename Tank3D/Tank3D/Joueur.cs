@@ -138,22 +138,32 @@ namespace AtelierXNA
 
             if (!EstHorsDesBornes(nouvellesCoords))
             {
-                HauteurTerrain = TerrainJeu.GetHauteur(nouvellesCoords);
-                Position = new Vector3(posXFinal, HauteurTerrain + HAUTEUR_DÉFAULT, posZFinal);
+                AncienneHauteurTerrain = NouvelleHauteurTerrain;
+                NouvelleHauteurTerrain = TerrainJeu.GetHauteur(nouvellesCoords);
+                Position = new Vector3(posXFinal, NouvelleHauteurTerrain + HAUTEUR_DÉFAULT, posZFinal);
                 AnglesNormales = TerrainJeu.GetNormale(nouvellesCoords);
-
-                Rotation = new Vector3(AnglesNormales.Y, Rotation.Y, Rotation.Z);
+                TraitementPentes();
+                Rotation = new Vector3(AnglesNormales.Y, Rotation.Y, AnglesNormales.X);
             }
             CalculerMonde();
+        }
+
+        void TraitementPentes()
+        {
+            if (AncienneHauteurTerrain > NouvelleHauteurTerrain)
+            {
+                AnglesNormales = new Vector2(AnglesNormales.X, -AnglesNormales.X);
+            }
         }
 
         void RotationTour()
         {
             GestionSouris();
-            RotationYawTour = new Vector3(-MathHelper.PiOver2 + AnglesNormales.Y, RotationYawTour.Y + 2 * (-0.00005f * DeltaRotationCanon.X), RotationYawTour.Z);
+            RotationYawTour = new Vector3(-MathHelper.PiOver2 + AnglesNormales.Y, RotationYawTour.Y + 2 * (-0.00005f * DeltaRotationCanon.X), MathHelper.PiOver2 + AnglesNormales.X);
             PositionTour = new Vector3(Position.X, Position.Y + 0.3f, Position.Z);
             MondeTour = TransformationsMeshes(ÉchelleTour, RotationYawTour, PositionTour);
         }
+
         void RotationCanon()
         {
             GestionSouris();
