@@ -17,14 +17,17 @@ namespace AtelierXNA
         const string TITRE = "Tank 3D";
         const int NB_TUILES = 5;
         const int NB_ZONES = NB_TUILES + 1;
-        const float ÉCHELLE_OBJET = 0.05f;
+        public const float ÉCHELLE_OBJET = 0.05f;
         const float INTERVALLE_CALCUL_FPS = 1f;
         const float INTERVALLE_MAJ_STANDARD = 1f / 60f;
         GraphicsDeviceManager PériphériqueGraphique { get; set; }
         SpriteBatch GestionSprites { get; set; }
+        GestionnaireEnnemis GestionEnnemis { get; set; }
         CalculateurFPS Calculateur { get; set; }
         Caméra CaméraJeu { get; set; }
         InputManager GestionInput { get; set; }
+        Terrain TerrainJeu { get; set; }
+        Joueur Utilisateur { get; set; }
         AI TankEnnemi { get; set; }
         Vector3 positionObjet { get; set; }
         Vector3 positionAI { get; set; }
@@ -81,15 +84,15 @@ namespace AtelierXNA
             Services.AddService(typeof(CalculateurFPS), Calculateur);
             Components.Add(new Afficheur3D(this));
 
-            Terrain TerrainJeu = new Terrain(this, 1f, Vector3.Zero, Vector3.Zero, new Vector3(256, 25, 256), "PetiteCarte", "DétailsDésertSable", 3, INTERVALLE_MAJ_STANDARD);
+            TerrainJeu = new Terrain(this, 1f, Vector3.Zero, Vector3.Zero, new Vector3(256, 25, 256), "PetiteCarte", "DétailsDésertSable", 3, INTERVALLE_MAJ_STANDARD);
             Components.Add(TerrainJeu);
-            //Components.Add(new ObjetDeBase(this, "desert", 2f, Vector3.Zero, new Vector3(0,-100,0)));
             Components.Add(new Sprite(this, "crosshairBon", new Vector2(Window.ClientBounds.Width / 2, Window.ClientBounds.Height / 2), 0.2f));
-            Joueur joueur = new Joueur(this, "Veteran Tiger Body", ÉCHELLE_OBJET, rotationObjet, positionObjet, INTERVALLE_MAJ_STANDARD);
-            Components.Add(joueur);
-            TankEnnemi = new AI(this, "Veteran Tiger NoColor", ÉCHELLE_OBJET, rotationObjet, positionAI, INTERVALLE_MAJ_STANDARD, joueur);
-            Components.Add(TankEnnemi);
-            //Components.Add(new AfficheurFPS(this));
+            Utilisateur = new Joueur(this, "Veteran Tiger Body", ÉCHELLE_OBJET, rotationObjet, positionObjet, INTERVALLE_MAJ_STANDARD);
+            Components.Add(Utilisateur);
+            //TankEnnemi = new AI(this, "Veteran Tiger NoColor", ÉCHELLE_OBJET, rotationObjet, positionAI, INTERVALLE_MAJ_STANDARD, Utilisateur);
+            //Components.Add(TankEnnemi);
+            GestionEnnemis = new GestionnaireEnnemis(this, Utilisateur, TerrainJeu, 5, ÉCHELLE_OBJET, INTERVALLE_MAJ_STANDARD);
+            Components.Add(GestionEnnemis);
             Services.AddService(typeof(RessourcesManager<SpriteFont>), new RessourcesManager<SpriteFont>(this, "Fonts"));
             Services.AddService(typeof(RessourcesManager<Texture2D>), new RessourcesManager<Texture2D>(this, "Textures"));
             Services.AddService(typeof(RessourcesManager<Model>), new RessourcesManager<Model>(this, "Modèles"));
