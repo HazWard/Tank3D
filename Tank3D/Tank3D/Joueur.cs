@@ -20,6 +20,7 @@ namespace AtelierXNA
         // Constantes
         protected const float DISTANCE_POURSUITE = 20f;
         protected const float HAUTEUR_CAM_DÉFAULT = 10f;
+        const float INCRÉMENT_ROTATION_TOUR = 0.00005f;
 
         // Propriétés
         Game Jeu { get; set; }
@@ -152,14 +153,14 @@ namespace AtelierXNA
         {
             if (AncienneHauteurTerrain > NouvelleHauteurTerrain)
             {
-                AnglesNormales = new Vector2(AnglesNormales.X, -AnglesNormales.X);
+                AnglesNormales = new Vector2(AnglesNormales.X, -AnglesNormales.Y);
             }
         }
 
         void RotationTour()
         {
             GestionSouris();
-            RotationYawTour = new Vector3(-MathHelper.PiOver2 + AnglesNormales.Y, RotationYawTour.Y + 2 * (-0.00005f * DeltaRotationCanon.X), MathHelper.PiOver2 + AnglesNormales.X);
+            RotationYawTour = new Vector3(-MathHelper.PiOver2 + AnglesNormales.Y, RotationYawTour.Y + 2 * (-INCRÉMENT_ROTATION_TOUR * DeltaRotationCanon.X), MathHelper.PiOver2 + AnglesNormales.X);
             PositionTour = new Vector3(Position.X, Position.Y + 0.3f, Position.Z);
             MondeTour = TransformationsMeshes(ÉchelleTour, RotationYawTour, PositionTour);
         }
@@ -167,11 +168,11 @@ namespace AtelierXNA
         void RotationCanon()
         {
             GestionSouris();
-            RotationPitchCanon = new Vector3(RotationPitchCanon.X + (-0.00005f * DeltaRotationCanon.Y),
-                                             RotationPitchCanon.Y + 2 * (-0.00005f * DeltaRotationCanon.X), RotationPitchCanon.Z);
+            RotationPitchCanon = new Vector3(RotationPitchCanon.X + (-INCRÉMENT_ROTATION_TOUR * DeltaRotationCanon.Y),
+                                             RotationPitchCanon.Y + 2 * (-INCRÉMENT_ROTATION_TOUR * DeltaRotationCanon.X), RotationPitchCanon.Z);
             if (RotationPitchCanon.X > -1.3 || RotationPitchCanon.X < -1.8)
             {
-                RotationPitchCanon = new Vector3(RotationPitchCanon.X - (-0.00005f * DeltaRotationCanon.Y),
+                RotationPitchCanon = new Vector3(RotationPitchCanon.X - (-INCRÉMENT_ROTATION_TOUR * DeltaRotationCanon.Y),
                                                  RotationPitchCanon.Y, RotationPitchCanon.Z);
             }
             PositionCanon = new Vector3(Position.X, Position.Y - 1f, Position.Z);
