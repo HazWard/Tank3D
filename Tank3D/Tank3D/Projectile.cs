@@ -18,6 +18,8 @@ namespace AtelierXNA
         const float VitesseDépart = 2f;
         float IncrémentDéplacementProjectile { get; set; }
         float IncrémentHauteurProjectile { get; set; }
+        PlanExplosion ExplosionUn { get; set; }
+        PlanExplosion ExplosionDeux { get; set; }
 
         public Projectile(Game jeu, string nomModèle, float échelleInitiale, Vector3 rotationInitiale, Vector3 positionInitiale, float intervalleMAJ)
             : base(jeu, nomModèle, échelleInitiale, rotationInitiale, positionInitiale, intervalleMAJ)
@@ -41,6 +43,9 @@ namespace AtelierXNA
         {
             IncrémentDéplacementProjectile = ((float)Math.Cos(Rotation.X) * VitesseDépart) * 2;
             IncrémentHauteurProjectile = ((float)Math.Sin(Rotation.X) * VitesseDépart) / 2;
+            ExplosionUn = new PlanExplosion(Game, 1f, new Vector3(0,MathHelper.PiOver2,0), new Vector3(0, 6, -126), new Vector2(256, 50), new Vector2(10, 10), "desertDunes", 0f);
+            ExplosionDeux = new PlanExplosion(Game, 1f, Vector3.Zero, new Vector3(0, 6, -126), new Vector2(256, 50), new Vector2(10, 10), "desertDunes", 0f);
+
             base.LoadContent();
         }
 
@@ -82,16 +87,20 @@ namespace AtelierXNA
                 Rotation = new Vector3(Rotation.X - 0.01f, Rotation.Y, Rotation.Z + 0.2f);
             }
 
-            EffacerProjectile(EstHorsDesBornes(nouvellesCoords));
+            EffacerProjectile(EstHorsDesBornes(nouvellesCoords),posXFinal,posZFinal);
 
             CalculerMonde();
         }
 
-        private void EffacerProjectile(bool sortie)
+        private void EffacerProjectile(bool sortie, float posX,float posZ)
         {
             if (Position.Y <= 0 || sortie)
             {
                 Game.Components.Remove(this);
+                Game.Components.Add(new PlanExplosion(Game, 0.8f, Vector3.Zero, new Vector3(posX,0,posZ), new Vector2(256, 50), new Vector2(10, 10), "desertDunes", 0f));
+                Game.Components.Add(new PlanExplosion(Game, 0.8f, new Vector3(0, MathHelper.PiOver2, 0), new Vector3(posX, 0, posZ), new Vector2(256, 50), new Vector2(10, 10), "desertDunes", 0f));
+                Game.Components.Add(ExplosionDeux);
+                
                 Console.WriteLine("Projectile effacé!");
             }
         }

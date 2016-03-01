@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework;
 
 namespace AtelierXNA
 {
-   class PlanTexturé : Plan
+   public class PlanTexturé : Plan
    {
       string NomTexture { get; set; }
       RessourcesManager<Texture2D> TextureManager { get; set; }
