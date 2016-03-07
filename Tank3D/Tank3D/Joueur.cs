@@ -157,7 +157,7 @@ namespace AtelierXNA
         bool VérificationNormales()
         {
             ++CompteurNormales;
-            return CompteurNormales % 25 == 0;
+            return CompteurNormales % 2 == 0;
         }
 
         void TraitementPentes()
@@ -236,9 +236,8 @@ namespace AtelierXNA
             monde *= Matrix.CreateScale(échelle);
             monde *= Matrix.CreateFromYawPitchRoll(rotation.Y, rotation.X, rotation.Z);
             monde *= Matrix.CreateTranslation(position);
-
             return monde;
-        }
+        } 
 
         public override void Draw(GameTime gameTime)
         {
