@@ -40,6 +40,7 @@ namespace AtelierXNA
         float ÉchelleTour { get; set; }
         float ÉchelleCanon { get; set; }
         float ÉchelleRoues { get; set; }
+        int CompteurNormales { get; set; }
         float IncrémentAngleRotationX { get; set; }
         float IncrémentAngleRotationY { get; set; }
         Vector2 AnglesNormales { get; set; }
@@ -70,6 +71,7 @@ namespace AtelierXNA
             ÉchelleTour = 0.0035f;
             ÉchelleCanon = 0.005f;
             ÉchelleRoues = 0.05f;
+            CompteurNormales = 1;
             Mouse.SetPosition(400, 200);
         }
 
@@ -142,11 +144,20 @@ namespace AtelierXNA
                 AncienneHauteurTerrain = NouvelleHauteurTerrain;
                 NouvelleHauteurTerrain = TerrainJeu.GetHauteur(nouvellesCoords);
                 Position = new Vector3(posXFinal, NouvelleHauteurTerrain + HAUTEUR_DÉFAULT, posZFinal);
-                AnglesNormales = TerrainJeu.GetNormale(nouvellesCoords);
-                TraitementPentes();
-                Rotation = new Vector3(AnglesNormales.Y, Rotation.Y, AnglesNormales.X);
+                if (VérificationNormales())
+                {
+                    AnglesNormales = TerrainJeu.GetNormale(nouvellesCoords);
+                    TraitementPentes();
+                    Rotation = new Vector3(AnglesNormales.Y, Rotation.Y, AnglesNormales.X);
+                }
             }
             CalculerMonde();
+        }
+
+        bool VérificationNormales()
+        {
+            ++CompteurNormales;
+            return CompteurNormales % 2 == 0;
         }
 
         void TraitementPentes()
@@ -225,9 +236,8 @@ namespace AtelierXNA
             monde *= Matrix.CreateScale(échelle);
             monde *= Matrix.CreateFromYawPitchRoll(rotation.Y, rotation.X, rotation.Z);
             monde *= Matrix.CreateTranslation(position);
-
             return monde;
-        }
+        } 
 
         public override void Draw(GameTime gameTime)
         {

@@ -158,7 +158,7 @@ namespace AtelierXNA
 
         #region Calculs pour les normales
 
-        public Vector2 GetNormale (Point coords)
+        public Vector2 GetNormale(Point coords)
         {
             Vector3 vecteurA = PtsSommets[coords.X, coords.Y + 1] - PtsSommets[coords.X, coords.Y];
             Vector3 vecteurB = PtsSommets[coords.X + 1, coords.Y] - PtsSommets[coords.X, coords.Y];
@@ -177,21 +177,10 @@ namespace AtelierXNA
 
         float AngleEntreDeuxVecteurs(Vector3 vecteurN, Vector3 vecteurV)
         {
-            // Pour des vecteurs normalisés
-            
-            /*
-            float expN = vecteurN.X * vecteurN.X + vecteurN.Y * vecteurN.Y + vecteurN.Z * vecteurN.Z;
-            float normeN = (float)Math.Sqrt(expN);
-
-            float expV = vecteurV.X * vecteurV.X + vecteurV.Y * vecteurV.Y + vecteurV.Z * vecteurV.Z;
-            float normeV = (float)Math.Sqrt(expV);
-            */
-
+            // Les deux vecteurs doivent être de norme 1
             float valeur = Vector3.Dot(vecteurN, vecteurV);
-
             return (float)Math.Acos(valeur);
         }
-
 
         #endregion
 
