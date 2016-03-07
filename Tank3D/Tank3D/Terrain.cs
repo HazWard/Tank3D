@@ -175,29 +175,6 @@ namespace AtelierXNA
             return new Vector2(-angleX, angleY);
         }
 
-        /// <summary>
-        /// Calcul de l'angle à l'aide de projection de vecteur
-        /// </summary>
-        /// <param name="axe">Axe de projection</param>
-        /// <param name="vecteur">Vecteur à projeter</param>
-        /// <returns>L'angle formé entre l'axe et le vecteur</returns>
-        float AngleSurPlan(char axe, Vector3 vecteur)
-        {
-            float angle = 0;
-            
-            switch(axe)
-            {
-                case 'X':
-
-                    break;
-
-                case 'Y':
-
-                    break;
-            }
-            return angle;
-        }
-
         float AngleEntreDeuxVecteurs(Vector3 vecteurN, Vector3 vecteurV)
         {
             // Les deux vecteurs doivent être de norme 1
