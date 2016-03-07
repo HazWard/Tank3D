@@ -43,7 +43,7 @@ namespace AtelierXNA
         {
             IncrémentDéplacementProjectile = ((float)Math.Cos(Rotation.X) * VitesseDépart) * 2;
             IncrémentHauteurProjectile = ((float)Math.Sin(Rotation.X) * VitesseDépart) / 2;
-            ExplosionUn = new PlanExplosion(Game, 1f, new Vector3(0,MathHelper.PiOver2,0), new Vector3(0, 6, -126), new Vector2(256, 50), new Vector2(10, 10), "desertDunes", 0f);
+            ExplosionUn = new PlanExplosion(Game, 1f, new Vector3(0, MathHelper.PiOver2, 0), new Vector3(0, 6, -126), new Vector2(256, 50), new Vector2(10, 10), "desertDunes", 0f);
             ExplosionDeux = new PlanExplosion(Game, 1f, Vector3.Zero, new Vector3(0, 6, -126), new Vector2(256, 50), new Vector2(10, 10), "desertDunes", 0f);
 
             base.LoadContent();
@@ -97,9 +97,9 @@ namespace AtelierXNA
             if (Position.Y <= 0 || sortie)
             {
                 Game.Components.Remove(this);
-                Game.Components.Add(new PlanExplosion(Game, 0.8f, Vector3.Zero, new Vector3(posX,0,posZ), new Vector2(256, 50), new Vector2(10, 10), "desertDunes", 0f));
-                Game.Components.Add(new PlanExplosion(Game, 0.8f, new Vector3(0, MathHelper.PiOver2, 0), new Vector3(posX, 0, posZ), new Vector2(256, 50), new Vector2(10, 10), "desertDunes", 0f));
-                Game.Components.Add(ExplosionDeux);
+                //Game.Components.Add(new PlanExplosion(Game, 0.8f, Vector3.Zero, new Vector3(posX,0,posZ), new Vector2(256, 50), new Vector2(10, 10), "desertDunes", 0f));
+                //Game.Components.Add(new PlanExplosion(Game, 0.8f, new Vector3(0, MathHelper.PiOver2, 0), new Vector3(posX, 0, posZ), new Vector2(256, 50), new Vector2(10, 10), "desertDunes", 0f));
+                //Game.Components.Add(ExplosionDeux);
                 
                 Console.WriteLine("Projectile effacé!");
             }
