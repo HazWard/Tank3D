@@ -39,7 +39,7 @@ namespace AtelierXNA
         public override void Initialize()
         {
             TempsÉcouléDepuisMAJ = 0;
-            IncrémentAngleRotation = (MathHelper.TwoPi * IntervalleMAJ);
+            IncrémentAngleRotation = MathHelper.TwoPi * IntervalleMAJ;
             base.Initialize();
         }
 

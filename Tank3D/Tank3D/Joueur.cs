@@ -40,10 +40,8 @@ namespace AtelierXNA
         float ÉchelleTour { get; set; }
         float ÉchelleCanon { get; set; }
         float ÉchelleRoues { get; set; }
-        int CompteurNormales { get; set; }
-        float IncrémentAngleRotationX { get; set; }
-        float IncrémentAngleRotationY { get; set; }
-        Vector2 AnglesNormales { get; set; }
+        Vector2 ObjectifAnglesNormales { get; set; }
+        Vector2 NormaleTerain { get; set; }
         public Vector2 Coordonnées
         {
             get
@@ -71,13 +69,13 @@ namespace AtelierXNA
             ÉchelleTour = 0.0035f;
             ÉchelleCanon = 0.005f;
             ÉchelleRoues = 0.05f;
-            CompteurNormales = 1;
             Mouse.SetPosition(400, 200);
         }
 
         protected override void LoadContent()
         {
             base.LoadContent();
+            
         }
 
         public override void Update(GameTime gameTime)
@@ -144,34 +142,53 @@ namespace AtelierXNA
                 AncienneHauteurTerrain = NouvelleHauteurTerrain;
                 NouvelleHauteurTerrain = TerrainJeu.GetHauteur(nouvellesCoords);
                 Position = new Vector3(posXFinal, NouvelleHauteurTerrain + HAUTEUR_DÉFAULT, posZFinal);
-                if (VérificationNormales())
-                {
-                    AnglesNormales = TerrainJeu.GetNormale(nouvellesCoords);
-                    TraitementPentes();
-                    Rotation = new Vector3(AnglesNormales.Y, Rotation.Y, AnglesNormales.X);
-                }
+                TraitementNormales(nouvellesCoords, "X");
+                TraitementNormales(nouvellesCoords, "Y");
             }
             CalculerMonde();
         }
 
-        bool VérificationNormales()
+        void TraitementNormales(Point coords, string axe)
         {
-            ++CompteurNormales;
-            return CompteurNormales % 2 == 0;
+            int sens;
+            switch(axe)
+            {
+                case "X":
+                    sens = (ObjectifAnglesNormales.X < Rotation.X) ? 1 : -1;
+                    if (VérificationAngle(ObjectifAnglesNormales.X, Rotation.X))
+                    {
+                        ObjectifAnglesNormales = TerrainJeu.GetNormale(coords, Rotation.Y);
+                    }
+                    else
+                    {
+                        Rotation = new Vector3(Rotation.X + sens * IncrémentAngleRotation, Rotation.Y, Rotation.Z);
+                    }
+                    break;
+
+                case "Y":
+                    sens = (ObjectifAnglesNormales.Y < Rotation.Z) ? 1 : -1;
+                    if (VérificationAngle(ObjectifAnglesNormales.Y, Rotation.Z))
+                    {
+                        ObjectifAnglesNormales = TerrainJeu.GetNormale(coords, Rotation.Y);
+                    }
+                    else
+                    {
+                        Rotation = new Vector3(Rotation.X, Rotation.Y, Rotation.Z + sens * IncrémentAngleRotation);
+                    }
+                    break;
+            }
         }
 
-        void TraitementPentes()
+        bool VérificationAngle(float angle1, float angle2)
         {
-            if (AncienneHauteurTerrain > NouvelleHauteurTerrain)
-            {
-                AnglesNormales = new Vector2(AnglesNormales.X, -AnglesNormales.Y);
-            }
+            double tolérance = angle1 * 0.00001;
+            return Math.Abs(angle1 - angle2) <= tolérance;
         }
 
         void RotationTour()
         {
             GestionSouris();
-            RotationYawTour = new Vector3(-MathHelper.PiOver2 + AnglesNormales.Y, RotationYawTour.Y + 2 * (-INCRÉMENT_ROTATION_TOUR * DeltaRotationCanon.X), MathHelper.PiOver2 + AnglesNormales.X);
+            RotationYawTour = new Vector3(-MathHelper.PiOver2, RotationYawTour.Y + 2 * (-INCRÉMENT_ROTATION_TOUR * DeltaRotationCanon.X), MathHelper.PiOver2);
             PositionTour = new Vector3(Position.X, Position.Y + 0.3f, Position.Z);
             MondeTour = TransformationsMeshes(ÉchelleTour, RotationYawTour, PositionTour);
         }

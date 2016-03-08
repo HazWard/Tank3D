@@ -158,15 +158,29 @@ namespace AtelierXNA
 
         #region Calculs pour les normales
 
-        public Vector2 GetNormale(Point coords)
+        public Vector2 GetNormale(Point coords, float direction)
         {
-            Vector3 vecteurA = PtsSommets[coords.X, coords.Y + 1] - PtsSommets[coords.X, coords.Y];
-            Vector3 vecteurB = PtsSommets[coords.X + 1, coords.Y] - PtsSommets[coords.X, coords.Y];
+            
+            // Calcul pour point actuel et prochain point
+            int coeffX = (int)(1 * (float)Math.Sin(direction));
+            int coeffY = (int)(1 * (float)Math.Cos(direction));
+            Vector3 vecteurA = PtsSommets[coords.X + coeffX, coords.Y + coeffY] - PtsSommets[coords.X, coords.Y];
+            Vector3 vecteurB = PtsSommets[coords.X + coeffX, coords.Y] - PtsSommets[coords.X, coords.Y];
 
-            Vector3 normale = Vector3.Normalize(Vector3.Cross(vecteurB, vecteurA));
+            Vector3 vecteurC = PtsSommets[coords.X, coords.Y + coeffY + 1] - PtsSommets[coords.X, coords.Y];
+            Vector3 vecteurD = PtsSommets[coords.X + coeffX + 1, coords.Y] - PtsSommets[coords.X, coords.Y];
 
-            float angleX = (float)Math.Atan2(normale.X, normale.Y);
-            float angleY = (float)Math.Atan2(normale.Z, normale.Y);
+            Vector3 normale1 = Vector3.Normalize(Vector3.Cross(vecteurB, vecteurA));
+            Vector3 normale2 = Vector3.Normalize(Vector3.Cross(vecteurC, vecteurD));
+
+            float angleX1 = (float)Math.Atan2(normale1.X, normale1.Y);
+            float angleY1 = (float)Math.Atan2(normale1.Z, normale1.Y);
+
+            float angleX2 = (float)Math.Atan2(normale2.X, normale2.Y);
+            float angleY2 = (float)Math.Atan2(normale2.Z, normale2.Y);
+
+            float angleX = (angleX1 + angleX2) / 2;
+            float angleY = (angleY1 + angleY2) / 2;
 
             Console.WriteLine("--------------------");
             Console.WriteLine("Angle en X: {0}", angleX);
