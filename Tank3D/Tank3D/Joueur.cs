@@ -155,8 +155,7 @@ namespace AtelierXNA
                 AncienneHauteurTerrain = NouvelleHauteurTerrain;
                 NouvelleHauteurTerrain = TerrainJeu.GetHauteur(nouvellesCoords);
                 Position = new Vector3(posXFinal, NouvelleHauteurTerrain + HAUTEUR_DÉFAULT, posZFinal);
-                //ObjectifAnglesNormales = TerrainJeu.GetNormale(nouvellesCoords, Rotation.Y);
-                ObjectifAnglesNormales = TerrainJeu.GetNormale(nouvellesCoords);
+                ObjectifAnglesNormales = GestionnaireDeNormales.GetNormale(nouvellesCoords);
                 Rotation = Rotation = new Vector3(ObjectifAnglesNormales.Y, Rotation.Y, ObjectifAnglesNormales.X);
             }
             CalculerMonde();
@@ -171,7 +170,7 @@ namespace AtelierXNA
                     sens = (ObjectifAnglesNormales.X < Rotation.X) ? 1 : -1;
                     if (ApproximationÉgalité(ObjectifAnglesNormales.X, Rotation.X))
                     {
-                        ObjectifAnglesNormales = TerrainJeu.GetNormale(coords, Rotation.Y);
+                        ObjectifAnglesNormales = GestionnaireDeNormales.GetNormale(coords);
                     }
                     else
                     {
@@ -183,7 +182,7 @@ namespace AtelierXNA
                     sens = (ObjectifAnglesNormales.Y < Rotation.Z) ? 1 : -1;
                     if (ApproximationÉgalité(ObjectifAnglesNormales.Y, Rotation.Z))
                     {
-                        ObjectifAnglesNormales = TerrainJeu.GetNormale(coords, Rotation.Y);
+                        ObjectifAnglesNormales = GestionnaireDeNormales.GetNormale(coords);
                     }
                     else
                     {

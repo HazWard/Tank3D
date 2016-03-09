@@ -23,6 +23,7 @@ namespace AtelierXNA
         GraphicsDeviceManager PériphériqueGraphique { get; set; }
         SpriteBatch GestionSprites { get; set; }
         GestionnaireEnnemis GestionEnnemis { get; set; }
+        NormalesManager GestionnaireDeNormales { get; set; }
         CalculateurFPS Calculateur { get; set; }
         Caméra CaméraJeu { get; set; }
         InputManager GestionInput { get; set; }
@@ -84,7 +85,7 @@ namespace AtelierXNA
             Components.Add(new Sprite(this, "crosshairBon", new Vector2(Window.ClientBounds.Width / 2, Window.ClientBounds.Height / 2), 0.2f));
             Utilisateur = new Joueur(this, "Veteran Tiger Body", ÉCHELLE_OBJET, rotationObjet, positionObjet, INTERVALLE_MAJ_STANDARD);
             Components.Add(Utilisateur);
-            GestionEnnemis = new GestionnaireEnnemis(this, Utilisateur, TerrainJeu, 5, ÉCHELLE_OBJET, INTERVALLE_MAJ_STANDARD);
+            GestionEnnemis = new GestionnaireEnnemis(this, Utilisateur, TerrainJeu, 0, ÉCHELLE_OBJET, INTERVALLE_MAJ_STANDARD);
             Components.Add(GestionEnnemis);
             Services.AddService(typeof(RessourcesManager<SpriteFont>), new RessourcesManager<SpriteFont>(this, "Fonts"));
             Services.AddService(typeof(RessourcesManager<Texture2D>), new RessourcesManager<Texture2D>(this, "Textures"));
@@ -95,6 +96,9 @@ namespace AtelierXNA
             Services.AddService(typeof(Terrain), TerrainJeu);
             GestionSprites = new SpriteBatch(GraphicsDevice);
             Services.AddService(typeof(SpriteBatch), GestionSprites);
+            GestionnaireDeNormales = new NormalesManager(this);
+            Components.Add(GestionnaireDeNormales);
+            Services.AddService(typeof(NormalesManager), GestionnaireDeNormales);
             base.Initialize();
         }
 

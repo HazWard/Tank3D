@@ -30,6 +30,7 @@ namespace AtelierXNA
         Vector3 Origine { get; set; }
         protected VertexPositionTexture[] Sommets { get; set; }
         protected Vector3[,] PtsSommets { get; set; }
+        public Vector3[,] Normales { get; set; }
         int NbColonnes { get; set; }
         int NbRangées { get; set; }
         int NbTuiles { get; set; }
@@ -64,6 +65,7 @@ namespace AtelierXNA
             AllouerTableaux();
             CréerTableauPoints();
             InitialiserSommets();
+            InitialiserNormales();
             base.Initialize();
         }
 
@@ -92,6 +94,7 @@ namespace AtelierXNA
         void AllouerTableaux()
         {
             PtsSommets = new Vector3[NbColonnes, NbRangées];
+            Normales = new Vector3[NbColonnes, NbRangées];
             Sommets = new VertexPositionTexture[NbSommets];
         }
 
@@ -149,6 +152,24 @@ namespace AtelierXNA
             }
         }
 
+        void InitialiserNormales()
+        {
+
+            Vector3 vecteurA = new Vector3();
+            Vector3 vecteurB = new Vector3();
+            Vector3 normale = new Vector3();
+            for (int j = 0; j < NbColonnes - 1; ++j)
+            {
+                for (int i = 0; i < NbRangées - 1; ++i)
+                {
+                    vecteurA = PtsSommets[i, j + 1] - PtsSommets[i, j];
+                    vecteurB = PtsSommets[i + 1, j] - PtsSommets[i, j];
+                    normale = Vector3.Normalize(Vector3.Cross(vecteurB, vecteurA));
+                    Normales[i, j] = normale;
+                }
+            }
+        }
+
         public float GetHauteur(Point coords)
         {
             return PtsSommets[VérificationExtrêmes(coords.X), VérificationExtrêmes(coords.Y)].Y;
@@ -162,51 +183,6 @@ namespace AtelierXNA
             }
             return indice;
         }
-
-        #region Calculs pour les normales
-
-        public Vector2 GetNormale(Point coords, float direction)
-        {
-            // Calcul pour point actuel et prochain point
-            int coeffX = (int)(1 * (float)Math.Sin(direction));
-            int coeffY = (int)(1 * (float)Math.Cos(direction));
-            Vector3 vecteurA = PtsSommets[coords.X + coeffX, coords.Y + coeffY] - PtsSommets[coords.X, coords.Y];
-            Vector3 vecteurB = PtsSommets[coords.X + coeffX, coords.Y] - PtsSommets[coords.X, coords.Y];
-            Vector3 vecteurC = PtsSommets[coords.X, coords.Y + coeffY + 1] - PtsSommets[coords.X, coords.Y];
-            Vector3 vecteurD = PtsSommets[coords.X + coeffX + 1, coords.Y] - PtsSommets[coords.X, coords.Y];
-
-            Vector3 normale1 = Vector3.Normalize(Vector3.Cross(vecteurB, vecteurA));
-            Vector3 normale2 = Vector3.Normalize(Vector3.Cross(vecteurC, vecteurD));
-
-            // Moyenne entre les deux angles trouvés
-            float angleX = ((float)Math.Atan2(normale1.X, normale1.Y) + (float)Math.Atan2(normale2.X, normale2.Y))/ 2;
-            float angleY = ((float)Math.Atan2(normale1.Z, normale1.Y) + (float)Math.Atan2(normale2.Z, normale2.Y)) / 2;
-
-            Console.WriteLine("--------------------");
-            Console.WriteLine("Angle en X: {0}", angleX);
-            Console.WriteLine("Angle en Y: {0}", angleY);
-
-            return new Vector2(-angleX, angleY);
-        }
-
-
-        public Vector2 GetNormale(Point coords)
-        {
-            Vector3 vecteurA = PtsSommets[coords.X, coords.Y + 1] - PtsSommets[coords.X, coords.Y];
-            Vector3 vecteurB = PtsSommets[coords.X + 1, coords.Y] - PtsSommets[coords.X, coords.Y];
-
-            Vector3 normale = Vector3.Normalize(Vector3.Cross(vecteurB, vecteurA));
-
-            float angleX = (float)Math.Atan2(normale.X, normale.Y);
-            float angleY = (float)Math.Atan2(normale.Z, normale.Y);
-
-            Console.WriteLine("--------------------");
-            Console.WriteLine("Angle en X: {0}", angleX);
-            Console.WriteLine("Angle en Y: {0}", angleY);
-
-            return new Vector2(-angleX, angleY);
-        }
-
 
         float AngleEntreDeuxVecteurs(Vector3 vecteurN, Vector3 vecteurV)
         {
@@ -222,7 +198,6 @@ namespace AtelierXNA
 
             return new Point(x, y);
         }
-        #endregion
 
         public override void Draw(GameTime gameTime)
         {

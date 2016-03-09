@@ -17,13 +17,14 @@ namespace AtelierXNA
         // Constantes
         protected const float FACTEUR_ACCÉLÉRATION = 1f / 60f;
         protected const float INCRÉMENT_DÉPLACEMENT = 0.5f;
-        protected const float HAUTEUR_DÉFAULT = 1f;
+        protected const float HAUTEUR_DÉFAULT = 0.5f;
 
         // Propriétés
         protected InputManager GestionInput { get; set; }
         protected float IncrémentAngleRotation { get; set; }
         protected float TempsÉcouléDepuisMAJ { get; set; }
         protected Terrain TerrainJeu { get; set; }
+        protected NormalesManager GestionnaireDeNormales { get; set; }
         protected float NouvelleHauteurTerrain { get; set; }
         protected float AncienneHauteurTerrain { get; set; }
         protected float IntervalleMAJ { get; set; }
@@ -47,6 +48,7 @@ namespace AtelierXNA
         {
             base.LoadContent();
             TerrainJeu = Game.Services.GetService(typeof(Terrain)) as Terrain;
+            GestionnaireDeNormales = Game.Services.GetService(typeof(NormalesManager)) as NormalesManager;
             GestionInput = Game.Services.GetService(typeof(InputManager)) as InputManager;
         }
 
