@@ -29,24 +29,16 @@ namespace AtelierXNA
         Projectile ProjectileTank { get; set; }
         Vector3 RotationYawTour { get; set; }
         Vector3 RotationPitchCanon { get; set; }
-        Vector3 RotationProjectile { get; set; }
         Vector3 PositionCanon { get; set; }
         Vector3 PositionTour { get; set; }
-        Vector3 PositionProjectile { get; set; }
         Vector2 DeltaRotationCanon { get; set; }
         Matrix MondeTour { get; set; }
         Matrix MondeCanon { get; set; }
-        Matrix MondeRoues { get; set; }
-        Matrix MondeProjectile { get; set; }
         float ÉchelleTour { get; set; }
         float ÉchelleCanon { get; set; }
         float ÉchelleRoues { get; set; }
         Vector2 ObjectifAnglesNormales { get; set; }
-        Vector2 NormaleTerain { get; set; }
-        float IncrémentAngleRotationX { get; set; }
-        float IncrémentAngleRotationY { get; set; }
         float TempsÉcouléMAJFumée { get; set; }
-        Vector2 AnglesNormales { get; set; }
         Sprite Fumée { get; set; }
         Sprite Terre { get; set; }
         public Vector2 Coordonnées
@@ -156,14 +148,17 @@ namespace AtelierXNA
             float posZFinal = Position.Z - déplacementFinal.Y;
 
             nouvellesCoords = TerrainJeu.ConvertionCoordonnées(new Vector3(posXFinal, 0, posZFinal));
+            // TraitementNormales(nouvellesCoords, "X");
+            // TraitementNormales(nouvellesCoords, "Y");
 
             if (!EstHorsDesBornes(nouvellesCoords))
             {
                 AncienneHauteurTerrain = NouvelleHauteurTerrain;
                 NouvelleHauteurTerrain = TerrainJeu.GetHauteur(nouvellesCoords);
                 Position = new Vector3(posXFinal, NouvelleHauteurTerrain + HAUTEUR_DÉFAULT, posZFinal);
-                TraitementNormales(nouvellesCoords, "X");
-                TraitementNormales(nouvellesCoords, "Y");
+                //ObjectifAnglesNormales = TerrainJeu.GetNormale(nouvellesCoords, Rotation.Y);
+                ObjectifAnglesNormales = TerrainJeu.GetNormale(nouvellesCoords);
+                Rotation = Rotation = new Vector3(ObjectifAnglesNormales.Y, Rotation.Y, ObjectifAnglesNormales.X);
             }
             CalculerMonde();
         }
@@ -249,18 +244,20 @@ namespace AtelierXNA
             if (AÉtéCliqué)
             {
                 Console.WriteLine(Position);
-                ProjectileTank = new Projectile(Jeu, "Projectile", 0.1f, new Vector3(2 * RotationPitchCanon.X + MathHelper.Pi, RotationPitchCanon.Y, RotationPitchCanon.Z), PositionCanon, IntervalleMAJ);
                 ProjectileTank = new Projectile(Jeu, "Projectile", 0.1f, 
                                                 new Vector3(2 * RotationPitchCanon.X + MathHelper.Pi, RotationPitchCanon.Y - 0.05f, RotationPitchCanon.Z),
                                                 new Vector3(PositionCanon.X, PositionCanon.Y + 4.6f, PositionCanon.Z), IntervalleMAJ);
                 Game.Components.Add(ProjectileTank);
             }
         }
+
+        /*
         public bool EstDétruit()
         {
             bool estDétruit = false;
             return estDétruit;
         }
+        */
 
         float GérerTouche(Keys touche)
         {

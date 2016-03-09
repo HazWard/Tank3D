@@ -164,9 +164,9 @@ namespace AtelierXNA
         }
 
         #region Calculs pour les normales
+
         public Vector2 GetNormale(Point coords, float direction)
         {
-            
             // Calcul pour point actuel et prochain point
             int coeffX = (int)(1 * (float)Math.Sin(direction));
             int coeffY = (int)(1 * (float)Math.Cos(direction));
@@ -188,6 +188,25 @@ namespace AtelierXNA
 
             return new Vector2(-angleX, angleY);
         }
+
+
+        public Vector2 GetNormale(Point coords)
+        {
+            Vector3 vecteurA = PtsSommets[coords.X, coords.Y + 1] - PtsSommets[coords.X, coords.Y];
+            Vector3 vecteurB = PtsSommets[coords.X + 1, coords.Y] - PtsSommets[coords.X, coords.Y];
+
+            Vector3 normale = Vector3.Normalize(Vector3.Cross(vecteurB, vecteurA));
+
+            float angleX = (float)Math.Atan2(normale.X, normale.Y);
+            float angleY = (float)Math.Atan2(normale.Z, normale.Y);
+
+            Console.WriteLine("--------------------");
+            Console.WriteLine("Angle en X: {0}", angleX);
+            Console.WriteLine("Angle en Y: {0}", angleY);
+
+            return new Vector2(-angleX, angleY);
+        }
+
 
         float AngleEntreDeuxVecteurs(Vector3 vecteurN, Vector3 vecteurV)
         {
