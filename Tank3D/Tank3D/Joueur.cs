@@ -128,15 +128,14 @@ namespace AtelierXNA
             RotationCanon();
 
             Caméra.Cible = new Vector3(Position.X, Position.Y + 4, Position.Z);
-            Caméra.Position= new Vector3(((float)Math.Sin(RotationYawTour.Y) * DISTANCE_POURSUITE) + Position.X, Position.Y + HAUTEUR_CAM_DÉFAULT,
+            Caméra.Position= new Vector3(((float)Math.Sin(RotationYawTour.Y) * DISTANCE_POURSUITE) + Position.X,
+                                         ((float)Math.Tan(MathHelper.PiOver2 - RotationPitchCanon.X) * DISTANCE_POURSUITE) + Position.Y + HAUTEUR_CAM_DÉFAULT,
                                          ((float)Math.Cos(RotationYawTour.Y) * DISTANCE_POURSUITE) + Position.Z);
 
             float déplacement = GérerTouche(Keys.W) - GérerTouche(Keys.S);
             float rotation = GérerTouche(Keys.D) - GérerTouche(Keys.A);
             if (déplacement != 0 || rotation != 0)
             {
-                Terre = new Sprite(Jeu, "Terre", new Vector2(Game.Window.ClientBounds.Width / 2, Game.Window.ClientBounds.Height - 50f), 0.3f);
-                Game.Components.Add(Terre);
                 ModificationParamètres(déplacement, rotation);
             }
         }
@@ -194,7 +193,6 @@ namespace AtelierXNA
             }
             PositionCanon = new Vector3(Position.X, Position.Y - 1f, Position.Z);
             MondeCanon = TransformationsMeshes(ÉchelleCanon, RotationPitchCanon, PositionCanon);
-            //DeltaRotationCanon = new Vector2(0, 0);
         }
 
         void GestionSouris()
