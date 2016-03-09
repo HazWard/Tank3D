@@ -190,8 +190,13 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Textures\Homemade.jpg">
-      <Name>Homemade</Name>
+    <Compile Include="Textures\Fumée.png">
+      <Name>Fumée</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Terre.png">
+      <Name>Terre</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>

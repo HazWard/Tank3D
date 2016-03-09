@@ -96,6 +96,7 @@
     <Compile Include="ModèleMobile.cs" />
     <Compile Include="ObjetDeBase.cs" />
     <Compile Include="Plan.cs" />
+    <Compile Include="PlanExplosion.cs" />
     <Compile Include="PlanTexturé.cs" />
     <Compile Include="PrimitiveDeBase.cs" />
     <Compile Include="PrimitiveDeBaseAnimée.cs" />

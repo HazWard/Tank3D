@@ -21,6 +21,7 @@ namespace AtelierXNA
         protected const float DISTANCE_POURSUITE = 20f;
         protected const float HAUTEUR_CAM_DÉFAULT = 10f;
         const float INCRÉMENT_ROTATION_TOUR = 0.00005f;
+        const float INTERVALLE_FUMÉE = 0.6f;
 
         // Propriétés
         Game Jeu { get; set; }
@@ -42,6 +43,12 @@ namespace AtelierXNA
         float ÉchelleRoues { get; set; }
         Vector2 ObjectifAnglesNormales { get; set; }
         Vector2 NormaleTerain { get; set; }
+        float IncrémentAngleRotationX { get; set; }
+        float IncrémentAngleRotationY { get; set; }
+        float TempsÉcouléMAJFumée { get; set; }
+        Vector2 AnglesNormales { get; set; }
+        Sprite Fumée { get; set; }
+        Sprite Terre { get; set; }
         public Vector2 Coordonnées
         {
             get
@@ -69,6 +76,7 @@ namespace AtelierXNA
             ÉchelleTour = 0.0035f;
             ÉchelleCanon = 0.005f;
             ÉchelleRoues = 0.05f;
+            TempsÉcouléMAJFumée = 0f;
             Mouse.SetPosition(400, 200);
         }
 
@@ -82,10 +90,20 @@ namespace AtelierXNA
         {
             float TempsÉcoulé = (float)gameTime.ElapsedGameTime.TotalSeconds;
             TempsÉcouléDepuisMAJ += TempsÉcoulé;
+            TempsÉcouléMAJFumée += TempsÉcoulé;
             AÉtéCliqué = GestionInput.EstNouveauClicGauche();
             if (AÉtéCliqué)
             {
+                float Y = -200 * RotationPitchCanon.X;
+                Fumée = new Sprite(Jeu, "Fumée", new Vector2(Game.Window.ClientBounds.Width / 2, Y), 0.2f);
+                Game.Components.Add(Fumée);
                 GestionProjectile();
+            }
+
+            if (TempsÉcouléMAJFumée > INTERVALLE_FUMÉE)
+            {
+                Game.Components.Remove(Fumée);
+                TempsÉcouléMAJFumée = 0;
             }
 
             if (TempsÉcouléDepuisMAJ >= IntervalleMAJ)
@@ -120,6 +138,8 @@ namespace AtelierXNA
             float rotation = GérerTouche(Keys.D) - GérerTouche(Keys.A);
             if (déplacement != 0 || rotation != 0)
             {
+                Terre = new Sprite(Jeu, "Terre", new Vector2(Game.Window.ClientBounds.Width / 2, Game.Window.ClientBounds.Height - 50f), 0.3f);
+                Game.Components.Add(Terre);
                 ModificationParamètres(déplacement, rotation);
             }
         }
@@ -231,7 +251,7 @@ namespace AtelierXNA
                 Console.WriteLine(Position);
                 ProjectileTank = new Projectile(Jeu, "Projectile", 0.1f, new Vector3(2 * RotationPitchCanon.X + MathHelper.Pi, RotationPitchCanon.Y, RotationPitchCanon.Z), PositionCanon, IntervalleMAJ);
                 ProjectileTank = new Projectile(Jeu, "Projectile", 0.1f, 
-                                                new Vector3(2 * RotationPitchCanon.X + MathHelper.Pi, RotationPitchCanon.Y, RotationPitchCanon.Z),
+                                                new Vector3(2 * RotationPitchCanon.X + MathHelper.Pi, RotationPitchCanon.Y - 0.05f, RotationPitchCanon.Z),
                                                 new Vector3(PositionCanon.X, PositionCanon.Y + 4.6f, PositionCanon.Z), IntervalleMAJ);
                 Game.Components.Add(ProjectileTank);
             }
@@ -253,8 +273,9 @@ namespace AtelierXNA
             monde *= Matrix.CreateScale(échelle);
             monde *= Matrix.CreateFromYawPitchRoll(rotation.Y, rotation.X, rotation.Z);
             monde *= Matrix.CreateTranslation(position);
+
             return monde;
-        } 
+        }
 
         public override void Draw(GameTime gameTime)
         {
