@@ -14,18 +14,23 @@ namespace AtelierXNA
 {
     class Projectile:ModèleMobile
     {
-        const float AccélérationGravitationelle = -0.98f;
-        const float VitesseDépart = 2f;
+        bool SeDésintègre { get; set; }
+        int Compteur { get; set; }
+        float VitesseDépart { get; set; }
+        float DeltaHauteur { get; set; }
         float IncrémentDéplacementProjectile { get; set; }
         float IncrémentHauteurProjectile { get; set; }
         PlanExplosion ExplosionUn { get; set; }
         PlanExplosion ExplosionDeux { get; set; }
 
-        public Projectile(Game jeu, string nomModèle, float échelleInitiale, Vector3 rotationInitiale, Vector3 positionInitiale, float intervalleMAJ)
+        public Projectile(Game jeu, string nomModèle, float échelleInitiale, Vector3 rotationInitiale, Vector3 positionInitiale, float intervalleMAJ, float vitesseInitiale, float deltaHauteur, bool seDésintègre)
             : base(jeu, nomModèle, échelleInitiale, rotationInitiale, positionInitiale, intervalleMAJ)
         {
-
+            VitesseDépart = vitesseInitiale;
+            DeltaHauteur = deltaHauteur;
+            SeDésintègre = seDésintègre;
         }
+
         public override void Update(GameTime gameTime)
         {
             float TempsÉcoulé = (float)gameTime.ElapsedGameTime.TotalSeconds;
@@ -35,18 +40,17 @@ namespace AtelierXNA
             {
                 GestionMouvements();
                 TempsÉcouléDepuisMAJ = 0;
+                Compteur++;
             }
             base.Update(gameTime);
         }
 
-        protected override void LoadContent()
+        public override void Initialize()
         {
+            Compteur = 0;
             IncrémentDéplacementProjectile = ((float)Math.Cos(Rotation.X) * VitesseDépart) * 2;
             IncrémentHauteurProjectile = ((float)Math.Sin(Rotation.X) * VitesseDépart) / 2;
-            ExplosionUn = new PlanExplosion(Game, 1f, new Vector3(0, MathHelper.PiOver2, 0), new Vector3(0, 6, -126), new Vector2(256, 50), new Vector2(10, 10), "desertDunes", 0f);
-            ExplosionDeux = new PlanExplosion(Game, 1f, Vector3.Zero, new Vector3(0, 6, -126), new Vector2(256, 50), new Vector2(10, 10), "desertDunes", 0f);
-
-            base.LoadContent();
+            base.Initialize();
         }
 
         public bool EstDétruit()
@@ -84,7 +88,14 @@ namespace AtelierXNA
             if (!EstHorsDesBornes(nouvellesCoords))
             {
                 Position = new Vector3(posXFinal, Position.Y + IncrémentHauteurProjectile, posZFinal);
-                Rotation = new Vector3(Rotation.X - 0.01f, Rotation.Y, Rotation.Z + 0.2f);
+                if (SeDésintègre)
+                {
+                    Rotation = new Vector3(Rotation.X - 0.05f, Rotation.Y, Rotation.Z + 0.2f);
+                }
+                else
+                {
+                    Rotation = new Vector3(Rotation.X - 0.01f, Rotation.Y, Rotation.Z + 0.2f);
+                }
             }
 
             EffacerProjectile(EstHorsDesBornes(nouvellesCoords), nouvellesCoords,posXFinal,posZFinal);
@@ -94,20 +105,35 @@ namespace AtelierXNA
 
         void EffacerProjectile(bool sortie, Point coords,float posX,float posZ)
         {
-            if (sortie || Position.Y <= TerrainJeu.GetHauteur(coords))
+            if (SeDésintègre)
             {
-                Game.Components.Remove(this);
-                //Game.Components.Add(new PlanExplosion(Game, 0.8f, Vector3.Zero, new Vector3(posX,0,posZ), new Vector2(256, 50), new Vector2(10, 10), "desertDunes", 0f));
-                //Game.Components.Add(new PlanExplosion(Game, 0.8f, new Vector3(0, MathHelper.PiOver2, 0), new Vector3(posX, 0, posZ), new Vector2(256, 50), new Vector2(10, 10), "desertDunes", 0f));
-                //Game.Components.Add(ExplosionDeux);
-                
-                Console.WriteLine("Projectile effacé!");
+                if (Compteur == 20 || Position.Y <= TerrainJeu.GetHauteur(coords))
+                {
+                    Game.Components.Remove(this);
+                    Console.WriteLine("Explosion effacée!");
+                }
+            }
+            else
+            {
+                if (sortie || Position.Y <= TerrainJeu.GetHauteur(coords))
+                {
+                    Game.Components.Remove(this);
+                    Console.WriteLine("Projectile effacé!");
+
+                    for (int i = 0; i < 7; ++i)
+                    {
+                        Game.Components.Add(new Projectile(this.Game, "Projectile", Échelle,
+                                            new Vector3(1f, i * (MathHelper.TwoPi / 8), Rotation.Z),
+                                            new Vector3(Position.X, Position.Y + 2, Position.Z), IntervalleMAJ, 0.5f, 0.01f, true));
+                    }
+
+                }
             }
         }
 
         void GestionForces()
         {
-            IncrémentHauteurProjectile -= 0.02f;
+            IncrémentHauteurProjectile -= DeltaHauteur;
         }
         #endregion
     }

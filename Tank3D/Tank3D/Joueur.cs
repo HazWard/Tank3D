@@ -240,10 +240,9 @@ namespace AtelierXNA
         {
             if (AÉtéCliqué)
             {
-                Console.WriteLine(Position);
                 ProjectileTank = new Projectile(Jeu, "Projectile", 0.1f, 
                                                 new Vector3(2 * RotationPitchCanon.X + MathHelper.Pi, RotationPitchCanon.Y - 0.05f, RotationPitchCanon.Z),
-                                                new Vector3(PositionCanon.X, PositionCanon.Y + 4.6f, PositionCanon.Z), IntervalleMAJ);
+                                                new Vector3(PositionCanon.X, PositionCanon.Y + 4.6f, PositionCanon.Z), IntervalleMAJ, 2f, 0.02f, false);
                 Game.Components.Add(ProjectileTank);
             }
         }

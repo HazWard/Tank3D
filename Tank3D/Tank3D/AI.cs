@@ -84,7 +84,7 @@ namespace AtelierXNA
         void GestionProjectile()
         {
             ProjectileTank = new Projectile(Jeu, "Projectile", 0.1f, Rotation, 
-                                            new Vector3(Position.X, Position.Y + 4f, Position.Z), IntervalleMAJ);
+                                            new Vector3(Position.X, Position.Y + 4f, Position.Z), IntervalleMAJ, 2f, 0.02f, false);
             Game.Components.Add(ProjectileTank);
         }
         
