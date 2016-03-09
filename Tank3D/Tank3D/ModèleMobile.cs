@@ -55,14 +55,6 @@ namespace AtelierXNA
             base.Update(gameTime);
         }
 
-        private void ÉcrireMeshes()
-        {
-            foreach (ModelMesh m in Modèle.Meshes)
-            {
-                Console.WriteLine(m.Name);
-            }
-        }
-
         protected bool EstHorsDesBornes(Point coords)
         {
             bool estHorsDesBornes = false;

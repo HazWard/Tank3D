@@ -151,13 +151,19 @@ namespace AtelierXNA
 
         public float GetHauteur(Point coords)
         {
-            // TODO: Utiliser des normales plus tard
-
             return PtsSommets[VérificationExtrêmes(coords.X), VérificationExtrêmes(coords.Y)].Y;
         }
 
-        #region Calculs pour les normales
+        int VérificationExtrêmes(int indice)
+        {
+            if (indice >= Extrêmes)
+            {
+                indice = Extrêmes;
+            }
+            return indice;
+        }
 
+        #region Calculs pour les normales
         public Vector2 GetNormale(Point coords, float direction)
         {
             
@@ -166,21 +172,15 @@ namespace AtelierXNA
             int coeffY = (int)(1 * (float)Math.Cos(direction));
             Vector3 vecteurA = PtsSommets[coords.X + coeffX, coords.Y + coeffY] - PtsSommets[coords.X, coords.Y];
             Vector3 vecteurB = PtsSommets[coords.X + coeffX, coords.Y] - PtsSommets[coords.X, coords.Y];
-
             Vector3 vecteurC = PtsSommets[coords.X, coords.Y + coeffY + 1] - PtsSommets[coords.X, coords.Y];
             Vector3 vecteurD = PtsSommets[coords.X + coeffX + 1, coords.Y] - PtsSommets[coords.X, coords.Y];
 
             Vector3 normale1 = Vector3.Normalize(Vector3.Cross(vecteurB, vecteurA));
             Vector3 normale2 = Vector3.Normalize(Vector3.Cross(vecteurC, vecteurD));
 
-            float angleX1 = (float)Math.Atan2(normale1.X, normale1.Y);
-            float angleY1 = (float)Math.Atan2(normale1.Z, normale1.Y);
-
-            float angleX2 = (float)Math.Atan2(normale2.X, normale2.Y);
-            float angleY2 = (float)Math.Atan2(normale2.Z, normale2.Y);
-
-            float angleX = (angleX1 + angleX2) / 2;
-            float angleY = (angleY1 + angleY2) / 2;
+            // Moyenne entre les deux angles trouvés
+            float angleX = ((float)Math.Atan2(normale1.X, normale1.Y) + (float)Math.Atan2(normale2.X, normale2.Y))/ 2;
+            float angleY = ((float)Math.Atan2(normale1.Z, normale1.Y) + (float)Math.Atan2(normale2.Z, normale2.Y)) / 2;
 
             Console.WriteLine("--------------------");
             Console.WriteLine("Angle en X: {0}", angleX);
@@ -191,23 +191,9 @@ namespace AtelierXNA
 
         float AngleEntreDeuxVecteurs(Vector3 vecteurN, Vector3 vecteurV)
         {
-            // Les deux vecteurs doivent être de norme 1
+            // Pour les vecteurs normalisés
             float valeur = Vector3.Dot(vecteurN, vecteurV);
             return (float)Math.Acos(valeur);
-        }
-
-        #endregion
-
-        #region Gestion des bornes
-        // Vérification peu nécessaire
-        int VérificationExtrêmes(int indice)
-        {
-            int maxPossible = PtsSommets.GetLength(0) - 1;       
-            if(indice > maxPossible)
-            {
-                indice = maxPossible;
-            }
-            return indice;
         }
 
         public Point ConvertionCoordonnées(Vector3 coords)

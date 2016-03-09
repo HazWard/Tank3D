@@ -82,17 +82,16 @@ namespace AtelierXNA
                 Rotation = new Vector3(Rotation.X - 0.01f, Rotation.Y, Rotation.Z + 0.2f);
             }
 
-            EffacerProjectile(EstHorsDesBornes(nouvellesCoords));
+            EffacerProjectile(EstHorsDesBornes(nouvellesCoords), nouvellesCoords);
 
             CalculerMonde();
         }
 
-        private void EffacerProjectile(bool sortie)
+        void EffacerProjectile(bool sortie, Point coords)
         {
-            if (Position.Y <= 0 || sortie)
+            if (sortie || Position.Y <= TerrainJeu.GetHauteur(coords))
             {
                 Game.Components.Remove(this);
-                Console.WriteLine("Projectile effacé!");
             }
         }
 

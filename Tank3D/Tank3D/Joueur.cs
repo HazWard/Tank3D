@@ -155,7 +155,7 @@ namespace AtelierXNA
             {
                 case "X":
                     sens = (ObjectifAnglesNormales.X < Rotation.X) ? 1 : -1;
-                    if (VérificationAngle(ObjectifAnglesNormales.X, Rotation.X))
+                    if (ApproximationÉgalité(ObjectifAnglesNormales.X, Rotation.X))
                     {
                         ObjectifAnglesNormales = TerrainJeu.GetNormale(coords, Rotation.Y);
                     }
@@ -167,7 +167,7 @@ namespace AtelierXNA
 
                 case "Y":
                     sens = (ObjectifAnglesNormales.Y < Rotation.Z) ? 1 : -1;
-                    if (VérificationAngle(ObjectifAnglesNormales.Y, Rotation.Z))
+                    if (ApproximationÉgalité(ObjectifAnglesNormales.Y, Rotation.Z))
                     {
                         ObjectifAnglesNormales = TerrainJeu.GetNormale(coords, Rotation.Y);
                     }
@@ -179,10 +179,10 @@ namespace AtelierXNA
             }
         }
 
-        bool VérificationAngle(float angle1, float angle2)
+        bool ApproximationÉgalité(float valeur1, float valeur2)
         {
-            double tolérance = angle1 * 0.00001;
-            return Math.Abs(angle1 - angle2) <= tolérance;
+            double tolérance = valeur1 * 0.0001; // 0.01 % de difference acceptable
+            return Math.Abs(valeur1 - valeur2) <= tolérance;
         }
 
         void RotationTour()
