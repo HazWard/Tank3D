@@ -87,6 +87,7 @@
     <Compile Include="CaméraFixe.cs" />
     <Compile Include="CaméraSubjective.cs" />
     <Compile Include="Dialogue.cs" />
+    <Compile Include="Fumée.cs" />
     <Compile Include="GestionnaireEnnemis.cs" />
     <Compile Include="IActivable.cs" />
     <Compile Include="InputManager.cs" />

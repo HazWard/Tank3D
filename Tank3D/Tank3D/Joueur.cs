@@ -87,7 +87,7 @@ namespace AtelierXNA
             if (AÉtéCliqué)
             {
                 float Y = -200 * RotationPitchCanon.X;
-                Fumée = new Sprite(Jeu, "Fumée", new Vector2(Game.Window.ClientBounds.Width / 2, Y), 0.2f);
+                Fumée = new Fumée(Jeu, new Vector2(Game.Window.ClientBounds.Width / 2, Y), 0.2f);
                 Game.Components.Add(Fumée);
                 GestionProjectile();
             }
