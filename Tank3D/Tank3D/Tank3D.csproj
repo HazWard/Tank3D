@@ -88,6 +88,7 @@
     <Compile Include="CaméraSubjective.cs" />
     <Compile Include="Dialogue.cs" />
     <Compile Include="Explosion.cs" />
+    <Compile Include="Fumée.cs" />
     <Compile Include="GestionnaireEnnemis.cs" />
     <Compile Include="IActivable.cs" />
     <Compile Include="InputManager.cs" />
@@ -95,6 +96,7 @@
     <Compile Include="Joueur.cs" />
     <Compile Include="Menu.cs" />
     <Compile Include="ModèleMobile.cs" />
+    <Compile Include="NormalesManager.cs" />
     <Compile Include="ObjetDeBase.cs" />
     <Compile Include="Plan.cs" />
     <Compile Include="PlanExplosion.cs" />
