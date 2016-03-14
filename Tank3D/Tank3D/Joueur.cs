@@ -21,6 +21,7 @@ namespace AtelierXNA
         protected const float DISTANCE_POURSUITE = 20f;
         protected const float HAUTEUR_CAM_DÉFAULT = 10f;
         const float INCRÉMENT_ROTATION_TOUR = 0.00005f;
+        const float INTERVALLE_FUMÉE = 0.6f;
 
         // Propriétés
         Game Jeu { get; set; }
@@ -28,21 +29,18 @@ namespace AtelierXNA
         Projectile ProjectileTank { get; set; }
         Vector3 RotationYawTour { get; set; }
         Vector3 RotationPitchCanon { get; set; }
-        Vector3 RotationProjectile { get; set; }
         Vector3 PositionCanon { get; set; }
         Vector3 PositionTour { get; set; }
-        Vector3 PositionProjectile { get; set; }
         Vector2 DeltaRotationCanon { get; set; }
         Matrix MondeTour { get; set; }
         Matrix MondeCanon { get; set; }
-        Matrix MondeRoues { get; set; }
-        Matrix MondeProjectile { get; set; }
         float ÉchelleTour { get; set; }
         float ÉchelleCanon { get; set; }
         float ÉchelleRoues { get; set; }
-        float IncrémentAngleRotationX { get; set; }
-        float IncrémentAngleRotationY { get; set; }
-        Vector2 AnglesNormales { get; set; }
+        Vector2 ObjectifAnglesNormales { get; set; }
+        float TempsÉcouléMAJFumée { get; set; }
+        Sprite Fumée { get; set; }
+        Sprite Terre { get; set; }
         public Vector2 Coordonnées
         {
             get
@@ -70,22 +68,34 @@ namespace AtelierXNA
             ÉchelleTour = 0.0035f;
             ÉchelleCanon = 0.005f;
             ÉchelleRoues = 0.05f;
+            TempsÉcouléMAJFumée = 0f;
             Mouse.SetPosition(400, 200);
         }
 
         protected override void LoadContent()
         {
             base.LoadContent();
+            
         }
 
         public override void Update(GameTime gameTime)
         {
             float TempsÉcoulé = (float)gameTime.ElapsedGameTime.TotalSeconds;
             TempsÉcouléDepuisMAJ += TempsÉcoulé;
+            TempsÉcouléMAJFumée += TempsÉcoulé;
             AÉtéCliqué = GestionInput.EstNouveauClicGauche();
             if (AÉtéCliqué)
             {
+                float Y = -200 * RotationPitchCanon.X;
+                Fumée = new Fumée(Jeu, new Vector2(Game.Window.ClientBounds.Width / 2, Y), 0.2f);
+                Game.Components.Add(Fumée);
                 GestionProjectile();
+            }
+
+            if (TempsÉcouléMAJFumée > INTERVALLE_FUMÉE)
+            {
+                Game.Components.Remove(Fumée);
+                TempsÉcouléMAJFumée = 0;
             }
 
             if (TempsÉcouléDepuisMAJ >= IntervalleMAJ)
@@ -113,7 +123,8 @@ namespace AtelierXNA
             RotationCanon();
 
             Caméra.Cible = new Vector3(Position.X, Position.Y + 4, Position.Z);
-            Caméra.Position= new Vector3(((float)Math.Sin(RotationYawTour.Y) * DISTANCE_POURSUITE) + Position.X, Position.Y + HAUTEUR_CAM_DÉFAULT,
+            Caméra.Position= new Vector3(((float)Math.Sin(RotationYawTour.Y) * DISTANCE_POURSUITE) + Position.X,
+                                         ((float)Math.Tan(MathHelper.PiOver2 - RotationPitchCanon.X) * DISTANCE_POURSUITE) + Position.Y + HAUTEUR_CAM_DÉFAULT,
                                          ((float)Math.Cos(RotationYawTour.Y) * DISTANCE_POURSUITE) + Position.Z);
 
             float déplacement = GérerTouche(Keys.W) - GérerTouche(Keys.S);
@@ -136,31 +147,61 @@ namespace AtelierXNA
             float posZFinal = Position.Z - déplacementFinal.Y;
 
             nouvellesCoords = TerrainJeu.ConvertionCoordonnées(new Vector3(posXFinal, 0, posZFinal));
+            // TraitementNormales(nouvellesCoords, "X");
+            // TraitementNormales(nouvellesCoords, "Y");
 
             if (!EstHorsDesBornes(nouvellesCoords))
             {
                 AncienneHauteurTerrain = NouvelleHauteurTerrain;
                 NouvelleHauteurTerrain = TerrainJeu.GetHauteur(nouvellesCoords);
                 Position = new Vector3(posXFinal, NouvelleHauteurTerrain + HAUTEUR_DÉFAULT, posZFinal);
-                AnglesNormales = TerrainJeu.GetNormale(nouvellesCoords);
-                TraitementPentes();
-                Rotation = new Vector3(AnglesNormales.Y, Rotation.Y, AnglesNormales.X);
+                ObjectifAnglesNormales = GestionnaireDeNormales.GetNormale(nouvellesCoords);
+                Rotation = Rotation = new Vector3(ObjectifAnglesNormales.Y, Rotation.Y, ObjectifAnglesNormales.X);
             }
             CalculerMonde();
         }
 
-        void TraitementPentes()
+        void TraitementNormales(Point coords, string axe)
         {
-            if (AncienneHauteurTerrain > NouvelleHauteurTerrain)
+            int sens;
+            switch(axe)
             {
-                AnglesNormales = new Vector2(AnglesNormales.X, -AnglesNormales.Y);
+                case "X":
+                    sens = (ObjectifAnglesNormales.X < Rotation.X) ? 1 : -1;
+                    if (ApproximationÉgalité(ObjectifAnglesNormales.X, Rotation.X))
+                    {
+                        ObjectifAnglesNormales = GestionnaireDeNormales.GetNormale(coords);
+                    }
+                    else
+                    {
+                        Rotation = new Vector3(Rotation.X + sens * IncrémentAngleRotation, Rotation.Y, Rotation.Z);
+                    }
+                    break;
+
+                case "Y":
+                    sens = (ObjectifAnglesNormales.Y < Rotation.Z) ? 1 : -1;
+                    if (ApproximationÉgalité(ObjectifAnglesNormales.Y, Rotation.Z))
+                    {
+                        ObjectifAnglesNormales = GestionnaireDeNormales.GetNormale(coords);
+                    }
+                    else
+                    {
+                        Rotation = new Vector3(Rotation.X, Rotation.Y, Rotation.Z + sens * IncrémentAngleRotation);
+                    }
+                    break;
             }
+        }
+
+        bool ApproximationÉgalité(float valeur1, float valeur2)
+        {
+            double tolérance = valeur1 * 0.0001; // 0.01 % de difference acceptable
+            return Math.Abs(valeur1 - valeur2) <= tolérance;
         }
 
         void RotationTour()
         {
             GestionSouris();
-            RotationYawTour = new Vector3(-MathHelper.PiOver2 + AnglesNormales.Y, RotationYawTour.Y + 2 * (-INCRÉMENT_ROTATION_TOUR * DeltaRotationCanon.X), MathHelper.PiOver2 + AnglesNormales.X);
+            RotationYawTour = new Vector3(-MathHelper.PiOver2, RotationYawTour.Y + 2 * (-INCRÉMENT_ROTATION_TOUR * DeltaRotationCanon.X), MathHelper.PiOver2);
             PositionTour = new Vector3(Position.X, Position.Y + 0.3f, Position.Z);
             MondeTour = TransformationsMeshes(ÉchelleTour, RotationYawTour, PositionTour);
         }
@@ -177,7 +218,6 @@ namespace AtelierXNA
             }
             PositionCanon = new Vector3(Position.X, Position.Y - 1f, Position.Z);
             MondeCanon = TransformationsMeshes(ÉchelleCanon, RotationPitchCanon, PositionCanon);
-            //DeltaRotationCanon = new Vector2(0, 0);
         }
 
         void GestionSouris()
@@ -200,19 +240,20 @@ namespace AtelierXNA
         {
             if (AÉtéCliqué)
             {
-                Console.WriteLine(Position);
-                ProjectileTank = new Projectile(Jeu, "Projectile", 0.1f, new Vector3(2 * RotationPitchCanon.X + MathHelper.Pi, RotationPitchCanon.Y, RotationPitchCanon.Z), PositionCanon, IntervalleMAJ);
                 ProjectileTank = new Projectile(Jeu, "Projectile", 0.1f, 
-                                                new Vector3(2 * RotationPitchCanon.X + MathHelper.Pi, RotationPitchCanon.Y, RotationPitchCanon.Z),
-                                                new Vector3(PositionCanon.X, PositionCanon.Y + 4.6f, PositionCanon.Z), IntervalleMAJ);
+                                                new Vector3(2 * RotationPitchCanon.X + MathHelper.Pi, RotationPitchCanon.Y - 0.05f, RotationPitchCanon.Z),
+                                                new Vector3(PositionCanon.X, PositionCanon.Y + 4.6f, PositionCanon.Z), IntervalleMAJ, 2f, 0.02f, false);
                 Game.Components.Add(ProjectileTank);
             }
         }
+
+        /*
         public bool EstDétruit()
         {
             bool estDétruit = false;
             return estDétruit;
         }
+        */
 
         float GérerTouche(Keys touche)
         {

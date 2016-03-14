@@ -30,6 +30,7 @@ namespace AtelierXNA
         Vector3 Origine { get; set; }
         protected VertexPositionTexture[] Sommets { get; set; }
         protected Vector3[,] PtsSommets { get; set; }
+        public Vector3[,] Normales { get; set; }
         int NbColonnes { get; set; }
         int NbRangées { get; set; }
         int NbTuiles { get; set; }
@@ -64,6 +65,7 @@ namespace AtelierXNA
             AllouerTableaux();
             CréerTableauPoints();
             InitialiserSommets();
+            InitialiserNormales();
             base.Initialize();
         }
 
@@ -92,6 +94,7 @@ namespace AtelierXNA
         void AllouerTableaux()
         {
             PtsSommets = new Vector3[NbColonnes, NbRangées];
+            Normales = new Vector3[NbColonnes, NbRangées];
             Sommets = new VertexPositionTexture[NbSommets];
         }
 
@@ -149,62 +152,43 @@ namespace AtelierXNA
             }
         }
 
+        void InitialiserNormales()
+        {
+
+            Vector3 vecteurA = new Vector3();
+            Vector3 vecteurB = new Vector3();
+            Vector3 normale = new Vector3();
+            for (int j = 0; j < NbColonnes - 1; ++j)
+            {
+                for (int i = 0; i < NbRangées - 1; ++i)
+                {
+                    vecteurA = PtsSommets[i, j + 1] - PtsSommets[i, j];
+                    vecteurB = PtsSommets[i + 1, j] - PtsSommets[i, j];
+                    normale = Vector3.Normalize(Vector3.Cross(vecteurB, vecteurA));
+                    Normales[i, j] = normale;
+                }
+            }
+        }
+
         public float GetHauteur(Point coords)
         {
-            // TODO: Utiliser des normales plus tard
-
             return PtsSommets[VérificationExtrêmes(coords.X), VérificationExtrêmes(coords.Y)].Y;
         }
 
-        #region Calculs pour les normales
-
-        public Vector2 GetNormale (Point coords)
+        int VérificationExtrêmes(int indice)
         {
-            Vector3 vecteurA = PtsSommets[coords.X, coords.Y + 1] - PtsSommets[coords.X, coords.Y];
-            Vector3 vecteurB = PtsSommets[coords.X + 1, coords.Y] - PtsSommets[coords.X, coords.Y];
-
-            Vector3 normale = Vector3.Normalize(Vector3.Cross(vecteurB, vecteurA));
-
-            float angleX = (float)Math.Atan2(normale.X, normale.Y);
-            float angleY = (float)Math.Atan2(normale.Z, normale.Y);
-
-            Console.WriteLine("--------------------");
-            Console.WriteLine("Angle en X: {0}", angleX);
-            Console.WriteLine("Angle en Y: {0}", angleY);
-
-            return new Vector2(-angleX, angleY);
+            if (indice >= Extrêmes)
+            {
+                indice = Extrêmes;
+            }
+            return indice;
         }
 
         float AngleEntreDeuxVecteurs(Vector3 vecteurN, Vector3 vecteurV)
         {
-            // Pour des vecteurs normalisés
-            
-            /*
-            float expN = vecteurN.X * vecteurN.X + vecteurN.Y * vecteurN.Y + vecteurN.Z * vecteurN.Z;
-            float normeN = (float)Math.Sqrt(expN);
-
-            float expV = vecteurV.X * vecteurV.X + vecteurV.Y * vecteurV.Y + vecteurV.Z * vecteurV.Z;
-            float normeV = (float)Math.Sqrt(expV);
-            */
-
+            // Pour les vecteurs normalisés
             float valeur = Vector3.Dot(vecteurN, vecteurV);
-
             return (float)Math.Acos(valeur);
-        }
-
-
-        #endregion
-
-        #region Gestion des bornes
-        // Vérification peu nécessaire
-        int VérificationExtrêmes(int indice)
-        {
-            int maxPossible = PtsSommets.GetLength(0) - 1;       
-            if(indice > maxPossible)
-            {
-                indice = maxPossible;
-            }
-            return indice;
         }
 
         public Point ConvertionCoordonnées(Vector3 coords)
@@ -214,7 +198,6 @@ namespace AtelierXNA
 
             return new Point(x, y);
         }
-        #endregion
 
         public override void Draw(GameTime gameTime)
         {

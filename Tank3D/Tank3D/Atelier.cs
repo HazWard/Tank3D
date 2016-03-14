@@ -23,6 +23,7 @@ namespace AtelierXNA
         GraphicsDeviceManager PériphériqueGraphique { get; set; }
         SpriteBatch GestionSprites { get; set; }
         GestionnaireEnnemis GestionEnnemis { get; set; }
+        NormalesManager GestionnaireDeNormales { get; set; }
         CalculateurFPS Calculateur { get; set; }
         Caméra CaméraJeu { get; set; }
         InputManager GestionInput { get; set; }
@@ -56,8 +57,7 @@ namespace AtelierXNA
             positionCaméraSubjective = new Vector3(0, 15, 15);
             positionCaméra = new Vector3(0, 100, 250);
             cibleCaméra = new Vector3(0, 0, -10);
-            // Menu------------------------------------------------------------------------------------------------------------------------
-            //const float MARGE_TITRE = 0.05f;
+
             int largeurÉcran = Window.ClientBounds.Width;
             int hauteurÉcran = Window.ClientBounds.Height;
             int dimensionMin = NB_TUILES * (hauteurÉcran / NB_TUILES);
@@ -67,15 +67,11 @@ namespace AtelierXNA
             Rectangle zoneMessage = new Rectangle(hauteurÉcran, hauteurÉcran / NB_ZONES, largeurÉcran - hauteurÉcran, hauteurÉcran / NB_ZONES);
             Rectangle zoneDialogue = new Rectangle(hauteurÉcran, hauteurÉcran / 3, largeurÉcran - hauteurÉcran, hauteurÉcran / 2);
 
-            //Components.Add(new TexteCentré(this, TITRE, "Arial20", zoneTitre, Color.Gold, MARGE_TITRE));
-            //Components.Add(new Dialogue(this, "FondDialogue", "Arial20", zoneDialogue));
-            
             Components.Add(new PlanTexturé(this, 1f, Vector3.Zero, new Vector3(0, 6, -126), new Vector2(256, 50), new Vector2(10, 10), "desertDunes", INTERVALLE_MAJ_STANDARD));
             Components.Add(new PlanTexturé(this, 1f, new Vector3(0, MathHelper.PiOver2, 0), new Vector3(-126, 6, 0), new Vector2(256, 50), new Vector2(10, 10), "desertDunesRéflexion", INTERVALLE_MAJ_STANDARD));
             Components.Add(new PlanTexturé(this, 1f, new Vector3(0, -(MathHelper.PiOver2), 0), new Vector3(126, 6, 0), new Vector2(256, 50), new Vector2(10, 10), "desertDunesRéflexion", INTERVALLE_MAJ_STANDARD));
             Components.Add(new PlanTexturé(this, 1f, new Vector3(0, MathHelper.Pi, 0), new Vector3(0, 6, 126), new Vector2(256, 50), new Vector2(10, 10), "desertDunes", INTERVALLE_MAJ_STANDARD));
             Components.Add(new PlanTexturé(this, 1f, new Vector3(MathHelper.PiOver2, 0, 0), new Vector3(0, 31, 0), new Vector2(256, 256), new Vector2(10, 10), "ciel", INTERVALLE_MAJ_STANDARD));
-            //-------------------------------------------------------------------------------------------------------------------------------
 
             GestionInput = new InputManager(this);
             Components.Add(GestionInput);
@@ -89,9 +85,7 @@ namespace AtelierXNA
             Components.Add(new Sprite(this, "crosshairBon", new Vector2(Window.ClientBounds.Width / 2, Window.ClientBounds.Height / 2), 0.2f));
             Utilisateur = new Joueur(this, "Veteran Tiger Body", ÉCHELLE_OBJET, rotationObjet, positionObjet, INTERVALLE_MAJ_STANDARD);
             Components.Add(Utilisateur);
-            //TankEnnemi = new AI(this, "Veteran Tiger NoColor", ÉCHELLE_OBJET, rotationObjet, positionAI, INTERVALLE_MAJ_STANDARD, Utilisateur);
-            //Components.Add(TankEnnemi);
-            GestionEnnemis = new GestionnaireEnnemis(this, Utilisateur, TerrainJeu, 5, ÉCHELLE_OBJET, INTERVALLE_MAJ_STANDARD);
+            GestionEnnemis = new GestionnaireEnnemis(this, Utilisateur, TerrainJeu, 0, ÉCHELLE_OBJET, INTERVALLE_MAJ_STANDARD);
             Components.Add(GestionEnnemis);
             Services.AddService(typeof(RessourcesManager<SpriteFont>), new RessourcesManager<SpriteFont>(this, "Fonts"));
             Services.AddService(typeof(RessourcesManager<Texture2D>), new RessourcesManager<Texture2D>(this, "Textures"));
@@ -102,6 +96,9 @@ namespace AtelierXNA
             Services.AddService(typeof(Terrain), TerrainJeu);
             GestionSprites = new SpriteBatch(GraphicsDevice);
             Services.AddService(typeof(SpriteBatch), GestionSprites);
+            GestionnaireDeNormales = new NormalesManager(this);
+            Components.Add(GestionnaireDeNormales);
+            Services.AddService(typeof(NormalesManager), GestionnaireDeNormales);
             base.Initialize();
         }
 
@@ -121,9 +118,7 @@ namespace AtelierXNA
 
         protected override void Draw(GameTime gameTime)
         {
-            GestionSprites.Begin();
             GraphicsDevice.Clear(Color.Black);
-            GestionSprites.End();
             base.Draw(gameTime);
         }
     }

@@ -14,18 +14,23 @@ namespace AtelierXNA
 {
     public class Projectile:ModèleMobile
     {
-        const float AccélérationGravitationelle = -0.98f;
-        const float VitesseDépart = 2f;
+        bool SeDésintègre { get; set; }
+        int Compteur { get; set; }
+        float VitesseDépart { get; set; }
+        float DeltaHauteur { get; set; }
         float IncrémentDéplacementProjectile { get; set; }
         float IncrémentHauteurProjectile { get; set; }
         
         Terrain Hauteur { get; set; }
 
-        public Projectile(Game jeu, string nomModèle, float échelleInitiale, Vector3 rotationInitiale, Vector3 positionInitiale, float intervalleMAJ)
+        public Projectile(Game jeu, string nomModèle, float échelleInitiale, Vector3 rotationInitiale, Vector3 positionInitiale, float intervalleMAJ, float vitesseInitiale, float deltaHauteur, bool seDésintègre)
             : base(jeu, nomModèle, échelleInitiale, rotationInitiale, positionInitiale, intervalleMAJ)
         {
-
+            VitesseDépart = vitesseInitiale;
+            DeltaHauteur = deltaHauteur;
+            SeDésintègre = seDésintègre;
         }
+
         public override void Update(GameTime gameTime)
         {
             float TempsÉcoulé = (float)gameTime.ElapsedGameTime.TotalSeconds;
@@ -35,16 +40,17 @@ namespace AtelierXNA
             {
                 GestionMouvements();
                 TempsÉcouléDepuisMAJ = 0;
+                Compteur++;
             }
             base.Update(gameTime);
         }
 
-        protected override void LoadContent()
+        public override void Initialize()
         {
+            Compteur = 0;
             IncrémentDéplacementProjectile = ((float)Math.Cos(Rotation.X) * VitesseDépart) * 2;
             IncrémentHauteurProjectile = ((float)Math.Sin(Rotation.X) * VitesseDépart) / 2;
-
-            base.LoadContent();
+            base.Initialize();
         }
 
         public bool EstDétruit()
@@ -83,7 +89,14 @@ namespace AtelierXNA
             if (!EstHorsDesBornes(nouvellesCoords))
             {
                 Position = new Vector3(posXFinal, Position.Y + IncrémentHauteurProjectile, posZFinal);
-                Rotation = new Vector3(Rotation.X - 0.01f, Rotation.Y, Rotation.Z + 0.2f);
+                if (SeDésintègre)
+                {
+                    Rotation = new Vector3(Rotation.X - 0.05f, Rotation.Y, Rotation.Z + 0.2f);
+                }
+                else
+                {
+                    Rotation = new Vector3(Rotation.X - 0.01f, Rotation.Y, Rotation.Z + 0.2f);
+                }
             }
 
             EffacerProjectile(EstHorsDesBornes(nouvellesCoords),posXFinal,posZFinal,déplacementFinal, hauteurMinimale);
@@ -108,7 +121,7 @@ namespace AtelierXNA
 
         void GestionForces()
         {
-            IncrémentHauteurProjectile -= 0.02f;
+            IncrémentHauteurProjectile -= DeltaHauteur;
         }
         #endregion
     }
