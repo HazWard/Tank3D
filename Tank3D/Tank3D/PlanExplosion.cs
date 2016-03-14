@@ -36,9 +36,15 @@ namespace AtelierXNA
             }
             base.Update(gameTime);
         }
-        //public override void Draw(GameTime gameTime)
-        //{
-        //    base.Draw(gameTime);
-        //}
+        public override void Draw(GameTime gameTime)
+        {
+            RasterizerState JeuRasterizerState = new RasterizerState();
+            RasterizerState ancienRasterizerState = EffetDeBase.GraphicsDevice.RasterizerState;
+            JeuRasterizerState.CullMode = CullMode.None;
+            JeuRasterizerState.FillMode = ancienRasterizerState.FillMode;
+            EffetDeBase.GraphicsDevice.RasterizerState = JeuRasterizerState;
+            base.Draw(gameTime);
+            EffetDeBase.GraphicsDevice.RasterizerState = ancienRasterizerState;
+        }
     }
 }

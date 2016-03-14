@@ -12,14 +12,14 @@ using Microsoft.Xna.Framework.Media;
 
 namespace AtelierXNA
 {
-    class Projectile:ModèleMobile
+    public class Projectile:ModèleMobile
     {
         const float AccélérationGravitationelle = -0.98f;
         const float VitesseDépart = 2f;
         float IncrémentDéplacementProjectile { get; set; }
         float IncrémentHauteurProjectile { get; set; }
-        PlanExplosion ExplosionUn { get; set; }
-        PlanExplosion ExplosionDeux { get; set; }
+        
+        Terrain Hauteur { get; set; }
 
         public Projectile(Game jeu, string nomModèle, float échelleInitiale, Vector3 rotationInitiale, Vector3 positionInitiale, float intervalleMAJ)
             : base(jeu, nomModèle, échelleInitiale, rotationInitiale, positionInitiale, intervalleMAJ)
@@ -43,8 +43,6 @@ namespace AtelierXNA
         {
             IncrémentDéplacementProjectile = ((float)Math.Cos(Rotation.X) * VitesseDépart) * 2;
             IncrémentHauteurProjectile = ((float)Math.Sin(Rotation.X) * VitesseDépart) / 2;
-            ExplosionUn = new PlanExplosion(Game, 1f, new Vector3(0,MathHelper.PiOver2,0), new Vector3(0, 6, -126), new Vector2(256, 50), new Vector2(10, 10), "desertDunes", 0f);
-            ExplosionDeux = new PlanExplosion(Game, 1f, Vector3.Zero, new Vector3(0, 6, -126), new Vector2(256, 50), new Vector2(10, 10), "desertDunes", 0f);
 
             base.LoadContent();
         }
@@ -73,34 +71,37 @@ namespace AtelierXNA
         {
             float posX = IncrémentDéplacementProjectile * (float)Math.Sin(Rotation.Y);
             float posY = IncrémentDéplacementProjectile * (float)Math.Cos(Rotation.Y);
+            
             Vector2 déplacementFinal = new Vector2(posX, posY);
             float posXFinal = Position.X - déplacementFinal.X;
             float posZFinal = Position.Z - déplacementFinal.Y;
             
             GestionForces();
 
-            nouvellesCoords = TerrainJeu.ConvertionCoordonnées(new Vector3(posXFinal, 0, posZFinal));
-
+            nouvellesCoords = TerrainJeu.ConvertionCoordonnées(new Vector3(posXFinal, déplacementFinal.Y, posZFinal));
+            float hauteurMinimale = TerrainJeu.GetHauteur(nouvellesCoords);
             if (!EstHorsDesBornes(nouvellesCoords))
             {
                 Position = new Vector3(posXFinal, Position.Y + IncrémentHauteurProjectile, posZFinal);
                 Rotation = new Vector3(Rotation.X - 0.01f, Rotation.Y, Rotation.Z + 0.2f);
             }
 
-            EffacerProjectile(EstHorsDesBornes(nouvellesCoords),posXFinal,posZFinal);
+            EffacerProjectile(EstHorsDesBornes(nouvellesCoords),posXFinal,posZFinal,déplacementFinal, hauteurMinimale);
 
             CalculerMonde();
         }
 
-        private void EffacerProjectile(bool sortie, float posX,float posZ)
+        private void EffacerProjectile(bool sortie, float posX,float posZ, Vector2 déplacementFinale, float hauteurMin)
         {
-            if (Position.Y <= 0 || sortie)
+            if (Position.Y <= 0 || sortie || Position.Y <= hauteurMin)
             {
                 Game.Components.Remove(this);
-                Game.Components.Add(new PlanExplosion(Game, 0.8f, Vector3.Zero, new Vector3(posX,0,posZ), new Vector2(256, 50), new Vector2(10, 10), "desertDunes", 0f));
-                Game.Components.Add(new PlanExplosion(Game, 0.8f, new Vector3(0, MathHelper.PiOver2, 0), new Vector3(posX, 0, posZ), new Vector2(256, 50), new Vector2(10, 10), "desertDunes", 0f));
-                Game.Components.Add(ExplosionDeux);
-                
+                float angleExplosion = 0;
+                for (int i = 0; i < 7; ++i)
+                {
+                    Game.Components.Add(new Explosion(Game, "Projectile", 0.1f, new Vector3(0,angleExplosion,0), new Vector3(posX, hauteurMin, posZ), IntervalleMAJ));
+                    angleExplosion += MathHelper.PiOver4;
+                }
                 Console.WriteLine("Projectile effacé!");
             }
         }
