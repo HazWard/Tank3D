@@ -15,7 +15,7 @@ namespace AtelierXNA
     /// <summary>
     /// This is a game component that implements IUpdateable.
     /// </summary>
-    public class Joueur : ModèleMobile
+    public class Joueur : ModèleMobile, IActivable
     {
         // Constantes
         protected const float DISTANCE_POURSUITE = 20f;
@@ -104,6 +104,11 @@ namespace AtelierXNA
                 TempsÉcouléDepuisMAJ = 0;
             }
             base.Update(gameTime);
+        }
+
+        public void ModifierActivation()
+        {
+
         }
 
         #region Méthodes pour la gestion des déplacements et rotations du modèle

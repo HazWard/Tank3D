@@ -15,7 +15,6 @@ namespace AtelierXNA
 
     public class Explosion : ModËleMobile
     {
-        float Temps…coulÈDepuisMAJ { get; set; }
         float Temps…coulÈTotal { get; set; }
         const float INTERVALLE_EXPLOSION = 0.4f;
         const float VITESSE_EXPLOSION = 0.0001f;

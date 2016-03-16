@@ -13,13 +13,13 @@ namespace AtelierXNA
 {
     public class Atelier : Microsoft.Xna.Framework.Game
     {
-        //--------------------------------------------------------------------------
         const string TITRE = "Tank 3D";
         const int NB_TUILES = 5;
         const int NB_ZONES = NB_TUILES + 1;
         public const float ÉCHELLE_OBJET = 0.05f;
         const float INTERVALLE_CALCUL_FPS = 1f;
         const float INTERVALLE_MAJ_STANDARD = 1f / 60f;
+        Menu MenuPrincipal { get; set; }
         GraphicsDeviceManager PériphériqueGraphique { get; set; }
         SpriteBatch GestionSprites { get; set; }
         GestionnaireEnnemis GestionEnnemis { get; set; }
@@ -58,15 +58,6 @@ namespace AtelierXNA
             positionCaméra = new Vector3(0, 100, 250);
             cibleCaméra = new Vector3(0, 0, -10);
 
-            int largeurÉcran = Window.ClientBounds.Width;
-            int hauteurÉcran = Window.ClientBounds.Height;
-            int dimensionMin = NB_TUILES * (hauteurÉcran / NB_TUILES);
-            int margeZoneJeu = (hauteurÉcran % NB_TUILES) / 2;
-            Rectangle zoneJeu = new Rectangle(margeZoneJeu, margeZoneJeu, dimensionMin, dimensionMin);
-            Rectangle zoneTitre = new Rectangle(hauteurÉcran, 0, largeurÉcran - hauteurÉcran, hauteurÉcran / NB_ZONES);
-            Rectangle zoneMessage = new Rectangle(hauteurÉcran, hauteurÉcran / NB_ZONES, largeurÉcran - hauteurÉcran, hauteurÉcran / NB_ZONES);
-            Rectangle zoneDialogue = new Rectangle(hauteurÉcran, hauteurÉcran / 3, largeurÉcran - hauteurÉcran, hauteurÉcran / 2);
-
             Components.Add(new PlanTexturé(this, 1f, Vector3.Zero, new Vector3(0, 6, -126), new Vector2(256, 50), new Vector2(10, 10), "desertDunes", INTERVALLE_MAJ_STANDARD));
             Components.Add(new PlanTexturé(this, 1f, new Vector3(0, MathHelper.PiOver2, 0), new Vector3(-126, 6, 0), new Vector2(256, 50), new Vector2(10, 10), "desertDunesRéflexion", INTERVALLE_MAJ_STANDARD));
             Components.Add(new PlanTexturé(this, 1f, new Vector3(0, -(MathHelper.PiOver2), 0), new Vector3(126, 6, 0), new Vector2(256, 50), new Vector2(10, 10), "desertDunesRéflexion", INTERVALLE_MAJ_STANDARD));
@@ -99,6 +90,17 @@ namespace AtelierXNA
             GestionnaireDeNormales = new NormalesManager(this);
             Components.Add(GestionnaireDeNormales);
             Services.AddService(typeof(NormalesManager), GestionnaireDeNormales);
+
+            foreach (GameComponent gc in Components)
+            {
+                if (gc is IActivable)
+                {
+                    gc.Enabled = false;
+                }
+            }
+            MenuPrincipal = new Menu(this);
+            Components.Add(MenuPrincipal);
+
             base.Initialize();
         }
 
