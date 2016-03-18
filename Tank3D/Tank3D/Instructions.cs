@@ -12,37 +12,29 @@ using Microsoft.Xna.Framework.Media;
 
 namespace AtelierXNA
 {
-    /// <summary>
-    /// This is a game component that implements IUpdateable.
-    /// </summary>
-    public class Instructions : Microsoft.Xna.Framework.GameComponent
+    public class Instructions : ArrièrePlan
     {
-        public Instructions(Game game)
-            : base(game)
+        // Propriétés
+        Rectangle Zone { get; set; }
+        public Instructions(Game game, string nomImage, Rectangle zone)
+            : base(game, nomImage)
         {
-            // TODO: Construct any child components here
+            Zone = zone;
         }
-
-        /// <summary>
-        /// Allows the game component to perform any initialization it needs to before starting
-        /// to run.  This is where it can query for any required services and load content.
-        /// </summary>
         public override void Initialize()
         {
-            // TODO: Add your initialization code here
-
             base.Initialize();
         }
 
-        /// <summary>
-        /// Allows the game component to update itself.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
-        public override void Update(GameTime gameTime)
+        protected override void LoadContent()
         {
-            // TODO: Add your update code here
-
-            base.Update(gameTime);
+            base.LoadContent();
+        }
+        public override void Draw(GameTime gameTime)
+        {
+            GestionSprites.Begin();
+            GestionSprites.Draw(ImageDeFond, Zone, Color.White);
+            GestionSprites.End();
         }
     }
 }
