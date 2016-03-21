@@ -40,6 +40,11 @@
       <Importer>FbxImporter</Importer>
       <Processor>ModelProcessor</Processor>
     </Compile>
+    <Compile Include="Textures\Background Transparent 60.png">
+      <Name>Background Transparent 60</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
     <Compile Include="Textures\CarteTest.bmp">
       <Name>CarteTest</Name>
       <Importer>TextureImporter</Importer>

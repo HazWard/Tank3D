@@ -20,6 +20,7 @@ namespace AtelierXNA
         const float INTERVALLE_CALCUL_FPS = 1f;
         const float INTERVALLE_MAJ_STANDARD = 1f / 60f;
         MenuPrincipal MenuPrincipal { get; set; }
+        MenuPause MenuPause { get; set; }
         GraphicsDeviceManager PériphériqueGraphique { get; set; }
         SpriteBatch GestionSprites { get; set; }
         GestionnaireEnnemis GestionEnnemis { get; set; }
@@ -29,7 +30,6 @@ namespace AtelierXNA
         InputManager GestionInput { get; set; }
         Terrain TerrainJeu { get; set; }
         Joueur Utilisateur { get; set; }
-        AI TankEnnemi { get; set; }
         Vector3 positionObjet { get; set; }
         Vector3 positionAI { get; set; }
         Vector3 positionTerrain { get; set; }
@@ -100,6 +100,7 @@ namespace AtelierXNA
             }
             MenuPrincipal = new MenuPrincipal(this);
             Components.Add(MenuPrincipal);
+            MenuPause = new MenuPause(this);
 
             base.Initialize();
         }
@@ -112,9 +113,17 @@ namespace AtelierXNA
 
         private void GérerClavier()
         {
-            if (GestionInput.EstEnfoncée(Keys.Escape))
+            if (GestionInput.EstNouvelleTouche(Keys.Escape))
             {
-                Exit();
+                if (!Components.Contains(MenuPause))
+                {
+                    Components.Add(MenuPause);
+                }
+                else
+                {
+                    MenuPause.Play();
+                }
+                //Exit();
             }
         }
 
@@ -122,6 +131,11 @@ namespace AtelierXNA
         {
             GraphicsDevice.Clear(Color.Black);
             base.Draw(gameTime);
+        }
+
+        public void Écrire()
+        {
+            Console.WriteLine("bonjour");
         }
     }
 }

@@ -32,7 +32,7 @@ namespace AtelierXNA
             BtnJouer = new BoutonDeCommande(Game, "Jouer", "Arial20", "BoutonRouge", "BoutonBleu", new Vector2(100, 400), true, new FonctionÉvénemtielle(DémarrerJeu));
             BtnInstructions = new BoutonDeCommande(Game, "Instructions", "Arial20", "BoutonRouge", "BoutonBleu", new Vector2(230, 400), true, new FonctionÉvénemtielle(AfficherInstructions));
             BtnOptions = new BoutonDeCommande(Game, "Options", "Arial20", "BoutonRouge", "BoutonBleu", new Vector2(380, 400), true, new FonctionÉvénemtielle(DémarrerJeu));
-            BtnQuitter = new BoutonDeCommande(Game, "Quitter", "Arial20", "BoutonRouge", "BoutonBleu", new Vector2(490, 400), true, new FonctionÉvénemtielle(DémarrerJeu));
+            BtnQuitter = new BoutonDeCommande(Game, "Quitter", "Arial20", "BoutonRouge", "BoutonBleu", new Vector2(490, 400), true, new FonctionÉvénemtielle(QuitterJeu));
             BtnRetourMenuPrincipal = new BoutonDeCommande(Game, " X ", "Arial20", "BoutonRougeX", "BoutonBleuX", new Vector2(750, 50), true, new FonctionÉvénemtielle(Retour));
             Game.Components.Add(ImageArrièrePlan);
             Game.Components.Add(BtnJouer);
@@ -52,6 +52,10 @@ namespace AtelierXNA
                     gc.Enabled = true;
                 }
             }
+        }
+        void QuitterJeu()
+        {
+            Game.Exit();
         }
 
         void EffacerMenu()
@@ -85,6 +89,17 @@ namespace AtelierXNA
         {
             Game.Components.Remove(MenuInstructions);
             Game.Components.Remove(BtnRetourMenuPrincipal);
+        }
+
+        void ArrêterJeu()
+        {
+            foreach (GameComponent gc in Game.Components)
+            {
+                if (gc is IActivable)
+                {
+                    gc.Enabled = false;
+                }
+            }
         }
     }
 }
