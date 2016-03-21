@@ -10,7 +10,7 @@ namespace AtelierXNA
         /// </summary>
         static void Main(string[] args)
         {
-            using (Atelier game = new Atelier())
+            using (MenuPrincipal game = new MenuPrincipal())
             {
                 game.Run();
             }

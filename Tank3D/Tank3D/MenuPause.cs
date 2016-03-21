@@ -84,7 +84,6 @@ namespace AtelierXNA
             Game.Components.Remove(ImageArrièrePlan);
             Game.Components.Remove(ReprendreJeu);
             Game.Components.Remove(BtnRetourMenuPrincipal);
-            Game.Components.Add(new MenuPrincipal(Game));
         }
 
         void ArrêterJeu()

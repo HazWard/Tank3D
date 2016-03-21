@@ -49,15 +49,10 @@ namespace AtelierXNA
             }
         }
 
-        public Joueur(Game jeu, string nomModèle, float échelleInitiale, Vector3 rotationInitiale, Vector3 positionInitiale, float intervalleMAJ)
+        public Joueur(Game jeu, string nomModèle, float échelleInitiale, Vector3 rotationInitiale, Vector3 positionInitiale, CaméraSubjective caméraJoueur, float intervalleMAJ)
             : base(jeu, nomModèle, échelleInitiale, rotationInitiale, positionInitiale, intervalleMAJ)
         {
-            Jeu = jeu;
-            Caméra = new CaméraSubjective(jeu, new Vector3(positionInitiale.X, positionInitiale.Y + HAUTEUR_CAM_DÉFAULT, positionInitiale.Z + DISTANCE_POURSUITE),
-                                               new Vector3(Position.X, Position.Y + 4, Position.Z),
-                                               Vector3.Up, IntervalleMAJ);
-            Game.Components.Add(Caméra);
-            Game.Services.AddService(typeof(Caméra), Caméra);
+            Caméra = caméraJoueur;
         }
 
         public override void Initialize()

@@ -11,7 +11,7 @@ using Microsoft.Xna.Framework.Media;
 
 namespace AtelierXNA
 {
-    public class Atelier : Microsoft.Xna.Framework.Game
+    public class Atelier : Microsoft.Xna.Framework.GameComponent
     {
         const string TITRE = "Tank 3D";
         const int NB_TUILES = 5;
@@ -19,14 +19,16 @@ namespace AtelierXNA
         public const float ÉCHELLE_OBJET = 0.05f;
         const float INTERVALLE_CALCUL_FPS = 1f;
         const float INTERVALLE_MAJ_STANDARD = 1f / 60f;
+        protected const float HAUTEUR_CAM_DÉFAULT = 10f;
+        protected const float DISTANCE_POURSUITE = 20f;
         MenuPrincipal MenuPrincipal { get; set; }
         MenuPause MenuPause { get; set; }
         GraphicsDeviceManager PériphériqueGraphique { get; set; }
         SpriteBatch GestionSprites { get; set; }
+        CaméraSubjective CaméraJoueur { get; set; }
         GestionnaireEnnemis GestionEnnemis { get; set; }
         NormalesManager GestionnaireDeNormales { get; set; }
         CalculateurFPS Calculateur { get; set; }
-        Caméra CaméraJeu { get; set; }
         InputManager GestionInput { get; set; }
         Terrain TerrainJeu { get; set; }
         Joueur Utilisateur { get; set; }
@@ -38,17 +40,12 @@ namespace AtelierXNA
         Vector3 positionCaméra { get; set; }
         Vector3 cibleCaméra { get; set; }
 
-        public Atelier()
+        public Atelier(Game jeu)
+            :base(jeu)
         {
-            PériphériqueGraphique = new GraphicsDeviceManager(this);
-            PériphériqueGraphique.IsFullScreen = false;
-            Content.RootDirectory = "Content";
-            PériphériqueGraphique.SynchronizeWithVerticalRetrace = false;
-            IsFixedTimeStep = false;
-            IsMouseVisible = true;
         }
 
-        protected override void Initialize()
+        public override void Initialize()
         {
             positionObjet = new Vector3(0, 10, 100);
             positionAI = new Vector3(-20, 10, 50);
@@ -58,54 +55,51 @@ namespace AtelierXNA
             positionCaméra = new Vector3(0, 100, 250);
             cibleCaméra = new Vector3(0, 0, -10);
 
-            Components.Add(new PlanTexturé(this, 1f, Vector3.Zero, new Vector3(0, 6, -126), new Vector2(256, 50), new Vector2(10, 10), "desertDunes", INTERVALLE_MAJ_STANDARD));
-            Components.Add(new PlanTexturé(this, 1f, new Vector3(0, MathHelper.PiOver2, 0), new Vector3(-126, 6, 0), new Vector2(256, 50), new Vector2(10, 10), "desertDunesRéflexion", INTERVALLE_MAJ_STANDARD));
-            Components.Add(new PlanTexturé(this, 1f, new Vector3(0, -(MathHelper.PiOver2), 0), new Vector3(126, 6, 0), new Vector2(256, 50), new Vector2(10, 10), "desertDunesRéflexion", INTERVALLE_MAJ_STANDARD));
-            Components.Add(new PlanTexturé(this, 1f, new Vector3(0, MathHelper.Pi, 0), new Vector3(0, 6, 126), new Vector2(256, 50), new Vector2(10, 10), "desertDunes", INTERVALLE_MAJ_STANDARD));
-            Components.Add(new PlanTexturé(this, 1f, new Vector3(MathHelper.PiOver2, 0, 0), new Vector3(0, 31, 0), new Vector2(256, 256), new Vector2(10, 10), "ciel", INTERVALLE_MAJ_STANDARD));
+            
 
-            GestionInput = new InputManager(this);
-            Components.Add(GestionInput);
-            Calculateur = new CalculateurFPS(this, INTERVALLE_CALCUL_FPS);
-            Components.Add(Calculateur);
-            Services.AddService(typeof(CalculateurFPS), Calculateur);
-            Components.Add(new Afficheur3D(this));
+            CaméraJoueur = new CaméraSubjective(Game, new Vector3(positionObjet.X, positionObjet.Y + HAUTEUR_CAM_DÉFAULT, positionObjet.Z + DISTANCE_POURSUITE),
+                                               new Vector3(positionObjet.X, positionObjet.Y + 4, positionObjet.Z),
+                                               Vector3.Up, INTERVALLE_MAJ_STANDARD);
+            Game.Components.Add(CaméraJoueur);
+            Game.Services.AddService(typeof(Caméra), CaméraJoueur);
 
-            TerrainJeu = new Terrain(this, 1f, Vector3.Zero, Vector3.Zero, new Vector3(256, 25, 256), "PetiteCarte", "DétailsDésertSable", 3, INTERVALLE_MAJ_STANDARD);
-            Components.Add(TerrainJeu);
-            Components.Add(new Sprite(this, "crosshairBon", new Vector2(Window.ClientBounds.Width / 2, Window.ClientBounds.Height / 2), 0.2f));
-            Utilisateur = new Joueur(this, "Veteran Tiger Body", ÉCHELLE_OBJET, rotationObjet, positionObjet, INTERVALLE_MAJ_STANDARD);
-            Components.Add(Utilisateur);
-            GestionEnnemis = new GestionnaireEnnemis(this, Utilisateur, TerrainJeu, 0, ÉCHELLE_OBJET, INTERVALLE_MAJ_STANDARD);
-            Components.Add(GestionEnnemis);
-            Services.AddService(typeof(RessourcesManager<SpriteFont>), new RessourcesManager<SpriteFont>(this, "Fonts"));
-            Services.AddService(typeof(RessourcesManager<Texture2D>), new RessourcesManager<Texture2D>(this, "Textures"));
-            Services.AddService(typeof(RessourcesManager<Model>), new RessourcesManager<Model>(this, "Modèles"));
-            Services.AddService(typeof(InputManager), GestionInput);
+            TerrainJeu = new Terrain(Game, 1f, Vector3.Zero, Vector3.Zero, new Vector3(256, 25, 256), "PetiteCarte", "DétailsDésertSable", 3, INTERVALLE_MAJ_STANDARD);
+            Game.Components.Add(TerrainJeu);
+            Game.Services.AddService(typeof(Terrain), TerrainJeu);
+
+            GestionInput = new InputManager(Game);
+            Game.Components.Add(GestionInput);
+            Calculateur = new CalculateurFPS(Game, INTERVALLE_CALCUL_FPS);
+            Game.Components.Add(Calculateur);
+            Game.Services.AddService(typeof(CalculateurFPS), Calculateur);
+            Game.Components.Add(new Afficheur3D(Game));
 
 
-            Services.AddService(typeof(Terrain), TerrainJeu);
-            GestionSprites = new SpriteBatch(GraphicsDevice);
-            Services.AddService(typeof(SpriteBatch), GestionSprites);
-            GestionnaireDeNormales = new NormalesManager(this);
-            Components.Add(GestionnaireDeNormales);
-            Services.AddService(typeof(NormalesManager), GestionnaireDeNormales);
+            Game.Components.Add(new Sprite(Game, "crosshairBon", new Vector2(Game.Window.ClientBounds.Width / 2, Game.Window.ClientBounds.Height / 2), 0.2f));
 
-            foreach (GameComponent gc in Components)
-            {
-                if (gc is IActivable)
-                {
-                    gc.Enabled = false;
-                }
-            }
-            MenuPrincipal = new MenuPrincipal(this);
-            Components.Add(MenuPrincipal);
-            MenuPause = new MenuPause(this);
+            GestionEnnemis = new GestionnaireEnnemis(Game, Utilisateur, TerrainJeu, 0, ÉCHELLE_OBJET, INTERVALLE_MAJ_STANDARD);
+            Game.Components.Add(GestionEnnemis);
+
+
+            GestionnaireDeNormales = new NormalesManager(Game);
+            Game.Components.Add(GestionnaireDeNormales);
+            Game.Services.AddService(typeof(NormalesManager), GestionnaireDeNormales);
+
+            Utilisateur = new Joueur(Game, "Veteran Tiger Body", ÉCHELLE_OBJET, rotationObjet, positionObjet, CaméraJoueur, INTERVALLE_MAJ_STANDARD);
+            Game.Components.Add(Utilisateur);
+
+            Game.Components.Add(new PlanTexturé(Game, 1f, Vector3.Zero, new Vector3(0, 6, -126), new Vector2(256, 50), new Vector2(10, 10), "desertDunes", INTERVALLE_MAJ_STANDARD));
+            Game.Components.Add(new PlanTexturé(Game, 1f, new Vector3(0, MathHelper.PiOver2, 0), new Vector3(-126, 6, 0), new Vector2(256, 50), new Vector2(10, 10), "desertDunesRéflexion", INTERVALLE_MAJ_STANDARD));
+            Game.Components.Add(new PlanTexturé(Game, 1f, new Vector3(0, -(MathHelper.PiOver2), 0), new Vector3(126, 6, 0), new Vector2(256, 50), new Vector2(10, 10), "desertDunesRéflexion", INTERVALLE_MAJ_STANDARD));
+            Game.Components.Add(new PlanTexturé(Game, 1f, new Vector3(0, MathHelper.Pi, 0), new Vector3(0, 6, 126), new Vector2(256, 50), new Vector2(10, 10), "desertDunes", INTERVALLE_MAJ_STANDARD));
+            Game.Components.Add(new PlanTexturé(Game, 1f, new Vector3(MathHelper.PiOver2, 0, 0), new Vector3(0, 31, 0), new Vector2(256, 256), new Vector2(10, 10), "ciel", INTERVALLE_MAJ_STANDARD));
+
+            MenuPause = new MenuPause(Game);
 
             base.Initialize();
         }
 
-        protected override void Update(GameTime gameTime)
+        public override void Update(GameTime gameTime)
         {
             GérerClavier();
             base.Update(gameTime);
@@ -115,9 +109,9 @@ namespace AtelierXNA
         {
             if (GestionInput.EstNouvelleTouche(Keys.Escape))
             {
-                if (!Components.Contains(MenuPause))
+                if (!Game.Components.Contains(MenuPause))
                 {
-                    Components.Add(MenuPause);
+                    Game.Components.Add(MenuPause);
                 }
                 else
                 {
@@ -126,13 +120,6 @@ namespace AtelierXNA
                 //Exit();
             }
         }
-
-        protected override void Draw(GameTime gameTime)
-        {
-            GraphicsDevice.Clear(Color.Black);
-            base.Draw(gameTime);
-        }
-
         public void Écrire()
         {
             Console.WriteLine("bonjour");

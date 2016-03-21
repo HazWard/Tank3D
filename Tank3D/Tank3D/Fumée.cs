@@ -20,11 +20,6 @@ namespace AtelierXNA
         public Fumée(Game game, Vector2 position, float échelle)
             : base(game, NOM_TEXTURE, position, échelle) { }
 
-        public override void Initialize()
-        {
-            base.Initialize();
-        }
-
         protected override void LoadContent()
         {
             base.LoadContent();
