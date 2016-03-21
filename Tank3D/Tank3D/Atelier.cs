@@ -19,7 +19,7 @@ namespace AtelierXNA
         public const float ÉCHELLE_OBJET = 0.05f;
         const float INTERVALLE_CALCUL_FPS = 1f;
         const float INTERVALLE_MAJ_STANDARD = 1f / 60f;
-        Menu MenuPrincipal { get; set; }
+        MenuPrincipal MenuPrincipal { get; set; }
         GraphicsDeviceManager PériphériqueGraphique { get; set; }
         SpriteBatch GestionSprites { get; set; }
         GestionnaireEnnemis GestionEnnemis { get; set; }
@@ -98,7 +98,7 @@ namespace AtelierXNA
                     gc.Enabled = false;
                 }
             }
-            MenuPrincipal = new Menu(this);
+            MenuPrincipal = new MenuPrincipal(this);
             Components.Add(MenuPrincipal);
 
             base.Initialize();

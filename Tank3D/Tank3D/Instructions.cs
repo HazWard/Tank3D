@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
@@ -34,7 +35,13 @@ namespace AtelierXNA
         {
             GestionSprites.Begin();
             GestionSprites.Draw(ImageDeFond, Zone, Color.White);
+            …crireInstructions();
             GestionSprites.End();
+        }
+
+        void …crireInstructions()
+        {
+            StreamReader texte¿Lire = new StreamReader(@"..\..\..\Lorem.txt");
         }
     }
 }

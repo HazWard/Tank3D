@@ -6,11 +6,10 @@ using Microsoft.Xna.Framework;
 
 namespace AtelierXNA
 {
-    class Menu:GameComponent
+    class MenuPrincipal:GameComponent
     {
         // Constantes
-        const float POURCENTAGE_MARGE_HORIZONTALE = 0.05f;
-        const float POURCENTAGE_MARGE_VERTICALE = 0.05f;
+        const float POURCENTAGE_MARGE = 0.05f;
         ArrièrePlan ImageArrièrePlan { get; set; }
         BoutonDeCommande BtnJouer { get; set; }
         BoutonDeCommande BtnInstructions { get; set; }
@@ -19,8 +18,8 @@ namespace AtelierXNA
         BoutonDeCommande BtnRetourMenuPrincipal { get; set; }
         List<GameComponent> Boutons { get; set; }
         Instructions MenuInstructions { get; set; }
-        
-        public Menu(Game jeu)
+
+        public MenuPrincipal(Game jeu)
             :base(jeu)
         {
             
@@ -34,7 +33,7 @@ namespace AtelierXNA
             BtnInstructions = new BoutonDeCommande(Game, "Instructions", "Arial20", "BoutonRouge", "BoutonBleu", new Vector2(230, 400), true, new FonctionÉvénemtielle(AfficherInstructions));
             BtnOptions = new BoutonDeCommande(Game, "Options", "Arial20", "BoutonRouge", "BoutonBleu", new Vector2(380, 400), true, new FonctionÉvénemtielle(DémarrerJeu));
             BtnQuitter = new BoutonDeCommande(Game, "Quitter", "Arial20", "BoutonRouge", "BoutonBleu", new Vector2(490, 400), true, new FonctionÉvénemtielle(DémarrerJeu));
-            BtnRetourMenuPrincipal = new BoutonDeCommande(Game, " X ", "Arial20", "BoutonRougeX", "BoutonBleuX", new Vector2(750, 50), true, new FonctionÉvénemtielle(DémarrerJeu));
+            BtnRetourMenuPrincipal = new BoutonDeCommande(Game, " X ", "Arial20", "BoutonRougeX", "BoutonBleuX", new Vector2(750, 50), true, new FonctionÉvénemtielle(Retour));
             Game.Components.Add(ImageArrièrePlan);
             Game.Components.Add(BtnJouer);
             Game.Components.Add(BtnInstructions);
@@ -73,15 +72,19 @@ namespace AtelierXNA
         }
         void AfficherInstructions()
         {
-            int margeDroite = (int)(Game.Window.ClientBounds.Width * POURCENTAGE_MARGE_HORIZONTALE);
-            int margeBas = (int)(Game.Window.ClientBounds.Height * POURCENTAGE_MARGE_HORIZONTALE);
-            int margeGauche = 20;
-            int margeHaut = 20;
+            int marge = (int)(Game.Window.ClientBounds.Width * POURCENTAGE_MARGE);
+            int pos = marge / 2;
 
-            MenuInstructions = new Instructions(Game, "FondInstructions", new Rectangle(margeGauche, margeHaut, Game.Window.ClientBounds.Width - margeDroite,
-                                                Game.Window.ClientBounds.Height - margeBas));
+            MenuInstructions = new Instructions(Game, "FondInstructions", new Rectangle(pos, pos, Game.Window.ClientBounds.Width - marge,
+                                                Game.Window.ClientBounds.Height - marge));
             Game.Components.Add(MenuInstructions);
             Game.Components.Add(BtnRetourMenuPrincipal);
+        }
+
+        void Retour()
+        {
+            Game.Components.Remove(MenuInstructions);
+            Game.Components.Remove(BtnRetourMenuPrincipal);
         }
     }
 }

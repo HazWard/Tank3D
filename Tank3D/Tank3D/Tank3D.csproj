@@ -94,7 +94,7 @@
     <Compile Include="InputManager.cs" />
     <Compile Include="Instructions.cs" />
     <Compile Include="Joueur.cs" />
-    <Compile Include="Menu.cs" />
+    <Compile Include="MenuPrincipal.cs" />
     <Compile Include="ModèleMobile.cs" />
     <Compile Include="NormalesManager.cs" />
     <Compile Include="ObjetDeBase.cs" />
