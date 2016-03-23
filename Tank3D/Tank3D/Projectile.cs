@@ -115,7 +115,6 @@ namespace AtelierXNA
                     Game.Components.Add(new Explosion(Game, "Projectile", 0.1f, new Vector3(0,angleExplosion,0), new Vector3(posX, hauteurMin, posZ), IntervalleMAJ));
                     angleExplosion += MathHelper.PiOver4;
                 }
-                Console.WriteLine("Projectile effacé!");
             }
         }
 

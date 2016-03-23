@@ -14,14 +14,17 @@ namespace AtelierXNA
 {
     class MenuPause : GameComponent
     {
-        List<GameComponent> Boutons { get; set; }
+        List<GameComponent> ListeGameComponentsMenu { get; set; }
+        List<GameComponent> ListeGameComponentsAtelier { get; set; }
         ArrièrePlan ImageArrièrePlan { get; set; }
         BoutonDeCommande ReprendreJeu { get; set; }
         BoutonDeCommande BtnRetourMenuPrincipal { get; set; }
 
-        public MenuPause(Game jeu)
+        public MenuPause(Game jeu, List<GameComponent> listeGameComponentsMenu, List<GameComponent> listeGameComponentsAtelier)
             : base(jeu)
         {
+            ListeGameComponentsMenu = listeGameComponentsMenu;
+            ListeGameComponentsAtelier = listeGameComponentsAtelier;
         }
 
         public override void Initialize()
@@ -33,10 +36,9 @@ namespace AtelierXNA
                     gc.Enabled = false;
                 }
             }
-            Boutons = new List<GameComponent>();
             ImageArrièrePlan = new ArrièrePlan(Game, "Background Transparent 60");
             ReprendreJeu = new BoutonDeCommande(Game, "Reprendre le jeu", "Arial20", "BoutonRouge", "BoutonBleu", new Vector2(100, 400), true, new FonctionÉvénemtielle(Play));
-            BtnRetourMenuPrincipal = new BoutonDeCommande(Game, " X ", "Arial20", "BoutonRougeX", "BoutonBleuX", new Vector2(750, 50), true, new FonctionÉvénemtielle(RetourMenuPrincipal));
+            BtnRetourMenuPrincipal = new BoutonDeCommande(Game, " X ", "Arial20", "BoutonRougeX", "BoutonBleuX", new Vector2(750, 50), true, new FonctionÉvénemtielle(RetournerMenuPrincipal));
             Game.Components.Add(ImageArrièrePlan);
             Game.Components.Add(ReprendreJeu);
             Game.Components.Add(BtnRetourMenuPrincipal);
@@ -51,9 +53,7 @@ namespace AtelierXNA
 
         public void Play()
         {
-            Game.Components.Remove(this);
-            Game.Components.Remove(ImageArrièrePlan);
-            Game.Components.Remove(ReprendreJeu);
+            EffacerMenu();
             foreach (GameComponent gc in Game.Components)
             {
                 if (gc is IActivable)
@@ -66,24 +66,23 @@ namespace AtelierXNA
         {
             Game.Components.Remove(this);
             Game.Components.Remove(ImageArrièrePlan);
-            foreach (GameComponent gc in Game.Components)
-            {
-                if (gc is BoutonDeCommande)
-                {
-                    Boutons.Add(gc);
-                }
-            }
-            foreach (BoutonDeCommande btn in Boutons)
-            {
-                Game.Components.Remove(btn);
-            }
-        }
-
-        void RetourMenuPrincipal()
-        {
-            Game.Components.Remove(ImageArrièrePlan);
             Game.Components.Remove(ReprendreJeu);
             Game.Components.Remove(BtnRetourMenuPrincipal);
+        }
+
+        void RetournerMenuPrincipal()
+        {
+            var ComponentsModifier = new MenuPrincipal();
+            EffacerMenu();
+
+            Game.Services.RemoveService(typeof(Caméra));
+
+            foreach (GameComponent gc in ListeGameComponentsAtelier)
+            {
+                Game.Components.Remove(gc);
+            }
+
+            ComponentsModifier.ModifyComponents(true, ListeGameComponentsMenu);
         }
 
         void ArrêterJeu()

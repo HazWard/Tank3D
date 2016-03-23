@@ -24,7 +24,6 @@ namespace AtelierXNA
         const float INTERVALLE_FUMÉE = 0.6f;
 
         // Propriétés
-        Game Jeu { get; set; }
         CaméraSubjective Caméra { get; set; }
         Projectile ProjectileTank { get; set; }
         Vector3 RotationYawTour { get; set; }
@@ -52,7 +51,7 @@ namespace AtelierXNA
         public Joueur(Game jeu, string nomModèle, float échelleInitiale, Vector3 rotationInitiale, Vector3 positionInitiale, CaméraSubjective caméraJoueur, float intervalleMAJ)
             : base(jeu, nomModèle, échelleInitiale, rotationInitiale, positionInitiale, intervalleMAJ)
         {
-            Caméra = caméraJoueur;
+            //Caméra = caméraJoueur;
         }
 
         public override void Initialize()
@@ -64,11 +63,11 @@ namespace AtelierXNA
             ÉchelleCanon = 0.005f;
             ÉchelleRoues = 0.05f;
             TempsÉcouléMAJFumée = 0f;
-            Mouse.SetPosition(400, 200);
         }
 
         protected override void LoadContent()
         {
+            Caméra = Game.Services.GetService(typeof(Caméra)) as CaméraSubjective;
             base.LoadContent();
             
         }
@@ -82,7 +81,7 @@ namespace AtelierXNA
             if (AÉtéCliqué)
             {
                 float Y = -200 * RotationPitchCanon.X;
-                Fumée = new Fumée(Jeu, new Vector2(Game.Window.ClientBounds.Width / 2, Y), 0.2f);
+                Fumée = new Fumée(Game, new Vector2(Game.Window.ClientBounds.Width / 2, Y), 0.2f);
                 Game.Components.Add(Fumée);
                 GestionProjectile();
             }
@@ -147,8 +146,6 @@ namespace AtelierXNA
             float posZFinal = Position.Z - déplacementFinal.Y;
 
             nouvellesCoords = TerrainJeu.ConvertionCoordonnées(new Vector3(posXFinal, 0, posZFinal));
-            // TraitementNormales(nouvellesCoords, "X");
-            // TraitementNormales(nouvellesCoords, "Y");
 
             if (!EstHorsDesBornes(nouvellesCoords))
             {
@@ -240,7 +237,7 @@ namespace AtelierXNA
         {
             if (AÉtéCliqué)
             {
-                ProjectileTank = new Projectile(Jeu, "Projectile", 0.1f, 
+                ProjectileTank = new Projectile(Game, "Projectile", 0.1f, 
                                                 new Vector3(2 * RotationPitchCanon.X + MathHelper.Pi, RotationPitchCanon.Y - 0.05f, RotationPitchCanon.Z),
                                                 new Vector3(PositionCanon.X, PositionCanon.Y + 4.6f, PositionCanon.Z), IntervalleMAJ, 2f, 0.02f, false);
                 Game.Components.Add(ProjectileTank);
