@@ -18,7 +18,6 @@ namespace AtelierXNA
         protected const float DISTANCE_POURSUITE = 20f;
         public const float ÉCHELLE_OBJET = 0.05f;
 
-        MenuPrincipal MenuPrincipal { get; set; }
         MenuPause MenuPause { get; set; }
         List<GameComponent> ListeGameComponentsMenu { get; set; }
         List<GameComponent> ListeGameComponents { get; set; }
