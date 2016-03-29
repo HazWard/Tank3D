@@ -32,6 +32,8 @@ namespace AtelierXNA
         BoutonDeCommande BtnTextureTank { get; set; }
         BoutonDeCommande BtnCarteTerrain { get; set; }
         Instructions MenuInstructions { get; set; }
+        int Marge { get; set; }
+        int PositionZoneContenu { get; set; }
         public List<GameComponent> ListeGameComponents { get; set; }
         string NomTexture { get; set; }
         int NbEnnemis { get; set; }
@@ -64,6 +66,9 @@ namespace AtelierXNA
             Components.Add(Calculateur);
             AddComponents();
             AddServices();
+            
+            Marge = (int)(Window.ClientBounds.Width * POURCENTAGE_MARGE);
+            PositionZoneContenu = Marge / 2;
 
             base.Initialize();
         }
@@ -82,11 +87,11 @@ namespace AtelierXNA
         {
             Titre = new TexteCentré(this, "Tank 3D", "Arial20", new Rectangle(Window.ClientBounds.Width / 4, Window.ClientBounds.Height / 12, Window.ClientBounds.Width / 2, Window.ClientBounds.Height / 8), Color.White, 0.1f);
             ImageArrièrePlan = new ArrièrePlan(this, "Background Tank");
-            BtnJouer = new BoutonDeCommande(this, "Jouer", "Arial20", "BoutonRouge", "BoutonBleu", new Vector2(Window.ClientBounds.Width / 2, Window.ClientBounds.Height / 1.2f), true, new FonctionÉvénemtielle(DémarrerJeu));
-            BtnInstructions = new BoutonDeCommande(this, "Instructions", "Arial20", "BoutonRouge", "BoutonBleu", new Vector2(Window.ClientBounds.Width / 2 - 400, Window.ClientBounds.Height / 1.2f), true, new FonctionÉvénemtielle(AfficherInstructions));
-            BtnOptions = new BoutonDeCommande(this, "Options", "Arial20", "BoutonRouge", "BoutonBleu", new Vector2(Window.ClientBounds.Width / 2 + 400, Window.ClientBounds.Height / 1.2f), true, new FonctionÉvénemtielle(AfficherOptions));
-            BtnQuitter = new BoutonDeCommande(this, "Quitter", "Arial20", "BoutonRouge", "BoutonBleu", new Vector2(Window.ClientBounds.Width / 2 + 800, Window.ClientBounds.Height / 1.1f), true, new FonctionÉvénemtielle(QuitterJeu));
-            BtnFermerFenêtre = new BoutonDeCommande(this, " X ", "Arial20", "BoutonRougeX", "BoutonBleuX", new Vector2(Window.ClientBounds.Width / 2 + 800, Window.ClientBounds.Height / 8), true, new FonctionÉvénemtielle(Retour));
+            BtnJouer = new BoutonDeCommande(this, "Jouer", "Arial20", "BoutonRouge", "BoutonBleu", new Vector2(Window.ClientBounds.Width / 2, 4 * Window.ClientBounds.Height / 5f), true, new FonctionÉvénemtielle(DémarrerJeu));
+            BtnInstructions = new BoutonDeCommande(this, "Instructions", "Arial20", "BoutonRouge", "BoutonBleu", new Vector2(Window.ClientBounds.Width / 2 - (Window.ClientBounds.Width / 4), 4 * Window.ClientBounds.Height / 5f), true, new FonctionÉvénemtielle(AfficherInstructions));
+            BtnOptions = new BoutonDeCommande(this, "Options", "Arial20", "BoutonRouge", "BoutonBleu", new Vector2(Window.ClientBounds.Width / 2 + (Window.ClientBounds.Width / 4), 4 * Window.ClientBounds.Height / 5f), true, new FonctionÉvénemtielle(AfficherOptions));
+            BtnQuitter = new BoutonDeCommande(this, "Quitter", "Arial20", "BoutonRouge", "BoutonBleu", new Vector2(5 * Window.ClientBounds.Width / 6, Window.ClientBounds.Height / 5f), true, new FonctionÉvénemtielle(QuitterJeu));
+            BtnFermerFenêtre = new BoutonDeCommande(this, " X ", "Arial20", "BoutonRougeX", "BoutonBleuX", new Vector2(9 * Window.ClientBounds.Width / 10, Window.ClientBounds.Height / 5), true, new FonctionÉvénemtielle(Retour));
         }
 
         void AddComponents()
@@ -175,23 +180,18 @@ namespace AtelierXNA
 
         void AfficherInstructions()
         {
-            int marge = (int)(Window.ClientBounds.Width * POURCENTAGE_MARGE);
-            int pos = marge / 2;
-
-            MenuInstructions = new Instructions(this, "FondInstructions", new Rectangle(pos, pos, Window.ClientBounds.Width - marge,
-                                                Window.ClientBounds.Height - marge));
+            MenuInstructions = new Instructions(this, "FondInstructions", new Rectangle(PositionZoneContenu, PositionZoneContenu, Window.ClientBounds.Width - Marge,
+                                                Window.ClientBounds.Height - Marge));
             Components.Add(MenuInstructions);
             Components.Add(BtnFermerFenêtre);
         }
 
         void AfficherOptions()
         {
-            int marge = (int)(Window.ClientBounds.Width * POURCENTAGE_MARGE);
-            int pos = marge / 2;
-
-            MenuInstructions = new Instructions(this, "FondInstructions", new Rectangle(pos, pos, Window.ClientBounds.Width - marge,
-                                                Window.ClientBounds.Height - marge));
+            MenuInstructions = new Instructions(this, "FondInstructions", new Rectangle(PositionZoneContenu, PositionZoneContenu, Window.ClientBounds.Width - Marge,
+                                                Window.ClientBounds.Height - Marge));
             BtnTextureTank = new BoutonDeCommande(this, "Choisir texture du tank", "Arial20", "BoutonRouge", "BoutonBleu", new Vector2(Window.ClientBounds.Width / 4, Window.ClientBounds.Height / 4), true, new FonctionÉvénemtielle(IllustrerTextures));
+            
             Components.Add(MenuInstructions);
             Components.Add(BtnFermerFenêtre);
             Components.Add(BtnTextureTank);
