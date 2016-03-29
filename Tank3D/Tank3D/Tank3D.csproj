@@ -91,7 +91,7 @@
     <Compile Include="GestionnaireEnnemis.cs" />
     <Compile Include="IActivable.cs" />
     <Compile Include="InputManager.cs" />
-    <Compile Include="Instructions.cs" />
+    <Compile Include="ZoneContextuelle.cs" />
     <Compile Include="Joueur.cs" />
     <Compile Include="MenuPause.cs" />
     <Compile Include="MenuPrincipal.cs" />

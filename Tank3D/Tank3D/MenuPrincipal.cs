@@ -31,8 +31,9 @@ namespace AtelierXNA
         BoutonDeCommande BtnFermerFenêtre { get; set; }
         BoutonDeCommande BtnTextureTank { get; set; }
         BoutonDeCommande BtnCarteTerrain { get; set; }
-        Instructions MenuInstructions { get; set; }
+        ZoneContextuelle Contenu { get; set; }
         int Marge { get; set; }
+        Vector2 DimensionTitre { get; set; }
         int PositionZoneContenu { get; set; }
         public List<GameComponent> ListeGameComponents { get; set; }
         string NomTexture { get; set; }
@@ -60,12 +61,12 @@ namespace AtelierXNA
             ListeGameComponents = new List<GameComponent>();
             NomTexture = "Veteran Tiger Body";
             NbEnnemis = 0;
+            AddServices();
             InitializeComponents();
 
             Components.Add(GestionInput);
             Components.Add(Calculateur);
             AddComponents();
-            AddServices();
             
             Marge = (int)(Window.ClientBounds.Width * POURCENTAGE_MARGE);
             PositionZoneContenu = Marge / 2;
@@ -85,7 +86,14 @@ namespace AtelierXNA
 
         void InitializeComponents()
         {
-            Titre = new TexteCentré(this, "Tank 3D", "Arial20", new Rectangle(Window.ClientBounds.Width / 4, Window.ClientBounds.Height / 12, Window.ClientBounds.Width / 2, Window.ClientBounds.Height / 8), Color.White, 0.1f);
+            RessourcesManager<SpriteFont>  GestionFont = Services.GetService(typeof(RessourcesManager<SpriteFont>)) as RessourcesManager<SpriteFont>;
+            SpriteFont Font = GestionFont.Find("Arial20");
+
+            DimensionTitre = Font.MeasureString("Tank 3D");
+
+            Titre = new TexteCentré(this, "Tank 3D", "Arial20", new Rectangle(Window.ClientBounds.Width / 2 - (int)DimensionTitre.X,
+                                                                                Window.ClientBounds.Height / 5,
+                                                                                2 * (int)DimensionTitre.X, 2 * (int)DimensionTitre.Y), Color.Black, 0.1f);
             ImageArrièrePlan = new ArrièrePlan(this, "Background Tank");
             BtnJouer = new BoutonDeCommande(this, "Jouer", "Arial20", "BoutonRouge", "BoutonBleu", new Vector2(Window.ClientBounds.Width / 2, 4 * Window.ClientBounds.Height / 5f), true, new FonctionÉvénemtielle(DémarrerJeu));
             BtnInstructions = new BoutonDeCommande(this, "Instructions", "Arial20", "BoutonRouge", "BoutonBleu", new Vector2(Window.ClientBounds.Width / 2 - (Window.ClientBounds.Width / 4), 4 * Window.ClientBounds.Height / 5f), true, new FonctionÉvénemtielle(AfficherInstructions));
@@ -96,12 +104,12 @@ namespace AtelierXNA
 
         void AddComponents()
         {
-            Components.Add(Titre);
             Components.Add(ImageArrièrePlan);
             Components.Add(BtnJouer);
             Components.Add(BtnInstructions);
             Components.Add(BtnOptions);
             Components.Add(BtnQuitter);
+            Components.Add(Titre);
             AddComponentsToList();
         }
 
@@ -180,19 +188,19 @@ namespace AtelierXNA
 
         void AfficherInstructions()
         {
-            MenuInstructions = new Instructions(this, "FondInstructions", new Rectangle(PositionZoneContenu, PositionZoneContenu, Window.ClientBounds.Width - Marge,
+            Contenu = new ZoneContextuelle(this, "FondInstructions", "Instructions", new Rectangle(PositionZoneContenu, PositionZoneContenu, Window.ClientBounds.Width - Marge,
                                                 Window.ClientBounds.Height - Marge));
-            Components.Add(MenuInstructions);
+            Components.Add(Contenu);
             Components.Add(BtnFermerFenêtre);
         }
 
         void AfficherOptions()
         {
-            MenuInstructions = new Instructions(this, "FondInstructions", new Rectangle(PositionZoneContenu, PositionZoneContenu, Window.ClientBounds.Width - Marge,
+            Contenu = new ZoneContextuelle(this, "FondInstructions", "Options", new Rectangle(PositionZoneContenu, PositionZoneContenu, Window.ClientBounds.Width - Marge,
                                                 Window.ClientBounds.Height - Marge));
-            BtnTextureTank = new BoutonDeCommande(this, "Choisir texture du tank", "Arial20", "BoutonRouge", "BoutonBleu", new Vector2(Window.ClientBounds.Width / 4, Window.ClientBounds.Height / 4), true, new FonctionÉvénemtielle(IllustrerTextures));
+            BtnTextureTank = new BoutonDeCommande(this, "Choix de la texture", "Arial20", "BoutonRouge", "BoutonBleu", new Vector2(Window.ClientBounds.Width / 4, Window.ClientBounds.Height / 4), true, new FonctionÉvénemtielle(IllustrerTextures));
             
-            Components.Add(MenuInstructions);
+            Components.Add(Contenu);
             Components.Add(BtnFermerFenêtre);
             Components.Add(BtnTextureTank);
         }
@@ -204,7 +212,7 @@ namespace AtelierXNA
 
         void Retour()
         {
-            Components.Remove(MenuInstructions);
+            Components.Remove(Contenu);
             Components.Remove(BtnFermerFenêtre);
             Components.Remove(BtnTextureTank);
         }

@@ -13,11 +13,12 @@ using Microsoft.Xna.Framework.Media;
 
 namespace AtelierXNA
 {
-    public class Instructions : ArrièrePlan
+    public class ZoneContextuelle : ArrièrePlan
     {
         // Propriétés
         Rectangle Zone { get; set; }
-        public Instructions(Game game, string nomImage, Rectangle zone)
+        string TypeMenu { get; set; }
+        public ZoneContextuelle(Game game, string nomImage, string typeMenu, Rectangle zone)
             : base(game, nomImage)
         {
             Zone = zone;
@@ -35,13 +36,34 @@ namespace AtelierXNA
         {
             GestionSprites.Begin();
             GestionSprites.Draw(ImageDeFond, Zone, Color.White);
-            ÉcrireInstructions();
+            AfficherContenu();
             GestionSprites.End();
+        }
+
+        void AfficherContenu()
+        {
+            switch(TypeMenu)
+            {
+                case "Instructions":
+                    ÉcrireInstructions();
+                    break;
+
+                case "Options":
+                    ÉcrireOptions();
+                    break;
+            }
+        }
+
+        void ÉcrireOptions()
+        {
+            // Afficher un tank avec une texture changeante
+            // Choix du nombre d'ennemi
+            // Difficulté (peut-être)
         }
 
         void ÉcrireInstructions()
         {
-            StreamReader texteÀLire = new StreamReader(@"..\..\..\Lorem.txt");
+            // Afficher les instructions
         }
     }
 }
