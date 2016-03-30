@@ -52,7 +52,6 @@ namespace AtelierXNA
             NbNiveauxTexture = nbNiveauxTexture;
             NomTextureTerrain = nomTextureTerrain;
             Étendue = étendue;
-            Console.WriteLine(Étendue);
         }
 
         public override void Initialize()

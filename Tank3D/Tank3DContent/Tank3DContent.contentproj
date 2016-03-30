@@ -40,6 +40,11 @@
       <Importer>FbxImporter</Importer>
       <Processor>ModelProcessor</Processor>
     </Compile>
+    <Compile Include="Textures\Background Transparent 60.png">
+      <Name>Background Transparent 60</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
     <Compile Include="Textures\CarteTest.bmp">
       <Name>CarteTest</Name>
       <Importer>TextureImporter</Importer>
@@ -206,6 +211,32 @@
   <ItemGroup>
     <Compile Include="Textures\Fumée.png">
       <Name>Fumée</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Textures\Background Tank.jpg">
+      <Name>Background Tank</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Textures\BoutonBleuX.png">
+      <Name>BoutonBleuX</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\BoutonRougeX.png">
+      <Name>BoutonRougeX</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Textures\FondInstructions.png">
+      <Name>FondInstructions</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>

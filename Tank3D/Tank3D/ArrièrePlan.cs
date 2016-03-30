@@ -9,7 +9,7 @@ namespace AtelierXNA
       protected SpriteBatch GestionSprites { get; private set; }
       RessourcesManager<Texture2D> GestionnaireDeTextures { get; set; }
       string NomImage { get; set; }
-      Rectangle ZoneAffichage { get; set; }
+      protected Rectangle ZoneAffichage { get; set; }
       protected Texture2D ImageDeFond { get; private set; }
 
       public ArrièrePlan(Game jeu, string nomImage)
@@ -33,8 +33,10 @@ namespace AtelierXNA
 
       public override void Draw(GameTime gameTime)
       {
-         GestionSprites.Draw(ImageDeFond, ZoneAffichage, Color.White);
-         base.Draw(gameTime);
+          GestionSprites.Begin();
+          GestionSprites.Draw(ImageDeFond, ZoneAffichage, Color.White);
+          GestionSprites.End();
+          base.Draw(gameTime);
       }
    }
 }
