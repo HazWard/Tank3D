@@ -111,11 +111,10 @@ namespace AtelierXNA
                                                Vector3.Up, INTERVALLE_MAJ_STANDARD);
             Game.Components.Add(CaméraJoueur);
             TerrainJeu = new Terrain(Game, 1f, Vector3.Zero, Vector3.Zero, new Vector3(256, 25, 256), "PetiteCarte", "DétailsDésertSable", 3, INTERVALLE_MAJ_STANDARD);
-            GestionEnnemis = new GestionnaireEnnemis(Game, Utilisateur, TerrainJeu, NbEnnemis, ÉCHELLE_OBJET, INTERVALLE_MAJ_STANDARD);
             GestionnaireDeNormales = new NormalesManager(Game);
-            Utilisateur = new Joueur(Game, NomModèleJoueur, ÉCHELLE_OBJET, rotationObjet, positionObjet, CaméraJoueur, INTERVALLE_MAJ_STANDARD);
+            Utilisateur = new Joueur(Game, NomModèleJoueur, ÉCHELLE_OBJET, rotationObjet, positionObjet, INTERVALLE_MAJ_STANDARD);
+            GestionEnnemis = new GestionnaireEnnemis(Game, Utilisateur, TerrainJeu, NbEnnemis, ÉCHELLE_OBJET, INTERVALLE_MAJ_STANDARD);
             MenuPause = new MenuPause(Game, ListeGameComponentsMenu, ListeGameComponents);
-
             PremierPlan = new PlanTexturé(Game, 1f, Vector3.Zero, new Vector3(0, 6, -126), new Vector2(256, 50), new Vector2(10, 10), "desertDunes", INTERVALLE_MAJ_STANDARD);
             DeuxièmePlan = new PlanTexturé(Game, 1f, new Vector3(0, MathHelper.PiOver2, 0), new Vector3(-126, 6, 0), new Vector2(256, 50), new Vector2(10, 10), "desertDunesRéflexion", INTERVALLE_MAJ_STANDARD);
             TroisièmePlan = new PlanTexturé(Game, 1f, new Vector3(0, -(MathHelper.PiOver2), 0), new Vector3(126, 6, 0), new Vector2(256, 50), new Vector2(10, 10), "desertDunesRéflexion", INTERVALLE_MAJ_STANDARD);

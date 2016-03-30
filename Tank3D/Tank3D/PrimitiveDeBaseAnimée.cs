@@ -6,9 +6,9 @@ namespace AtelierXNA
 {
    public abstract class PrimitiveDeBaseAnimÈe : PrimitiveDeBase
    {
-      float HomothÈtie { get; set; }
-      Vector3 Position { get; set; }
-      float IntervalleMAJ { get; set; }
+      public float HomothÈtie { get; set; }
+      public Vector3 Position { get; set; }
+      protected float IntervalleMAJ { get; set; }
       protected InputManager GestionInput { get; private set; }
       float Temps…coulÈDepuisMAJ { get; set; }
       float IncrÈmentAngleRotation { get; set; }
@@ -18,7 +18,7 @@ namespace AtelierXNA
       protected bool Monde¿Recalculer { get; set; }
 
       float angleLacet;
-      protected float AngleLacet
+      public float AngleLacet
       {
          get
          {
@@ -90,7 +90,7 @@ namespace AtelierXNA
 
       public override void Update(GameTime gameTime)
       {
-         GÈrerClavier();
+          GÈrerClavier();
          float Temps…coulÈ = (float)gameTime.ElapsedGameTime.TotalSeconds;
          Temps…coulÈDepuisMAJ += Temps…coulÈ;
          if (Temps…coulÈDepuisMAJ >= IntervalleMAJ)
@@ -119,27 +119,27 @@ namespace AtelierXNA
 
       protected virtual void GÈrerClavier()
       {
-         if (GestionInput.EstEnfoncÈe(Keys.LeftControl) || GestionInput.EstEnfoncÈe(Keys.RightControl))
-         {
-            if (GestionInput.EstNouvelleTouche(Keys.Space))
-            {
-               InitialiserRotations();
-               Monde¿Recalculer = true;
-            }
-            if (GestionInput.EstNouvelleTouche(Keys.D1) || GestionInput.EstNouvelleTouche(Keys.NumPad1))
-            {
-               Lacet = !Lacet;
-            }
-            if (GestionInput.EstNouvelleTouche(Keys.D2) || GestionInput.EstNouvelleTouche(Keys.NumPad2))
-            {
-               Tangage = !Tangage;
-            }
-            if (GestionInput.EstNouvelleTouche(Keys.D3) || GestionInput.EstNouvelleTouche(Keys.NumPad3))
-            {
-               Roulis = !Roulis;
-            }
-         }
-         Monde¿Recalculer = Monde¿Recalculer || Lacet || Tangage || Roulis;
+          if (GestionInput.EstEnfoncÈe(Keys.LeftControl) || GestionInput.EstEnfoncÈe(Keys.RightControl))
+          {
+              if (GestionInput.EstNouvelleTouche(Keys.Space))
+              {
+                  InitialiserRotations();
+                  Monde¿Recalculer = true;
+              }
+              if (GestionInput.EstNouvelleTouche(Keys.D1) || GestionInput.EstNouvelleTouche(Keys.NumPad1))
+              {
+                  Lacet = !Lacet;
+              }
+              if (GestionInput.EstNouvelleTouche(Keys.D2) || GestionInput.EstNouvelleTouche(Keys.NumPad2))
+              {
+                  Tangage = !Tangage;
+              }
+              if (GestionInput.EstNouvelleTouche(Keys.D3) || GestionInput.EstNouvelleTouche(Keys.NumPad3))
+              {
+                  Roulis = !Roulis;
+              }
+          }
+          Monde¿Recalculer = Monde¿Recalculer || Lacet || Tangage || Roulis;
       }
    }
 }

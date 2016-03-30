@@ -27,14 +27,9 @@ namespace AtelierXNA
         int Compteur { get; set; }
         ModèleMobile ProjectileTank { get; set; }
         Game Jeu { get; set; }
-        public Vector3 GetPosition
-        {
-            get
-            {
-                return Position;
-            }
-            private set { }
-        }
+        BarreDeVie VieAI { get; set; }
+        float PourcentageVie { get; set; }
+       
         public Vector3 GetRotation
         {
             get
@@ -50,7 +45,16 @@ namespace AtelierXNA
             Jeu = jeu;
             Cible = cible;
             Compteur = 0;
+            VieAI = new BarreDeVie(jeu, échelleInitiale, rotationInitiale, positionInitiale, new Vector2(100, 50), new Vector2(5, 10), "FondInstructions", IntervalleMAJ);
+            Game.Components.Add(VieAI);
+            Console.WriteLine("Barre de vie crée");
         }
+        public override void Initialize()
+        {
+            PourcentageVie = 1;
+            base.Initialize();
+        }
+
         public override void Update(GameTime gameTime)
         {
             float TempsÉcoulé = (float)gameTime.ElapsedGameTime.TotalSeconds;
@@ -63,12 +67,26 @@ namespace AtelierXNA
                 {
                     GestionProjectile();
                 }
-                
+
                 GestionMouvements();
                 Compteur++;
                 TempsÉcouléDepuisMAJ = 0;
+
+                CalculBarreDeVie();
+                //VieAI.CalculerVie();
+
             }
             base.Update(gameTime);
+        }
+        void CalculBarreDeVie()
+        {
+            VieAI.Position = new Vector3(Position.X, Position.Y +7 , Position.Z);
+            VieAI.AngleLacet = Rotation.Y;
+            VieAI.PositionJoueur = Cible.GetPosition;
+            
+            VieAI.PourcentageVie = PourcentageVie;
+           
+            //VieJoueur.CalculerVie(RotationPitchCanon, RotationYawTour, PositionTour);
         }
         public bool EstDétruit()
         {
@@ -85,6 +103,7 @@ namespace AtelierXNA
         {
             ProjectileTank = new Projectile(Jeu, "Projectile", 0.1f, Rotation, 
                                             new Vector3(Position.X, Position.Y + 4f, Position.Z), IntervalleMAJ, 2f, 0.02f, false);
+           
             Game.Components.Add(ProjectileTank);
         }
         

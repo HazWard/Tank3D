@@ -47,11 +47,17 @@ namespace AtelierXNA
                 return new Vector2(Position.X, Position.Z);
             }
         }
+        public Vector3 GetPosition
+        {
+            get
+            {
+                return Caméra.Position;
+            }
+        }
 
-        public Joueur(Game jeu, string nomModèle, float échelleInitiale, Vector3 rotationInitiale, Vector3 positionInitiale, CaméraSubjective caméraJoueur, float intervalleMAJ)
+        public Joueur(Game jeu, string nomModèle, float échelleInitiale, Vector3 rotationInitiale, Vector3 positionInitiale, float intervalleMAJ)
             : base(jeu, nomModèle, échelleInitiale, rotationInitiale, positionInitiale, intervalleMAJ)
         {
-            //Caméra = caméraJoueur;
         }
 
         public override void Initialize()
@@ -69,7 +75,7 @@ namespace AtelierXNA
         {
             Caméra = Game.Services.GetService(typeof(Caméra)) as CaméraSubjective;
             base.LoadContent();
-            
+
         }
 
         public override void Update(GameTime gameTime)
@@ -122,7 +128,7 @@ namespace AtelierXNA
             RotationCanon();
 
             Caméra.Cible = new Vector3(Position.X, Position.Y + 4, Position.Z);
-            Caméra.Position= new Vector3(((float)Math.Sin(RotationYawTour.Y) * DISTANCE_POURSUITE) + Position.X,
+            Caméra.Position = new Vector3(((float)Math.Sin(RotationYawTour.Y) * DISTANCE_POURSUITE) + Position.X,
                                          ((float)Math.Tan(MathHelper.PiOver2 - RotationPitchCanon.X) * DISTANCE_POURSUITE) + Position.Y + HAUTEUR_CAM_DÉFAULT,
                                          ((float)Math.Cos(RotationYawTour.Y) * DISTANCE_POURSUITE) + Position.Z);
 
@@ -161,7 +167,7 @@ namespace AtelierXNA
         void TraitementNormales(Point coords, string axe)
         {
             int sens;
-            switch(axe)
+            switch (axe)
             {
                 case "X":
                     sens = (ObjectifAnglesNormales.X < Rotation.X) ? 1 : -1;
@@ -237,7 +243,7 @@ namespace AtelierXNA
         {
             if (AÉtéCliqué)
             {
-                ProjectileTank = new Projectile(Game, "Projectile", 0.1f, 
+                ProjectileTank = new Projectile(Game, "Projectile", 0.1f,
                                                 new Vector3(2 * RotationPitchCanon.X + MathHelper.Pi, RotationPitchCanon.Y - 0.05f, RotationPitchCanon.Z),
                                                 new Vector3(PositionCanon.X, PositionCanon.Y + 4.6f, PositionCanon.Z), IntervalleMAJ, 2f, 0.02f, false);
                 Game.Components.Add(ProjectileTank);

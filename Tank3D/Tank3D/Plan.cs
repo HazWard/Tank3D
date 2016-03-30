@@ -1,4 +1,4 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 
 namespace AtelierXNA
@@ -12,18 +12,23 @@ namespace AtelierXNA
       protected int NbRangées { get; private set; } // idem 
       protected int NbTrianglesParStrip { get; private set; } //...
       protected BasicEffect EffetDeBase { get; private set; } // 
+      protected Vector2 Étendue { get; set; }
+      Vector2 Charpente { get; set; }
 
       public Plan(Game jeu, float homothétieInitiale, Vector3 rotationInitiale, Vector3 positionInitiale, Vector2 étendue, Vector2 charpente, float intervalleMAJ)
          : base(jeu, homothétieInitiale, rotationInitiale, positionInitiale, intervalleMAJ)
       {
           NbColonnes = (int)charpente.X;
           NbRangées = (int)charpente.Y;
-          Delta = étendue/charpente;
+          Charpente = charpente;
+          Étendue = étendue;
+         
           Origine = new Vector3(-étendue.X / 2, -étendue.Y / 2, 0);
       }
 
       public override void Initialize()
       {
+          Delta = Étendue / Charpente;
          NbTrianglesParStrip = 2*NbColonnes;
          NbSommets = (NbTrianglesParStrip + 2) * NbRangées;
          PtsSommets = new Vector3[NbColonnes + 1,NbRangées + 1];

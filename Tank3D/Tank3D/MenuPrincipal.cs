@@ -43,7 +43,7 @@ namespace AtelierXNA
         public MenuPrincipal()
         {
             PériphériqueGraphique = new GraphicsDeviceManager(this);
-            PériphériqueGraphique.IsFullScreen = true;
+            PériphériqueGraphique.IsFullScreen = false;
             PériphériqueGraphique.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
             PériphériqueGraphique.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
             Content.RootDirectory = "Content";
@@ -59,7 +59,7 @@ namespace AtelierXNA
             Calculateur = new CalculateurFPS(this, INTERVALLE_CALCUL_FPS);
             ListeGameComponents = new List<GameComponent>();
             NomTexture = "Veteran Tiger Body";
-            NbEnnemis = 0;
+            NbEnnemis = 5;
             AddServices();
             InitializeComponents();
 
