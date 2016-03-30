@@ -141,6 +141,7 @@ namespace AtelierXNA
             ListeGameComponents.Add(TroisièmePlan);
             ListeGameComponents.Add(QuatrièmePlan);
             ListeGameComponents.Add(Ciel);
+            ListeGameComponents.Add(this);
         }
 
         void AddTextures()

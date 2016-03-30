@@ -14,6 +14,7 @@ namespace AtelierXNA
 {
     class MenuPause : GameComponent
     {
+        Game Jeu { get; set; }
         List<GameComponent> ListeGameComponentsMenu { get; set; }
         List<GameComponent> ListeGameComponentsAtelier { get; set; }
         ArrièrePlan ImageArrièrePlan { get; set; }
@@ -23,6 +24,7 @@ namespace AtelierXNA
         public MenuPause(Game jeu, List<GameComponent> listeGameComponentsMenu, List<GameComponent> listeGameComponentsAtelier)
             : base(jeu)
         {
+            Jeu = jeu;
             ListeGameComponentsMenu = listeGameComponentsMenu;
             ListeGameComponentsAtelier = listeGameComponentsAtelier;
         }
@@ -38,7 +40,7 @@ namespace AtelierXNA
             }
             ImageArrièrePlan = new ArrièrePlan(Game, "Background Transparent 60");
             ReprendreJeu = new BoutonDeCommande(Game, "Reprendre le jeu", "Arial20", "BoutonRouge", "BoutonBleu", new Vector2(100, 400), true, new FonctionÉvénemtielle(Play));
-            BtnRetourMenuPrincipal = new BoutonDeCommande(Game, " X ", "Arial20", "BoutonRougeX", "BoutonBleuX", new Vector2(750, 50), true, new FonctionÉvénemtielle(RetournerMenuPrincipal));
+            BtnRetourMenuPrincipal = new BoutonDeCommande(Game, " X ", "Arial20", "BoutonRougeX", "BoutonBleuX", new Vector2(15f * (Game.Window.ClientBounds.Width / 16f), Game.Window.ClientBounds.Height / 10f), true, new FonctionÉvénemtielle(RetournerMenuPrincipal));
             Game.Components.Add(ImageArrièrePlan);
             Game.Components.Add(ReprendreJeu);
             Game.Components.Add(BtnRetourMenuPrincipal);
@@ -72,17 +74,16 @@ namespace AtelierXNA
 
         void RetournerMenuPrincipal()
         {
-            var ComponentsModifier = new MenuPrincipal();
             EffacerMenu();
-
+            
             Game.Services.RemoveService(typeof(Caméra));
 
             foreach (GameComponent gc in ListeGameComponentsAtelier)
             {
                 Game.Components.Remove(gc);
             }
-
-            ComponentsModifier.ModifyComponents(true, ListeGameComponentsMenu);
+            
+            MenuPrincipal.ModifyComponents(true, ListeGameComponentsMenu);
         }
 
         void ArrêterJeu()

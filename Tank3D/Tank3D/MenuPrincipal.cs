@@ -43,10 +43,9 @@ namespace AtelierXNA
         public MenuPrincipal()
         {
             PériphériqueGraphique = new GraphicsDeviceManager(this);
-            PériphériqueGraphique.PreferredBackBufferWidth = 1280;
-            PériphériqueGraphique.PreferredBackBufferHeight = 720;
-            PériphériqueGraphique.ApplyChanges();
-            PériphériqueGraphique.IsFullScreen = false;
+            PériphériqueGraphique.IsFullScreen = true;
+            PériphériqueGraphique.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
+            PériphériqueGraphique.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
             Content.RootDirectory = "Content";
             PériphériqueGraphique.SynchronizeWithVerticalRetrace = false;
             IsFixedTimeStep = false;
@@ -84,7 +83,7 @@ namespace AtelierXNA
             Services.AddService(typeof(RessourcesManager<Model>), new RessourcesManager<Model>(this, "Modèles"));
         }
 
-        void InitializeComponents()
+        public void InitializeComponents()
         {
             RessourcesManager<SpriteFont>  GestionFont = Services.GetService(typeof(RessourcesManager<SpriteFont>)) as RessourcesManager<SpriteFont>;
             SpriteFont Font = GestionFont.Find("Arial20");
@@ -137,7 +136,7 @@ namespace AtelierXNA
             }
         }
 
-        public void ModifyComponents(bool créer, List<GameComponent> listeGameComponents)
+        public static void ModifyComponents(bool créer, List<GameComponent> listeGameComponents)
         {
             if (créer)
             {
