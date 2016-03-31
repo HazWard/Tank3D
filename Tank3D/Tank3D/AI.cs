@@ -15,7 +15,7 @@ namespace AtelierXNA
     /// <summary>
     /// This is a game component that implements IUpdateable.
     /// </summary>
-    public class AI : ModèleMobile
+    public class AI : ModèleMobile, IActivable
     {
         const float INCRÉMENT_DÉPLACEMENT_AI = 0.1f;
         const float EST_PROCHE = 50f;
@@ -27,7 +27,7 @@ namespace AtelierXNA
         int Compteur { get; set; }
         ModèleMobile ProjectileTank { get; set; }
         Game Jeu { get; set; }
-        BarreDeVie VieAI { get; set; }
+        public BarreDeVie VieAI { get; set; }
         float PourcentageVie { get; set; }
        
         public Vector3 GetRotation
@@ -47,7 +47,6 @@ namespace AtelierXNA
             Compteur = 0;
             VieAI = new BarreDeVie(jeu, échelleInitiale, rotationInitiale, positionInitiale, new Vector2(100, 50), new Vector2(5, 10), "FondInstructions", IntervalleMAJ);
             Game.Components.Add(VieAI);
-            Console.WriteLine("Barre de vie crée");
         }
         public override void Initialize()
         {
@@ -96,6 +95,11 @@ namespace AtelierXNA
                 estDétruit = true;
             }
             return estDétruit;
+        }
+
+        public void ModifierActivation()
+        {
+
         }
 
         #region Méthodes pour la gestion des déplacements et rotations du modèle

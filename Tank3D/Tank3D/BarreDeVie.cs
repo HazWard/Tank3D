@@ -77,7 +77,6 @@ namespace AtelierXNA
                 //GÈrerDÈplacement()
                 //CalculDeDommages();
                 CalculerNormale();
-                Console.WriteLine("Position AI: {0} ",Position);
                 Temps…coulÈDepuisMAJ = 0;
             }
             base.Update(gameTime);

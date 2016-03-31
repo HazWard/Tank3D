@@ -17,16 +17,18 @@ namespace AtelierXNA
         Game Jeu { get; set; }
         List<GameComponent> ListeGameComponentsMenu { get; set; }
         List<GameComponent> ListeGameComponentsAtelier { get; set; }
+        GestionnaireEnnemis GestionEnnemis { get; set; }
         ArrièrePlan ImageArrièrePlan { get; set; }
         BoutonDeCommande ReprendreJeu { get; set; }
         BoutonDeCommande BtnRetourMenuPrincipal { get; set; }
 
-        public MenuPause(Game jeu, List<GameComponent> listeGameComponentsMenu, List<GameComponent> listeGameComponentsAtelier)
+        public MenuPause(Game jeu, List<GameComponent> listeGameComponentsMenu, List<GameComponent> listeGameComponentsAtelier, GestionnaireEnnemis gestionEnnemis)
             : base(jeu)
         {
             Jeu = jeu;
             ListeGameComponentsMenu = listeGameComponentsMenu;
             ListeGameComponentsAtelier = listeGameComponentsAtelier;
+            GestionEnnemis = gestionEnnemis;
         }
 
         public override void Initialize()
@@ -82,6 +84,8 @@ namespace AtelierXNA
             {
                 Game.Components.Remove(gc);
             }
+
+            GestionEnnemis.EffacerEnnemis();
             
             MenuPrincipal.ModifyComponents(true, ListeGameComponentsMenu);
         }
