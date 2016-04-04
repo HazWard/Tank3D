@@ -16,7 +16,7 @@ namespace AtelierXNA
     /// This is a game component that implements IUpdateable.
     /// </summary>
 
-    public class BarreDeVie : PlanTexturé
+    public class BarreDeVie : PlanTexturé, IActivable
     {
         //float PourcentageVie { get; set; }
         //Joueur Joueur { get; set; }
@@ -53,6 +53,9 @@ namespace AtelierXNA
             base.Initialize();
             
         }
+        public void ModifierActivation()
+        { 
+        }
         protected override void LoadContent()
         {
             
@@ -72,11 +75,12 @@ namespace AtelierXNA
             if (TempsÉcouléDepuisMAJ > IntervalleMAJ)
             {
                 CalculerVie();
-                CalculerMatriceMonde();
+                
                 //GérerAnimation();
                 //GérerDéplacement()
                 //CalculDeDommages();
                 CalculerNormale();
+                CalculerMatriceMonde();
                 TempsÉcouléDepuisMAJ = 0;
             }
             base.Update(gameTime);
@@ -90,15 +94,30 @@ namespace AtelierXNA
 
             NormaleBarreDeVie = Vector3.Cross(VecteurUn, VecteurDeux);
             NormaleBarreDeVie = Vector3.Normalize(NormaleBarreDeVie);
-            VecteurBarreDeVieCaméra = PositionJoueur - Position;
+            VecteurBarreDeVieCaméra = PositionJoueur - new Vector3(Position.X,PositionJoueur.Y,Position.Z);
             VecteurBarreDeVieCaméra = Vector3.Normalize(VecteurBarreDeVieCaméra);
 
+            Console.WriteLine(Vector3.Dot(NormaleBarreDeVie, VecteurBarreDeVieCaméra));
+            float produitScalaire = Vector3.Dot(NormaleBarreDeVie, VecteurBarreDeVieCaméra);
+            float angleEntreBarreCaméra = (float)Math.Acos(produitScalaire);
+            
 
+            Console.WriteLine("ANGLE : {0}",angleEntreBarreCaméra);
+            AjusterAngleBarreDeVie(angleEntreBarreCaméra,produitScalaire);
 
-            float angleEntreBarreCaméra = (float)Math.Acos(Vector3.Dot(NormaleBarreDeVie, VecteurBarreDeVieCaméra));
-
-            Console.WriteLine("ANGLE : {0}", MathHelper.ToDegrees(angleEntreBarreCaméra));
-
+        }
+        void AjusterAngleBarreDeVie(float angle, float produitScalaire)
+        {
+            if (produitScalaire >= 0)
+            {
+                AngleLacet = AngleLacet + angle + MathHelper.PiOver2;
+            }
+            else
+            {
+                AngleLacet = AngleLacet - angle - MathHelper.PiOver2;
+            }
+               
+            
         }
         protected override void CalculerMatriceMonde()
         {
