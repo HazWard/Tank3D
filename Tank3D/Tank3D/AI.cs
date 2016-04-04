@@ -19,7 +19,7 @@ namespace AtelierXNA
     {
         const float INCRÉMENT_DÉPLACEMENT_AI = 0.1f;
         const float EST_PROCHE = 50f;
-        
+        const float HAUTEUR_DÉFAULT = 0.5f;
 
         Joueur Cible { get; set; }
         bool estDétruit { get; set; }

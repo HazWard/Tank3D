@@ -42,11 +42,6 @@ namespace AtelierXNA
 
             float angleX = (float)Math.Atan2(normale.X, normale.Y);
             float angleY = (float)Math.Atan2(normale.Z, normale.Y);
-
-            Console.WriteLine("--------------------");
-            Console.WriteLine("Angle en X: {0}", angleX);
-            Console.WriteLine("Angle en Y: {0}", angleY);
-
             return new Vector2(-angleX, angleY);
         }
     }
