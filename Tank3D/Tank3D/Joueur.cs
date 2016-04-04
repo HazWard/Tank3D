@@ -17,11 +17,17 @@ namespace AtelierXNA
     /// </summary>
     public class Joueur : ModèleMobile, IActivable
     {
+        VertexPositionColor[] ListePointsColor { get; set; }
+        Vector3[] ListePoints { get; set; }
+        protected BasicEffect EffetDeBase { get; set; }
+
         // Constantes
         protected const float DISTANCE_POURSUITE = 20f;
         protected const float HAUTEUR_CAM_DÉFAULT = 10f;
         const float INCRÉMENT_ROTATION_TOUR = 0.00005f;
+        const float INCRÉMENT_DÉPLACEMENT = 0.5f;
         const float INTERVALLE_FUMÉE = 0.6f;
+        const float HAUTEUR_DÉFAULT = 0.5f;
 
         // Propriétés
         CaméraSubjective Caméra { get; set; }
@@ -33,6 +39,7 @@ namespace AtelierXNA
         Vector2 DeltaRotationCanon { get; set; }
         Matrix MondeTour { get; set; }
         Matrix MondeCanon { get; set; }
+        Matrix MondeBoundingBox { get; set; }
         float ÉchelleTour { get; set; }
         float ÉchelleCanon { get; set; }
         float ÉchelleRoues { get; set; }
@@ -63,8 +70,16 @@ namespace AtelierXNA
         public override void Initialize()
         {
             base.Initialize();
+            ListePointsColor = new VertexPositionColor[8];
+            ListePoints = new Vector3[8];
+            EffetDeBase = new BasicEffect(GraphicsDevice);
+
+
             RotationYawTour = new Vector3(-MathHelper.PiOver2, 0, MathHelper.PiOver2);
             RotationPitchCanon = new Vector3(-MathHelper.PiOver2, 0.02f, MathHelper.PiOver2);
+            PositionBoundingBox1 = new Vector3(Position.X - 55f, Position.Y, Position.Z - 200f);
+            PositionBoundingBox2 = new Vector3(Position.X + 55f, Position.Y + 100f, Position.Z);
+            BoundingBoxModèle = new BoundingBox(PositionBoundingBox1, PositionBoundingBox2);
             ÉchelleTour = 0.0035f;
             ÉchelleCanon = 0.005f;
             ÉchelleRoues = 0.05f;
@@ -145,19 +160,29 @@ namespace AtelierXNA
             float rotationFinal = Rotation.Y - (IncrémentAngleRotation * rotation) / 3f;
             float posX = déplacement * (float)Math.Sin(rotationFinal);
             float posY = déplacement * (float)Math.Cos(rotationFinal);
-
             Vector2 déplacementFinal = new Vector2(posX, posY);
-            Rotation = new Vector3(Rotation.X, rotationFinal, Rotation.Z);
             float posXFinal = Position.X - déplacementFinal.X;
             float posZFinal = Position.Z - déplacementFinal.Y;
-
+            PositionBoundingBox1 = new Vector3(PositionBoundingBox1.X - déplacementFinal.X, 0, PositionBoundingBox1.Z - déplacementFinal.Y);
+            PositionBoundingBox2 = new Vector3(PositionBoundingBox2.X - déplacementFinal.X, 0, PositionBoundingBox2.Z - déplacementFinal.Y);
+            Console.WriteLine(PositionBoundingBox1);
+            Console.WriteLine(PositionBoundingBox2);
+            Console.WriteLine("-----------------");
+            Console.WriteLine(posXFinal);
+            Console.WriteLine(posZFinal);
+            Console.WriteLine("-------------------------------");
+            Rotation = new Vector3(Rotation.X, rotationFinal, Rotation.Z);
             nouvellesCoords = TerrainJeu.ConvertionCoordonnées(new Vector3(posXFinal, 0, posZFinal));
+            
 
             if (!EstHorsDesBornes(nouvellesCoords))
             {
                 AncienneHauteurTerrain = NouvelleHauteurTerrain;
                 NouvelleHauteurTerrain = TerrainJeu.GetHauteur(nouvellesCoords);
                 Position = new Vector3(posXFinal, NouvelleHauteurTerrain + HAUTEUR_DÉFAULT, posZFinal);
+                BoundingBoxModèle = new BoundingBox(new Vector3(PositionBoundingBox1.X, NouvelleHauteurTerrain, PositionBoundingBox1.Z),
+                                                    new Vector3(PositionBoundingBox2.X, NouvelleHauteurTerrain + 100f, PositionBoundingBox2.Z));
+                MondeBoundingBox = TransformationsMeshes(0.1f, Rotation, Position);
                 ObjectifAnglesNormales = GestionnaireDeNormales.GetNormale(nouvellesCoords);
                 Rotation = Rotation = new Vector3(ObjectifAnglesNormales.Y, Rotation.Y, ObjectifAnglesNormales.X);
             }
@@ -275,6 +300,21 @@ namespace AtelierXNA
 
         public override void Draw(GameTime gameTime)
         {
+            ListePoints = new Vector3[8];
+            ListePointsColor = new VertexPositionColor[8];
+            EffetDeBase.World = MondeBoundingBox;
+            EffetDeBase.View = CaméraJeu.Vue;
+            EffetDeBase.Projection = CaméraJeu.Projection;
+
+            EffetDeBase.CurrentTechnique.Passes[0].Apply();
+            BoundingBoxModèle.GetCorners(ListePoints);
+            for (int i = 0; i < ListePoints.Count(); i++)
+            {
+                ListePointsColor[i] = new VertexPositionColor(ListePoints[i], Color.Red);
+            }
+            GraphicsDevice.DrawUserPrimitives<VertexPositionColor>(PrimitiveType.LineStrip, ListePointsColor, 0, 7);
+
+
             GraphicsDevice.BlendState = BlendState.Opaque;
             GraphicsDevice.DepthStencilState = DepthStencilState.Default;
 
@@ -305,6 +345,7 @@ namespace AtelierXNA
                 }
                 maille.Draw();
             }
+            
         }
         #endregion
     }

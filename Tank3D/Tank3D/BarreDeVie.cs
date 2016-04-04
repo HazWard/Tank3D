@@ -93,12 +93,7 @@ namespace AtelierXNA
             VecteurBarreDeVieCaméra = PositionJoueur - Position;
             VecteurBarreDeVieCaméra = Vector3.Normalize(VecteurBarreDeVieCaméra);
 
-
-
             float angleEntreBarreCaméra = (float)Math.Acos(Vector3.Dot(NormaleBarreDeVie, VecteurBarreDeVieCaméra));
-
-            Console.WriteLine("ANGLE : {0}", MathHelper.ToDegrees(angleEntreBarreCaméra));
-
         }
         protected override void CalculerMatriceMonde()
         {

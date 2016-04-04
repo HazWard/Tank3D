@@ -14,12 +14,9 @@ namespace AtelierXNA
 {
     public abstract class ModèleMobile : ObjetDeBase
     {
-        // Constantes
-        protected const float FACTEUR_ACCÉLÉRATION = 1f / 60f;
-        protected const float INCRÉMENT_DÉPLACEMENT = 0.5f;
-        protected const float HAUTEUR_DÉFAULT = 0.5f;
-
-        // Propriétés
+        protected BoundingBox BoundingBoxModèle { get; set; }
+        protected Vector3 PositionBoundingBox1 { get; set; }
+        protected Vector3 PositionBoundingBox2 { get; set; }
         protected InputManager GestionInput { get; set; }
         protected float IncrémentAngleRotation { get; set; }
         protected float TempsÉcouléDepuisMAJ { get; set; }
@@ -41,6 +38,7 @@ namespace AtelierXNA
         {
             TempsÉcouléDepuisMAJ = 0;
             IncrémentAngleRotation = MathHelper.TwoPi * IntervalleMAJ;
+            
             base.Initialize();
         }
 
