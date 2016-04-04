@@ -106,7 +106,7 @@ namespace AtelierXNA
             base.Update(gameTime);
         }
 
-        #region Méthodes pour la gestion des déplacements et rotations du modèle
+        #region Méthodes pour la gestion des mouvements
         void CalculerMonde()
         {
             Monde = Matrix.Identity;
@@ -147,20 +147,22 @@ namespace AtelierXNA
             float posZFinal = Position.Z - déplacementFinal.Y;
 
             nouvellesCoords = TerrainJeu.ConvertionCoordonnées(new Vector3(posXFinal, 0, posZFinal));
-            // TraitementNormales(nouvellesCoords, "X");
-            // TraitementNormales(nouvellesCoords, "Y");
-
+            /*
+            TraitementNormales(nouvellesCoords, "X");
+            TraitementNormales(nouvellesCoords, "Y");
+            */
             if (!EstHorsDesBornes(nouvellesCoords))
             {
                 AncienneHauteurTerrain = NouvelleHauteurTerrain;
                 NouvelleHauteurTerrain = TerrainJeu.GetHauteur(nouvellesCoords);
                 Position = new Vector3(posXFinal, NouvelleHauteurTerrain + HAUTEUR_DÉFAULT, posZFinal);
-                ObjectifAnglesNormales = GestionnaireDeNormales.GetNormale(nouvellesCoords);
+                ObjectifAnglesNormales = GestionnaireDeNormales.GetNormale(nouvellesCoords, Rotation.Y);
                 Rotation = Rotation = new Vector3(ObjectifAnglesNormales.Y, Rotation.Y, ObjectifAnglesNormales.X);
             }
             CalculerMonde();
         }
 
+        /*
         void TraitementNormales(Point coords, string axe)
         {
             int sens;
@@ -191,6 +193,7 @@ namespace AtelierXNA
                     break;
             }
         }
+        */
 
         bool ApproximationÉgalité(float valeur1, float valeur2)
         {

@@ -80,18 +80,17 @@ namespace AtelierXNA
             Services.AddService(typeof(CalculateurFPS), Calculateur);
             Components.Add(new Afficheur3D(this));
 
-            TerrainJeu = new Terrain(this, 1f, Vector3.Zero, Vector3.Zero, new Vector3(256, 25, 256), "PetiteCarte", "DétailsDésertSable", 3, INTERVALLE_MAJ_STANDARD);
+            TerrainJeu = new Terrain(this, 1f, Vector3.Zero, Vector3.Zero, new Vector3(256, 25, 256), "GrandeCarte", "DétailsDésertSable", 3, INTERVALLE_MAJ_STANDARD);
             Components.Add(TerrainJeu);
             Components.Add(new Sprite(this, "crosshairBon", new Vector2(Window.ClientBounds.Width / 2, Window.ClientBounds.Height / 2), 0.2f));
             Utilisateur = new Joueur(this, "Veteran Tiger Body", ÉCHELLE_OBJET, rotationObjet, positionObjet, INTERVALLE_MAJ_STANDARD);
             Components.Add(Utilisateur);
-            GestionEnnemis = new GestionnaireEnnemis(this, Utilisateur, TerrainJeu, 0, ÉCHELLE_OBJET, INTERVALLE_MAJ_STANDARD);
+            GestionEnnemis = new GestionnaireEnnemis(this, Utilisateur, TerrainJeu, 5, ÉCHELLE_OBJET, INTERVALLE_MAJ_STANDARD);
             Components.Add(GestionEnnemis);
             Services.AddService(typeof(RessourcesManager<SpriteFont>), new RessourcesManager<SpriteFont>(this, "Fonts"));
             Services.AddService(typeof(RessourcesManager<Texture2D>), new RessourcesManager<Texture2D>(this, "Textures"));
             Services.AddService(typeof(RessourcesManager<Model>), new RessourcesManager<Model>(this, "Modèles"));
             Services.AddService(typeof(InputManager), GestionInput);
-
 
             Services.AddService(typeof(Terrain), TerrainJeu);
             GestionSprites = new SpriteBatch(GraphicsDevice);

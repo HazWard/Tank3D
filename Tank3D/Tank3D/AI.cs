@@ -18,38 +18,25 @@ namespace AtelierXNA
     public class AI : ModèleMobile
     {
         const float INCRÉMENT_DÉPLACEMENT_AI = 0.1f;
-        const float EST_PROCHE = 50f;
-        
+        const float EST_PROCHE = 45f;
+        const int DÉLAI_MOUVEMENT = 17;
+        const int DÉLAI_TIR = 71;
 
         Joueur Cible { get; set; }
         bool estDétruit { get; set; }
         float Distance { get; set; }
-        int Compteur { get; set; }
-        ModèleMobile ProjectileTank { get; set; }
-        Game Jeu { get; set; }
-        public Vector3 GetPosition
-        {
-            get
-            {
-                return Position;
-            }
-            private set { }
-        }
-        public Vector3 GetRotation
-        {
-            get
-            {
-                return Rotation;
-            }
-            private set { }
-        }
+        int CompteurTir { get; set; }
+        int CompteurMouvement { get; set; }
+        Projectile ProjectileTank { get; set; }
+        float Orientation { get; set; }
 
         public AI(Game jeu, string nomModèle, float échelleInitiale, Vector3 rotationInitiale, Vector3 positionInitiale, float intervalleMAJ, Joueur cible)
             : base(jeu, nomModèle, échelleInitiale, rotationInitiale, positionInitiale, intervalleMAJ)
         {
-            Jeu = jeu;
             Cible = cible;
-            Compteur = 0;
+            CompteurTir = 0;
+            CompteurMouvement = 0;
+            Orientation = 0;
         }
         public override void Update(GameTime gameTime)
         {
@@ -59,13 +46,19 @@ namespace AtelierXNA
             Distance = new Vector2(Position.X - Cible.Coordonnées.X, Position.Z - Cible.Coordonnées.Y).Length();
             if (TempsÉcouléDepuisMAJ >= IntervalleMAJ)
             {
-                if (Distance <= EST_PROCHE && Compteur % 100 == 0)
+                if (Distance <= EST_PROCHE)
                 {
-                    GestionProjectile();
+                    if (CompteurTir % DÉLAI_TIR == 0)
+                    {
+                        GestionProjectile();
+                    }
                 }
-                
-                GestionMouvements();
-                Compteur++;
+                else
+                {
+                    GestionMouvements();
+                }
+
+                ++CompteurTir;
                 TempsÉcouléDepuisMAJ = 0;
             }
             base.Update(gameTime);
@@ -73,17 +66,17 @@ namespace AtelierXNA
         public bool EstDétruit()
         {
             estDétruit = false;
-            if (Compteur == 1000)
+            if (CompteurTir == 1000)
             {
                 estDétruit = true;
             }
             return estDétruit;
         }
 
-        #region Méthodes pour la gestion des déplacements et rotations du modèle
+        #region Méthodes pour les mouvements
         void GestionProjectile()
         {
-            ProjectileTank = new Projectile(Jeu, "Projectile", 0.1f, Rotation, 
+            ProjectileTank = new Projectile(Game, "Projectile", 0.1f, Rotation, 
                                             new Vector3(Position.X, Position.Y + 4f, Position.Z), IntervalleMAJ, 2f, 0.02f, false);
             Game.Components.Add(ProjectileTank);
         }
@@ -96,9 +89,15 @@ namespace AtelierXNA
             Monde *= Matrix.CreateTranslation(Position);
         }
 
+        #region Calculs des mouvements automatisés
         protected void GestionMouvements()
         {
-            ModificationParamètres(CalculOrientation(Cible.Coordonnées));
+            ++CompteurMouvement;
+            if (CompteurMouvement % DÉLAI_MOUVEMENT == 0)
+            {
+                Orientation = CalculOrientation(Cible.Coordonnées);
+            }
+            ModificationParamètres(Orientation);
         }
 
         float CalculOrientation(Vector2 cible)
@@ -149,6 +148,8 @@ namespace AtelierXNA
 
             CalculerMonde();
         }
+        #endregion
+
         #endregion
     }
 }
