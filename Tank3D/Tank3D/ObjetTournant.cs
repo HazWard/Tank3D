@@ -30,8 +30,7 @@ namespace AtelierXNA
 
         public override void Update(GameTime gameTime)
         {
-            float Temps…coulÈ = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            Temps…coulÈDepuisMAJ += Temps…coulÈ;
+            Temps…coulÈDepuisMAJ += (float)gameTime.ElapsedGameTime.TotalSeconds;
             if (Temps…coulÈDepuisMAJ >= IntervalleMAJ)
             {
                 Rotation = new Vector3(Rotation.X, Rotation.Y + 0.02f, Rotation.Z);
@@ -41,10 +40,6 @@ namespace AtelierXNA
                 Monde *= Matrix.CreateTranslation(Position);
                 Temps…coulÈDepuisMAJ = 0;
             }
-            base.Update(gameTime);
-
-
-            
             base.Update(gameTime);
         }
 
