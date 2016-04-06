@@ -67,12 +67,13 @@ namespace AtelierXNA
             Rectangle zoneMessage = new Rectangle(hauteurÉcran, hauteurÉcran / NB_ZONES, largeurÉcran - hauteurÉcran, hauteurÉcran / NB_ZONES);
             Rectangle zoneDialogue = new Rectangle(hauteurÉcran, hauteurÉcran / 3, largeurÉcran - hauteurÉcran, hauteurÉcran / 2);
 
+            /*
             Components.Add(new PlanTexturé(this, 1f, Vector3.Zero, new Vector3(0, 6, -126), new Vector2(256, 50), new Vector2(10, 10), "desertDunes", INTERVALLE_MAJ_STANDARD));
             Components.Add(new PlanTexturé(this, 1f, new Vector3(0, MathHelper.PiOver2, 0), new Vector3(-126, 6, 0), new Vector2(256, 50), new Vector2(10, 10), "desertDunesRéflexion", INTERVALLE_MAJ_STANDARD));
             Components.Add(new PlanTexturé(this, 1f, new Vector3(0, -(MathHelper.PiOver2), 0), new Vector3(126, 6, 0), new Vector2(256, 50), new Vector2(10, 10), "desertDunesRéflexion", INTERVALLE_MAJ_STANDARD));
             Components.Add(new PlanTexturé(this, 1f, new Vector3(0, MathHelper.Pi, 0), new Vector3(0, 6, 126), new Vector2(256, 50), new Vector2(10, 10), "desertDunes", INTERVALLE_MAJ_STANDARD));
             Components.Add(new PlanTexturé(this, 1f, new Vector3(MathHelper.PiOver2, 0, 0), new Vector3(0, 31, 0), new Vector2(256, 256), new Vector2(10, 10), "ciel", INTERVALLE_MAJ_STANDARD));
-
+            */
             GestionInput = new InputManager(this);
             Components.Add(GestionInput);
             Calculateur = new CalculateurFPS(this, INTERVALLE_CALCUL_FPS);
