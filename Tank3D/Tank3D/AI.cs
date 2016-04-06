@@ -21,10 +21,11 @@ namespace AtelierXNA
         const float EST_PROCHE = 35f;
         const int DÉLAI_MOUVEMENT = 5;
         const int DÉLAI_TIR = 71;
-        const float INCRÉMENT_ROTATION = 0.05f;
+        // const float INCRÉMENT_ROTATION = 0.05f;
 
         Joueur Cible { get; set; }
         bool estDétruit { get; set; }
+        int NuméroAI { get; set; }
         float Distance { get; set; }
         int CompteurTir { get; set; }
         int CompteurMouvement { get; set; }
@@ -32,13 +33,14 @@ namespace AtelierXNA
         Vector2 ObjectifAnglesNormales { get; set; }
         float Orientation { get; set; }
 
-        public AI(Game jeu, string nomModèle, float échelleInitiale, Vector3 rotationInitiale, Vector3 positionInitiale, float intervalleMAJ, Joueur cible)
+        public AI(Game jeu, string nomModèle, float échelleInitiale, Vector3 rotationInitiale, Vector3 positionInitiale, float intervalleMAJ, Joueur cible, int numéroAI)
             : base(jeu, nomModèle, échelleInitiale, rotationInitiale, positionInitiale, intervalleMAJ)
         {
             Cible = cible;
             CompteurTir = 0;
             CompteurMouvement = 0;
             Orientation = 0;
+            NuméroAI = numéroAI;
         }
         public override void Update(GameTime gameTime)
         {
@@ -68,10 +70,6 @@ namespace AtelierXNA
         public bool EstDétruit()
         {
             estDétruit = false;
-            if (CompteurTir == 1000)
-            {
-                estDétruit = true;
-            }
             return estDétruit;
         }
 
@@ -91,18 +89,18 @@ namespace AtelierXNA
             Monde *= Matrix.CreateTranslation(Position);
         }
 
-        #region Calculs des mouvements automatisés
         protected void GestionMouvements(bool seDéplace)
         {
             ++CompteurMouvement;
             if (CompteurMouvement % DÉLAI_MOUVEMENT == 0)
             {
-                Console.WriteLine("Recalcule de l'orientation.....");
+                // Recalcul de la rotation
                 Orientation = CalculOrientation(Cible.Coordonnées);
                 ModificationParamètres(Orientation, seDéplace);
             }
             else
             {
+                // Déplacement normal
                 ModificationParamètres(Orientation, seDéplace);
             }
             
@@ -162,8 +160,6 @@ namespace AtelierXNA
 
             CalculerMonde();
         }
-        #endregion
-
         #endregion
     }
 }
