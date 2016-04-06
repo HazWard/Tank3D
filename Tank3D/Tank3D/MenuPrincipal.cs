@@ -19,6 +19,7 @@ namespace AtelierXNA
         
         Atelier Jeu { get; set; }
         CalculateurFPS Calculateur { get; set; }
+        CaméraFixe CaméraMenu { get; set; }
         TexteCentré Titre { get; set; }
         TexteCentré Instruction1 { get; set; }
         TexteCentré Instruction2 { get; set; }
@@ -36,6 +37,7 @@ namespace AtelierXNA
         BoutonDeCommande BtnTextureTank { get; set; }
         BoutonDeCommande BtnCarteTerrain { get; set; }
         ZoneContextuelle Contenu { get; set; }
+        ObjetTournant DémoTexture { get; set; }
         Vector2 DimensionTitre { get; set; }
         Vector2 DimensionPhrase { get; set; }
         public List<GameComponent> ListeGameComponents { get; set; }
@@ -49,8 +51,8 @@ namespace AtelierXNA
         {
             PériphériqueGraphique = new GraphicsDeviceManager(this);
             PériphériqueGraphique.IsFullScreen = false;
-            //PériphériqueGraphique.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
-            //PériphériqueGraphique.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
+            PériphériqueGraphique.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
+            PériphériqueGraphique.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
             Content.RootDirectory = "Content";
             PériphériqueGraphique.SynchronizeWithVerticalRetrace = false;
             IsFixedTimeStep = false;
@@ -62,6 +64,8 @@ namespace AtelierXNA
             GestionInput = new InputManager(this);
             GestionSprites = new SpriteBatch(GraphicsDevice);
             Calculateur = new CalculateurFPS(this, INTERVALLE_CALCUL_FPS);
+            CaméraMenu = new CaméraFixe(this, new Vector3(0, 0, 300), Vector3.Zero, Vector3.Up);
+            Services.AddService(typeof(Caméra), CaméraMenu);
             ListeGameComponents = new List<GameComponent>();
             NomTexture = "Veteran Tiger Body";
             NbEnnemis = 1;
@@ -201,6 +205,7 @@ namespace AtelierXNA
 
         void DémarrerJeu() 
         {
+            Services.RemoveService(typeof(Caméra));
             ModifyComponents(false, ListeGameComponents);
             Jeu = new Atelier(this, ListeGameComponents, NomTexture, NbEnnemis);
             Components.Add(Jeu);
@@ -253,7 +258,9 @@ namespace AtelierXNA
 
         void IllustrerTextures()
         {
-
+            Components.Remove(DémoTexture);
+            DémoTexture = new ObjetTournant(this, NomTexture, 0.5f, new Vector3(0, - MathHelper.PiOver2, 0), new Vector3(0, -50, 0));
+            Components.Add(DémoTexture);
         }
 
         void Retour()
@@ -265,6 +272,7 @@ namespace AtelierXNA
             Components.Remove(Instruction3);
             Components.Remove(Instruction4);
             Components.Remove(BtnTextureTank);
+            Components.Remove(DémoTexture);
         }
 
         void ArrêterJeu()
