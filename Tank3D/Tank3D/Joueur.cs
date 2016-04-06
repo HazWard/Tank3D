@@ -25,7 +25,7 @@ namespace AtelierXNA
         protected const float DISTANCE_POURSUITE = 20f;
         protected const float HAUTEUR_CAM_DÉFAULT = 10f;
         const float INCRÉMENT_ROTATION_TOUR = 0.00005f;
-        const float INCRÉMENT_DÉPLACEMENT = 0.5f;
+        const float INCRÉMENT_DÉPLACEMENT = 1f;
         const float INTERVALLE_FUMÉE = 0.6f;
         const float HAUTEUR_DÉFAULT = 0.5f;
 
@@ -73,7 +73,6 @@ namespace AtelierXNA
             ListePointsColor = new VertexPositionColor[8];
             ListePoints = new Vector3[8];
             EffetDeBase = new BasicEffect(GraphicsDevice);
-
 
             RotationYawTour = new Vector3(-MathHelper.PiOver2, 0, MathHelper.PiOver2);
             RotationPitchCanon = new Vector3(-MathHelper.PiOver2, 0.02f, MathHelper.PiOver2);
