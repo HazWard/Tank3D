@@ -16,7 +16,7 @@ namespace AtelierXNA
         const float INTERVALLE_MAJ_STANDARD = 1f / 60f;
         protected const float HAUTEUR_CAM_DÉFAULT = 10f;
         protected const float DISTANCE_POURSUITE = 20f;
-        public const float ÉCHELLE_OBJET = 0.05f;
+        public const float ÉCHELLE_OBJET = 0.025f;
 
         MenuPause MenuPause { get; set; }
         List<GameComponent> ListeGameComponentsMenu { get; set; }
@@ -59,7 +59,7 @@ namespace AtelierXNA
         {
             Mouse.SetPosition(Game.Window.ClientBounds.Width / 2, Game.Window.ClientBounds.Height / 2);
 
-            positionObjet = new Vector3(0, 10, 100);
+            positionObjet = new Vector3(0, 10, 0);
             positionAI = new Vector3(-20, 10, 50);
             positionTerrain = new Vector3(0, 0, 0);
             rotationObjet = new Vector3(0, 0, 0); // MathHelper.PiOver2
@@ -110,16 +110,16 @@ namespace AtelierXNA
                                                new Vector3(positionObjet.X, positionObjet.Y + 4, positionObjet.Z),
                                                Vector3.Up, INTERVALLE_MAJ_STANDARD);
             Game.Components.Add(CaméraJoueur);
-            TerrainJeu = new Terrain(Game, 1f, Vector3.Zero, Vector3.Zero, new Vector3(256, 25, 256), "PetiteCarte", "DétailsDésertSable", 3, INTERVALLE_MAJ_STANDARD);
+            TerrainJeu = new Terrain(Game, 1f, Vector3.Zero, Vector3.Zero, new Vector3(256, 20, 256), "PetiteCarte", "DétailsDésertSable", 3, INTERVALLE_MAJ_STANDARD);
             GestionnaireDeNormales = new NormalesManager(Game);
             Utilisateur = new Joueur(Game, NomModèleJoueur, ÉCHELLE_OBJET, rotationObjet, positionObjet, INTERVALLE_MAJ_STANDARD);
             GestionEnnemis = new GestionnaireEnnemis(Game, Utilisateur, TerrainJeu, NbEnnemis, ÉCHELLE_OBJET, INTERVALLE_MAJ_STANDARD);
             MenuPause = new MenuPause(Game, ListeGameComponentsMenu, ListeGameComponents, GestionEnnemis);
-            PremierPlan = new PlanTexturé(Game, 1f, Vector3.Zero, new Vector3(0, 6, -126), new Vector2(256, 50), new Vector2(10, 10), "desertDunes", INTERVALLE_MAJ_STANDARD);
-            DeuxièmePlan = new PlanTexturé(Game, 1f, new Vector3(0, MathHelper.PiOver2, 0), new Vector3(-126, 6, 0), new Vector2(256, 50), new Vector2(10, 10), "desertDunesRéflexion", INTERVALLE_MAJ_STANDARD);
-            TroisièmePlan = new PlanTexturé(Game, 1f, new Vector3(0, -(MathHelper.PiOver2), 0), new Vector3(126, 6, 0), new Vector2(256, 50), new Vector2(10, 10), "desertDunesRéflexion", INTERVALLE_MAJ_STANDARD);
-            QuatrièmePlan = new PlanTexturé(Game, 1f, new Vector3(0, MathHelper.Pi, 0), new Vector3(0, 6, 126), new Vector2(256, 50), new Vector2(10, 10), "desertDunes", INTERVALLE_MAJ_STANDARD);
-            Ciel = new PlanTexturé(Game, 1f, new Vector3(MathHelper.PiOver2, 0, 0), new Vector3(0, 31, 0), new Vector2(256, 256), new Vector2(10, 10), "ciel", INTERVALLE_MAJ_STANDARD);
+            //PremierPlan = new PlanTexturé(Game, 1f, Vector3.Zero, new Vector3(0, 6, -126), new Vector2(256, 60), new Vector2(10, 10), "desertDunes", INTERVALLE_MAJ_STANDARD);
+            //DeuxièmePlan = new PlanTexturé(Game, 1f, new Vector3(0, MathHelper.PiOver2, 0), new Vector3(-126, 6, 0), new Vector2(256, 60), new Vector2(10, 10), "desertDunesRéflexion", INTERVALLE_MAJ_STANDARD);
+            //TroisièmePlan = new PlanTexturé(Game, 1f, new Vector3(0, -(MathHelper.PiOver2), 0), new Vector3(126, 6, 0), new Vector2(256, 60), new Vector2(10, 10), "desertDunesRéflexion", INTERVALLE_MAJ_STANDARD);
+            //QuatrièmePlan = new PlanTexturé(Game, 1f, new Vector3(0, MathHelper.Pi, 0), new Vector3(0, 6, 126), new Vector2(256, 60), new Vector2(10, 10), "desertDunes", INTERVALLE_MAJ_STANDARD);
+            //Ciel = new PlanTexturé(Game, 1f, new Vector3(MathHelper.PiOver2, 0, 0), new Vector3(0, 35, 0), new Vector2(256, 256), new Vector2(10, 10), "ciel", INTERVALLE_MAJ_STANDARD);
         }
 
         void AddComponents()
@@ -145,11 +145,11 @@ namespace AtelierXNA
 
         void AddTextures()
         {
-            Game.Components.Add(PremierPlan);
-            Game.Components.Add(DeuxièmePlan);
-            Game.Components.Add(TroisièmePlan);
-            Game.Components.Add(QuatrièmePlan);
-            Game.Components.Add(Ciel);
+            //Game.Components.Add(PremierPlan);
+            //Game.Components.Add(DeuxièmePlan);
+            //Game.Components.Add(TroisièmePlan);
+            //Game.Components.Add(QuatrièmePlan);
+            //Game.Components.Add(Ciel);
         }
 
         public override void Update(GameTime gameTime)

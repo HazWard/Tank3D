@@ -110,15 +110,6 @@ namespace AtelierXNA
            
             Game.Components.Add(ProjectileTank);
         }
-        
-        void CalculerMonde()
-        {
-            Monde = Matrix.Identity;
-            Monde *= Matrix.CreateScale(Échelle);
-            Monde *= Matrix.CreateFromYawPitchRoll(Rotation.Y, Rotation.X, Rotation.Z);
-            Monde *= Matrix.CreateTranslation(Position);
-        }
-
         protected void GestionMouvements()
         {
             ModificationParamètres(CalculOrientation(Cible.Coordonnées));

@@ -60,14 +60,6 @@ namespace AtelierXNA
         }
 
         #region Méthodes pour la gestion des déplacements et rotations du modèle
-        void CalculerMonde()
-        {
-            Monde = Matrix.Identity;
-            Monde *= Matrix.CreateScale(Échelle);
-            Monde *= Matrix.CreateFromYawPitchRoll(Rotation.Y, Rotation.X, Rotation.Z);
-            Monde *= Matrix.CreateTranslation(Position);
-        }
-
         protected void GestionMouvements()
         {
             ModificationParamètres();

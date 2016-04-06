@@ -14,7 +14,7 @@ namespace AtelierXNA
 {
     public abstract class ModèleMobile : ObjetDeBase
     {
-        protected BoundingBox BoundingBoxModèle { get; set; }
+        protected BoundingBoxSimple BoundingBoxModèle { get; set; }
         protected Vector3 PositionBoundingBox1 { get; set; }
         protected Vector3 PositionBoundingBox2 { get; set; }
         protected InputManager GestionInput { get; set; }
@@ -59,8 +59,8 @@ namespace AtelierXNA
         {
             bool estHorsDesBornes = false;
 
-            if (coords.X >= TerrainJeu.Extrêmes - 5 || coords.Y >= TerrainJeu.Extrêmes - 5 || 
-                coords.X <= 5 || coords.Y <= 5)
+            if (coords.X >= TerrainJeu.Extrêmes - 2 || coords.Y >= TerrainJeu.Extrêmes - 2 || 
+                coords.X <= 2 || coords.Y <= 2)
             {
                 estHorsDesBornes = true;
             }

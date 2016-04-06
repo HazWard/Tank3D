@@ -34,7 +34,7 @@ namespace AtelierXNA
             base.Initialize();
         }
 
-        private void CalculerMonde()
+        protected void CalculerMonde()
         {
             Monde = Matrix.Identity;
             Monde *= Matrix.CreateScale(Échelle);
