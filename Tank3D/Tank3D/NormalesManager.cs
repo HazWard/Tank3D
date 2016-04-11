@@ -15,6 +15,8 @@ namespace AtelierXNA
 
     public class NormalesManager : Microsoft.Xna.Framework.DrawableGameComponent
     {
+        const float ANGLE_MAX = MathHelper.Pi / 16f;
+        
         Terrain TerrainJeu { get; set; }
         
         public NormalesManager(Game game)
@@ -36,10 +38,10 @@ namespace AtelierXNA
             TerrainJeu = Game.Services.GetService(typeof(Terrain)) as Terrain;
         }
 
-        public Vector2 GetNormale(Point coords, float rotation)
+        public Vector2 GetNormale(Point coords, Vector3 anciensAngles)
         {
-            Point coordsAvant = new Point(coords.X + (int)(3 * Math.Cos(rotation)), coords.Y + (int)(3 * Math.Sin(rotation)));
-            Point coordsAprès = new Point(coords.X + (int)(3 * Math.Cos(rotation)), coords.Y + (int)(3 * Math.Sin(rotation)));
+            Point coordsAvant = new Point(coords.X + (int)(3 * Math.Cos(anciensAngles.Y)), coords.Y + (int)(3 * Math.Sin(anciensAngles.Y)));
+            Point coordsAprès = new Point(coords.X + (int)(3 * Math.Cos(anciensAngles.Y)), coords.Y + (int)(3 * Math.Sin(anciensAngles.Y)));
 
             Vector3 normaleA = TerrainJeu.Normales[coordsAvant.X, coordsAvant.Y];
             Vector3 normaleB = TerrainJeu.Normales[coordsAprès.X, coordsAprès.Y];
@@ -50,7 +52,21 @@ namespace AtelierXNA
             float angleBX = (float)Math.Atan2(normaleB.X, normaleB.Y);
             float angleBY = (float)Math.Atan2(normaleB.Z, normaleB.Y);
 
-            return CalculMoyenne(new Vector2(-angleAX, angleAY), new Vector2(-angleBX, angleBY));
+            Vector2 angles = CalculMoyenne(new Vector2(-angleBX, angleAX), new Vector2(-angleAY, angleBY));
+
+
+            // Vérification X
+            if(angles.X > ANGLE_MAX)
+            {
+                angles.X = ANGLE_MAX;
+            }
+
+            if (angles.Y > ANGLE_MAX)
+            {
+                angles.Y = ANGLE_MAX;
+            }
+            Console.WriteLine("Max: {0}\nX: {1}\nY: {2}", ANGLE_MAX, angles.X, angles.Y);
+            return angles;
         }
 
         Vector2 CalculMoyenne(Vector2 norm1, Vector2 norm2)
@@ -58,6 +74,17 @@ namespace AtelierXNA
             float moyenneX = (norm1.X + norm2.X) / 2f;
             float moyenneY = (norm1.Y + norm2.Y) / 2f;
             return new Vector2(moyenneX, moyenneY);
+        }
+
+        public Vector2 GetDroites(Vector2 position, float rotation)
+        {
+            Vector2 pointXAvant = new Vector2(position.X + (float)(3f * Math.Cos(rotation)), position.Y + (float)(3f * Math.Sin(rotation)));
+            Vector2 pointX= new Vector2(position.X + (float)(3f * Math.Cos(rotation)), position.Y + (float)(3f * Math.Sin(rotation)));
+            
+            
+            Vector2 pointAvant = new Vector2(position.X + (float)(3f * Math.Cos(rotation)), position.Y + (float)(3f * Math.Sin(rotation)));
+
+            return Vector2.Zero;
         }
     }
 }

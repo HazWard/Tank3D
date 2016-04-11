@@ -151,8 +151,8 @@ namespace AtelierXNA
                 {
                     NouvelleHauteurTerrain = TerrainJeu.GetHauteur(nouvellesCoords);
                     Position = new Vector3(posXFinal, NouvelleHauteurTerrain + HAUTEUR_DÉFAULT, posZFinal);
-                    ObjectifAnglesNormales = GestionnaireDeNormales.GetNormale(nouvellesCoords, Rotation.Y);
-                    Rotation = new Vector3(ObjectifAnglesNormales.Y, Rotation.Y, ObjectifAnglesNormales.X);
+                    //ObjectifAnglesNormales = GestionnaireDeNormales.GetNormale(nouvellesCoords, Rotation.Y);
+                    //Rotation = new Vector3(ObjectifAnglesNormales.Y, Rotation.Y, ObjectifAnglesNormales.X);
                 }
             }
 

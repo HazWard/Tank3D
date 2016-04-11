@@ -37,7 +37,7 @@ namespace AtelierXNA
         float ÉchelleTour { get; set; }
         float ÉchelleCanon { get; set; }
         float ÉchelleRoues { get; set; }
-        Vector2 ObjectifAnglesNormales { get; set; }
+        Vector2 AnglesIncréments { get; set; }
         float TempsÉcouléMAJFumée { get; set; }
         Sprite Fumée { get; set; }
         Sprite Terre { get; set; }
@@ -147,53 +147,37 @@ namespace AtelierXNA
             float posZFinal = Position.Z - déplacementFinal.Y;
 
             nouvellesCoords = TerrainJeu.ConvertionCoordonnées(new Vector3(posXFinal, 0, posZFinal));
-            /*
-            TraitementNormales(nouvellesCoords, "X");
-            TraitementNormales(nouvellesCoords, "Y");
-            */
+
+
+
             if (!EstHorsDesBornes(nouvellesCoords))
             {
                 AncienneHauteurTerrain = NouvelleHauteurTerrain;
                 NouvelleHauteurTerrain = TerrainJeu.GetHauteur(nouvellesCoords);
                 Position = new Vector3(posXFinal, NouvelleHauteurTerrain + HAUTEUR_DÉFAULT, posZFinal);
-                ObjectifAnglesNormales = GestionnaireDeNormales.GetNormale(nouvellesCoords, Rotation.Y);
-                Rotation = Rotation = new Vector3(ObjectifAnglesNormales.Y, Rotation.Y, ObjectifAnglesNormales.X);
+                AnglesIncréments = GestionnaireDeNormales.GetNormale(nouvellesCoords, Rotation);
+                TraitementNormales(nouvellesCoords, "X");
+                TraitementNormales(nouvellesCoords, "Y");
             }
             CalculerMonde();
         }
 
-        /*
+
         void TraitementNormales(Point coords, string axe)
         {
-            int sens;
             switch(axe)
             {
                 case "X":
-                    sens = (ObjectifAnglesNormales.X < Rotation.X) ? 1 : -1;
-                    if (ApproximationÉgalité(ObjectifAnglesNormales.X, Rotation.X))
-                    {
-                        ObjectifAnglesNormales = GestionnaireDeNormales.GetNormale(coords);
-                    }
-                    else
-                    {
-                        Rotation = new Vector3(Rotation.X + sens * IncrémentAngleRotation, Rotation.Y, Rotation.Z);
-                    }
+
+                    Rotation = new Vector3(Rotation.X + AnglesIncréments.Y, Rotation.Y, Rotation.Z);
                     break;
 
                 case "Y":
-                    sens = (ObjectifAnglesNormales.Y < Rotation.Z) ? 1 : -1;
-                    if (ApproximationÉgalité(ObjectifAnglesNormales.Y, Rotation.Z))
-                    {
-                        ObjectifAnglesNormales = GestionnaireDeNormales.GetNormale(coords);
-                    }
-                    else
-                    {
-                        Rotation = new Vector3(Rotation.X, Rotation.Y, Rotation.Z + sens * IncrémentAngleRotation);
-                    }
+                    Rotation = new Vector3(Rotation.X, Rotation.Y, Rotation.Z + AnglesIncréments.X);
                     break;
             }
         }
-        */
+
 
         bool ApproximationÉgalité(float valeur1, float valeur2)
         {
