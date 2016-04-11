@@ -40,23 +40,8 @@
       <Importer>FbxImporter</Importer>
       <Processor>ModelProcessor</Processor>
     </Compile>
-    <Compile Include="Textures\CarteTest.bmp">
-      <Name>CarteTest</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Textures\CarteUn.jpg">
-      <Name>CarteUn</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
     <Compile Include="Textures\DétailsDésert.bmp">
       <Name>DétailsDésert</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Textures\DétailsTerrain.bmp">
-      <Name>DétailsTerrain</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
@@ -67,11 +52,6 @@
     </Compile>
     <Compile Include="Textures\PetiteCarte.jpg">
       <Name>PetiteCarte</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Textures\Sahara.png">
-      <Name>Sahara</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
@@ -142,11 +122,6 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="Textures\CielÉtoilé.png">
-      <Name>CielÉtoilé</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
     <Compile Include="Textures\desertDunes.png">
       <Name>desertDunes</Name>
       <Importer>TextureImporter</Importer>
@@ -164,20 +139,6 @@
     </Compile>
     <Compile Include="Textures\PetiteMire.png">
       <Name>PetiteMire</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Textures\Flat.bmp">
-      <Name>Flat</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Textures\FlatGéant.bmp">
-      <Name>FlatGéant</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
@@ -213,6 +174,13 @@
   <ItemGroup>
     <Compile Include="Textures\TresGrandeCarte.jpg">
       <Name>TresGrandeCarte</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Textures\Carte.jpg">
+      <Name>Carte</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>

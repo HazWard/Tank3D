@@ -41,7 +41,7 @@ namespace AtelierXNA
         public Vector2 GetNormale(Point coords, Vector3 anciensAngles)
         {
             Point coordsAvant = new Point(coords.X + (int)(3 * Math.Cos(anciensAngles.Y)), coords.Y + (int)(3 * Math.Sin(anciensAngles.Y)));
-            Point coordsAprès = new Point(coords.X + (int)(3 * Math.Cos(anciensAngles.Y)), coords.Y + (int)(3 * Math.Sin(anciensAngles.Y)));
+            Point coordsAprès = new Point(coords.X - (int)(3 * Math.Cos(anciensAngles.Y)), coords.Y - (int)(3 * Math.Sin(anciensAngles.Y)));
 
             Vector3 normaleA = TerrainJeu.Normales[coordsAvant.X, coordsAvant.Y];
             Vector3 normaleB = TerrainJeu.Normales[coordsAprès.X, coordsAprès.Y];
@@ -52,20 +52,8 @@ namespace AtelierXNA
             float angleBX = (float)Math.Atan2(normaleB.X, normaleB.Y);
             float angleBY = (float)Math.Atan2(normaleB.Z, normaleB.Y);
 
-            Vector2 angles = CalculMoyenne(new Vector2(-angleBX, angleAX), new Vector2(-angleAY, angleBY));
+            Vector2 angles = CalculMoyenne(new Vector2(angleAX, angleAY), new Vector2(angleBX, angleBY));
 
-
-            // Vérification X
-            if(angles.X > ANGLE_MAX)
-            {
-                angles.X = ANGLE_MAX;
-            }
-
-            if (angles.Y > ANGLE_MAX)
-            {
-                angles.Y = ANGLE_MAX;
-            }
-            Console.WriteLine("Max: {0}\nX: {1}\nY: {2}", ANGLE_MAX, angles.X, angles.Y);
             return angles;
         }
 

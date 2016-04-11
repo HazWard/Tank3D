@@ -38,6 +38,7 @@ namespace AtelierXNA
         float ÉchelleCanon { get; set; }
         float ÉchelleRoues { get; set; }
         Vector2 AnglesIncréments { get; set; }
+        Vector2 AncienAnglesIncréments { get; set; }
         float TempsÉcouléMAJFumée { get; set; }
         Sprite Fumée { get; set; }
         Sprite Terre { get; set; }
@@ -156,12 +157,18 @@ namespace AtelierXNA
                 NouvelleHauteurTerrain = TerrainJeu.GetHauteur(nouvellesCoords);
                 Position = new Vector3(posXFinal, NouvelleHauteurTerrain + HAUTEUR_DÉFAULT, posZFinal);
                 AnglesIncréments = GestionnaireDeNormales.GetNormale(nouvellesCoords, Rotation);
+
+                if (Math.Abs(Rotation.Y % MathHelper.TwoPi) >= MathHelper.PiOver2 && Math.Abs(Rotation.Y % MathHelper.TwoPi) <= MathHelper.PiOver2 * 3)
+                {
+                    AnglesIncréments = new Vector2(AnglesIncréments.X, -AnglesIncréments.Y);
+                }
+
                 TraitementNormales(nouvellesCoords, "X");
                 TraitementNormales(nouvellesCoords, "Y");
+                AncienAnglesIncréments = AnglesIncréments;
             }
             CalculerMonde();
         }
-
 
         void TraitementNormales(Point coords, string axe)
         {
@@ -169,11 +176,11 @@ namespace AtelierXNA
             {
                 case "X":
 
-                    Rotation = new Vector3(Rotation.X + AnglesIncréments.Y, Rotation.Y, Rotation.Z);
+                    Rotation = new Vector3(AnglesIncréments.Y, Rotation.Y, Rotation.Z);
                     break;
 
                 case "Y":
-                    Rotation = new Vector3(Rotation.X, Rotation.Y, Rotation.Z + AnglesIncréments.X);
+                    Rotation = new Vector3(Rotation.X, Rotation.Y, Rotation.Z);
                     break;
             }
         }

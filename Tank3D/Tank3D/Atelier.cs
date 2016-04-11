@@ -50,7 +50,7 @@ namespace AtelierXNA
 
         protected override void Initialize()
         {
-            positionObjet = new Vector3(0, 10, 100);
+            positionObjet = new Vector3(0, 10, 0);
             positionAI = new Vector3(-20, 10, 50);
             positionTerrain = new Vector3(0, 0, 0);
             rotationObjet = new Vector3(0, 0, 0); // MathHelper.PiOver2
@@ -81,7 +81,7 @@ namespace AtelierXNA
             Services.AddService(typeof(CalculateurFPS), Calculateur);
             Components.Add(new Afficheur3D(this));
 
-            TerrainJeu = new Terrain(this, 1f, Vector3.Zero, Vector3.Zero, new Vector3(256, 25, 256), "TresGrandeCarte", "DétailsDésertSable", 3, INTERVALLE_MAJ_STANDARD);
+            TerrainJeu = new Terrain(this, 1f, Vector3.Zero, Vector3.Zero, new Vector3(256, 25, 256), "Carte", "DétailsDésertSable", 3, INTERVALLE_MAJ_STANDARD);
             Components.Add(TerrainJeu);
             Components.Add(new Sprite(this, "crosshairBon", new Vector2(Window.ClientBounds.Width / 2, Window.ClientBounds.Height / 2), 0.2f));
             Utilisateur = new Joueur(this, "Veteran Tiger Body", ÉCHELLE_OBJET, rotationObjet, positionObjet, INTERVALLE_MAJ_STANDARD);
