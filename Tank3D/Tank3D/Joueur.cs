@@ -168,8 +168,16 @@ namespace AtelierXNA
                 AncienneHauteurTerrain = NouvelleHauteurTerrain;
                 NouvelleHauteurTerrain = TerrainJeu.GetHauteur(nouvellesCoords);
                 Position = new Vector3(posXFinal, NouvelleHauteurTerrain + HAUTEUR_DÉFAULT, posZFinal);
-                ObjectifAnglesNormales = GestionnaireDeNormales.GetNormale(nouvellesCoords);
-                Rotation = Rotation = new Vector3(ObjectifAnglesNormales.Y, Rotation.Y, ObjectifAnglesNormales.X);
+                AnglesIncréments = GestionnaireDeNormales.GetNormale(nouvellesCoords, Rotation);
+
+                if (Math.Abs(Rotation.Y % MathHelper.TwoPi) >= MathHelper.PiOver2 && Math.Abs(Rotation.Y % MathHelper.TwoPi) <= MathHelper.PiOver2 * 3)
+                {
+                    AnglesIncréments = new Vector2(AnglesIncréments.X, -AnglesIncréments.Y);
+                }
+
+                TraitementNormales(nouvellesCoords, "X");
+                TraitementNormales(nouvellesCoords, "Y");
+                AncienAnglesIncréments = AnglesIncréments;
                 SphereCollision = new BoundingSphere(Position, RAYON_COLLISION);
             }
             CalculerMonde();

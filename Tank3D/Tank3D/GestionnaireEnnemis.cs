@@ -14,6 +14,7 @@ namespace AtelierXNA
 {
     public class GestionnaireEnnemis : GameComponent
     {
+        const int SAFE_SPOT_BORNES = 10;
         int BorneMin { get; set; }
         int BorneMax { get; set; }
         int NbEnnemis { get; set; }
@@ -39,14 +40,14 @@ namespace AtelierXNA
         {
             base.Initialize();
             GénérateurAléatoire = new Random();
-            BorneMin = (int)-TerrainJeu.Étendue.X / 2;
+            BorneMin = (int)-TerrainJeu.Étendue.X / 2 ;
             BorneMax = (int)TerrainJeu.Étendue.X / 2;
             for (int i = 0; i < NbEnnemis; i++)
             {
                 ListeEnnemis.Add(new AI(base.Game, "Veteran Tiger Forest", ÉchelleAI, Vector3.Zero, 
-                                  new Vector3(GénérateurAléatoire.Next(BorneMin, BorneMax), 
-                                  TerrainJeu.GetHauteur(TerrainJeu.ConvertionCoordonnées(new Vector3(GénérateurAléatoire.Next(BorneMin, BorneMax), 0, GénérateurAléatoire.Next(BorneMin, BorneMax)))), 
-                                  GénérateurAléatoire.Next(BorneMin, BorneMax)), IntervalleMAJ, Cible));
+                                  new Vector3(GénérateurAléatoire.Next(BorneMin, BorneMax),
+                                  TerrainJeu.GetHauteur(TerrainJeu.ConvertionCoordonnées(new Vector3(GénérateurAléatoire.Next(BorneMin + SAFE_SPOT_BORNES, BorneMax - SAFE_SPOT_BORNES), 0, GénérateurAléatoire.Next(BorneMin, BorneMax)))),
+                                  GénérateurAléatoire.Next(BorneMin + SAFE_SPOT_BORNES, BorneMax - SAFE_SPOT_BORNES)), IntervalleMAJ, Cible, i + 1));
                 Game.Components.Add(ListeEnnemis[i]);
             }
         }

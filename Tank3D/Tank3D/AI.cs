@@ -18,12 +18,20 @@ namespace AtelierXNA
     public class AI : ModèleMobile, IActivable, IModel
     {
         const float INCRÉMENT_DÉPLACEMENT_AI = 0.1f;
-        const float EST_PROCHE = 50f;
-        const float HAUTEUR_DÉFAULT = 0.5f;
 
+        const float EST_PROCHE = 35f;
+        const int DÉLAI_MOUVEMENT = 5;
+        const int DÉLAI_TIR = 71;
+        // const float INCRÉMENT_ROTATION = 0.05f;
         Joueur Cible { get; set; }
         bool estDétruit { get; set; }
+        int NuméroAI { get; set; }
         float Distance { get; set; }
+        int CompteurTir { get; set; }
+        int CompteurMouvement { get; set; }
+        Projectile ProjectileTank { get; set; }
+        Vector2 ObjectifAnglesNormales { get; set; }
+        float Orientation { get; set; }
         int Compteur { get; set; }
         ModèleMobile ProjectileTank { get; set; }
         Game Jeu { get; set; }
@@ -40,11 +48,14 @@ namespace AtelierXNA
             private set { }
         }
 
-        public AI(Game jeu, string nomModèle, float échelleInitiale, Vector3 rotationInitiale, Vector3 positionInitiale, float intervalleMAJ, Joueur cible)
+        public AI(Game jeu, string nomModèle, float échelleInitiale, Vector3 rotationInitiale, Vector3 positionInitiale, float intervalleMAJ, Joueur cible, int numéroAI)
             : base(jeu, nomModèle, échelleInitiale, rotationInitiale, positionInitiale, intervalleMAJ)
         {
-            Jeu = jeu;
             Cible = cible;
+            CompteurTir = 0;
+            CompteurMouvement = 0;
+            Orientation = 0;
+            NuméroAI = numéroAI;
             Compteur = 0;
             VieAI = new BarreDeVie(jeu, échelleInitiale, rotationInitiale, positionInitiale, new Vector2(100, 50), new Vector2(5, 10), "FondInstructions", IntervalleMAJ);
             Game.Components.Add(VieAI);
@@ -59,17 +70,25 @@ namespace AtelierXNA
 
         public override void Update(GameTime gameTime)
         {
-            float TempsÉcoulé = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            TempsÉcouléDepuisMAJ += TempsÉcoulé;
+            TempsÉcouléDepuisMAJ += (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             Distance = new Vector2(Position.X - Cible.Coordonnées.X, Position.Z - Cible.Coordonnées.Y).Length();
             if (TempsÉcouléDepuisMAJ >= IntervalleMAJ)
             {
-                if (Distance <= EST_PROCHE && Compteur % 100 == 0)
+                if (Distance <= EST_PROCHE)
                 {
-                    GestionProjectile();
+                    if (CompteurTir % DÉLAI_TIR == 0)
+                    {
+                        GestionProjectile();
+                    }
+                    GestionMouvements(false);
+                }
+                else
+                {
+                    GestionMouvements(true);
                 }
 
+                ++CompteurTir;
                 GestionMouvements();
 
                 Compteur++;
@@ -96,17 +115,38 @@ namespace AtelierXNA
 
         }
 
-        #region Méthodes pour la gestion des déplacements et rotations du modèle
+        #region Méthodes pour les mouvements
         void GestionProjectile()
         {
-            ProjectileTank = new Projectile(Jeu, "Projectile", 0.1f, Rotation, 
+            ProjectileTank = new Projectile(Game, "Projectile", 0.1f, Rotation, 
                                             new Vector3(Position.X, Position.Y + 4f, Position.Z), IntervalleMAJ, 2f, 0.02f, false);
            
             Game.Components.Add(ProjectileTank);
         }
-        protected void GestionMouvements()
+
+        void CalculerMonde()
         {
-            ModificationParamètres(CalculOrientation(Cible.Coordonnées));
+            Monde = Matrix.Identity;
+            Monde *= Matrix.CreateScale(Échelle);
+            Monde *= Matrix.CreateFromYawPitchRoll(Rotation.Y, Rotation.X, Rotation.Z);
+            Monde *= Matrix.CreateTranslation(Position);
+        }
+
+        protected void GestionMouvements(bool seDéplace)
+        {
+            ++CompteurMouvement;
+            if (CompteurMouvement % DÉLAI_MOUVEMENT == 0)
+            {
+                // Recalcul de la rotation
+                Orientation = CalculOrientation(Cible.Coordonnées);
+                ModificationParamètres(Orientation, seDéplace);
+            }
+            else
+            {
+                // Déplacement normal
+                ModificationParamètres(Orientation, seDéplace);
+            }
+            
         }
 
         float CalculOrientation(Vector2 cible)
@@ -128,24 +168,27 @@ namespace AtelierXNA
             {
                 if (direction.Y <= 0)
                 {
-                    coeff = 3 * MathHelper.PiOver2;
+                    coeff = 3f * MathHelper.PiOver2;
                 }
             }
-            float orientation = coeff + (float)Math.Atan(direction.X / direction.Y);
 
-            return orientation;
+            // (orientation >= INCRÉMENT_ROTATION) ? INCRÉMENT_ROTATION : orientation;
+            return coeff + (float)Math.Atan(direction.X / direction.Y);
         }
 
-        void ModificationParamètres(float orientation)
+        void ModificationParamètres(float orientation, bool seDéplace)
         {
-            float posX = INCRÉMENT_DÉPLACEMENT_AI * (float)Math.Sin(orientation);
-            float posY = INCRÉMENT_DÉPLACEMENT_AI * (float)Math.Cos(orientation);
-            Vector2 déplacementFinal = new Vector2(posX, posY);
+            
+            if(seDéplace)
+            {
+                float posX = INCRÉMENT_DÉPLACEMENT_AI * (float)Math.Sin(orientation);
+                float posY = INCRÉMENT_DÉPLACEMENT_AI * (float)Math.Cos(orientation);
+                Vector2 déplacementFinal = new Vector2(posX, posY);
 
-            float posXFinal = Position.X - déplacementFinal.X;
-            float posZFinal = Position.Z - déplacementFinal.Y;
+                float posXFinal = Position.X - déplacementFinal.X;
+                float posZFinal = Position.Z - déplacementFinal.Y;
 
-            nouvellesCoords = TerrainJeu.ConvertionCoordonnées(new Vector3(posXFinal, 0, posZFinal));
+                nouvellesCoords = TerrainJeu.ConvertionCoordonnées(new Vector3(posXFinal, 0, posZFinal));
 
             if (!EstHorsDesBornes(nouvellesCoords))
             {
