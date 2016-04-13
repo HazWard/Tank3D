@@ -81,7 +81,7 @@ namespace AtelierXNA
             ListePointsColor = new VertexPositionColor[8];
             ListePoints = new Vector3[8];
             EffetDeBase = new BasicEffect(GraphicsDevice);
-	    RotationYawTour = new Vector3(-MathHelper.PiOver2, 0, MathHelper.PiOver2);
+	        RotationYawTour = new Vector3(-MathHelper.PiOver2, 0, MathHelper.PiOver2);
             RotationPitchCanon = new Vector3(-MathHelper.PiOver2, 0.02f, MathHelper.PiOver2);
             SphereCollision = new BoundingSphere(Position, RAYON_COLLISION);
             ÉchelleTour = 0.0035f;

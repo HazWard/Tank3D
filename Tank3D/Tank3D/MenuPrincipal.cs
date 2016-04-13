@@ -25,6 +25,10 @@ namespace AtelierXNA
         TexteCentré Instruction2 { get; set; }
         TexteCentré Instruction3 { get; set; }
         TexteCentré Instruction4 { get; set; }
+        BoutonDeCommande Texture1 { get; set; }
+        BoutonDeCommande Texture2 { get; set; }
+        BoutonDeCommande Texture3 { get; set; }
+        BoutonDeCommande Texture4 { get; set; }
         GraphicsDeviceManager PériphériqueGraphique { get; set; }
         SpriteBatch GestionSprites { get; set; }
         InputManager GestionInput { get; set; }
@@ -108,38 +112,41 @@ namespace AtelierXNA
             DimensionPhrase = Font.MeasureString("Le but est de tirer tous les tanks ennemis en évitant de se faire tirer.");
 
             Instruction1 = new TexteCentré(this, "  Le but est de tirer tous les tanks ennemis en évitant de se faire tirer.", "Arial20", 
-                                                                new Rectangle(Window.ClientBounds.Width / 8,
+                                                                new Rectangle(Window.ClientBounds.Width / 10,
                                                                               2 * Window.ClientBounds.Height / 8,
-                                                                              2 * (int)DimensionPhrase.X,
+                                                                              (int)DimensionPhrase.X,
                                                                               2 * (int)DimensionPhrase.Y),
-                                                                              Color.White, 0.1f);
+                                                                              Color.Black, 0.1f);
 
             DimensionPhrase = Font.MeasureString("Vous pouvez contrôler la caméra grâce à la souris.");
 
             Instruction2 = new TexteCentré(this, "   Vous pouvez contrôler la caméra grâce à la souris.", "Arial20",
-                                                                new Rectangle(Window.ClientBounds.Width / 8,
+                                                                new Rectangle(Window.ClientBounds.Width / 10,
                                                                               3 * Window.ClientBounds.Height / 8,
-                                                                              2 * (int)DimensionPhrase.X,
+                                                                              (int)DimensionPhrase.X,
                                                                               2 * (int)DimensionPhrase.Y),
-                                                                              Color.White, 0.1f);
+                                                                              Color.Black, 0.1f);
 
             DimensionPhrase = Font.MeasureString("Vous pouvez contrôler les mouvements du tank avec les touches (W,A,S,D).");
 
             Instruction3 = new TexteCentré(this, "Vous pouvez contrôler les mouvements du tank avec les touches (W,A,S,D).", "Arial20",
-                                                                new Rectangle(Window.ClientBounds.Width / 8,
+                                                                new Rectangle(Window.ClientBounds.Width / 10,
                                                                               4 * Window.ClientBounds.Height / 8,
-                                                                              2 * (int)DimensionPhrase.X,
+                                                                              (int)DimensionPhrase.X,
                                                                               2 * (int)DimensionPhrase.Y),
-                                                                              Color.White, 0.1f);
+                                                                              Color.Black, 0.1f);
 
             DimensionPhrase = Font.MeasureString("Vous pouvez tirer un projectile avec le clic gauche de la souris.");
 
             Instruction4 = new TexteCentré(this, "  Vous pouvez tirer un projectile avec le clic gauche de la souris.", "Arial20",
-                                                                new Rectangle(Window.ClientBounds.Width / 8,
+                                                                new Rectangle(Window.ClientBounds.Width / 10,
                                                                               5 * Window.ClientBounds.Height / 8,
-                                                                              2 * (int)DimensionPhrase.X,
+                                                                              (int)DimensionPhrase.X,
                                                                               2 * (int)DimensionPhrase.Y),
-                                                                              Color.White, 0.1f);
+                                                                              Color.Black, 0.1f);
+
+            Texture1 = new BoutonDeCommande(this, "BITCHHH ------>", "Arial20", "Explosion", "Détails", new Vector2(Window.ClientBounds.Width / 8, Window.ClientBounds.Height / 4), true, new FonctionÉvénemtielle(ChangerTexture));
+
             ImageArrièrePlan = new ArrièrePlan(this, "Background Tank");
             BtnJouer = new BoutonDeCommande(this, "Jouer", "Arial20", "BoutonRouge", "BoutonBleu", new Vector2(Window.ClientBounds.Width / 2, 4 * Window.ClientBounds.Height / 5f), true, new FonctionÉvénemtielle(DémarrerJeu));
             BtnInstructions = new BoutonDeCommande(this, "Instructions", "Arial20", "BoutonRouge", "BoutonBleu", new Vector2(Window.ClientBounds.Width / 2 - (Window.ClientBounds.Width / 4), 4 * Window.ClientBounds.Height / 5f), true, new FonctionÉvénemtielle(AfficherInstructions));
@@ -243,24 +250,35 @@ namespace AtelierXNA
             Components.Add(Instruction2);
             Components.Add(Instruction3);
             Components.Add(Instruction4);
+            Components.Add(Texture1);
         }
 
         void AfficherOptions()
         {
             Contenu = new ZoneContextuelle(this, "FondInstructions", "Options", new Rectangle(PositionZoneContenu, PositionZoneContenu, Window.ClientBounds.Width - Marge,
                                                 Window.ClientBounds.Height - Marge));
-            BtnTextureTank = new BoutonDeCommande(this, "Choix de la texture", "Arial20", "BoutonRouge", "BoutonBleu", new Vector2(Window.ClientBounds.Width / 4, Window.ClientBounds.Height / 4), true, new FonctionÉvénemtielle(IllustrerTextures));
+            BtnTextureTank = new BoutonDeCommande(this, "Choix de la texture", "Arial20", "BoutonRouge", "BoutonBleu", new Vector2(Window.ClientBounds.Width / 4, Window.ClientBounds.Height / 4), true, new FonctionÉvénemtielle(IllustrerTank));
             
             Components.Add(Contenu);
             Components.Add(BtnFermerFenêtre);
             Components.Add(BtnTextureTank);
         }
 
-        void IllustrerTextures()
+        void IllustrerTank()
         {
+            if(Services.GetService(typeof(Caméra)) == null)
+            {
+                Services.AddService(typeof(Caméra), CaméraMenu);
+            }
             Components.Remove(DémoTexture);
             DémoTexture = new ObjetTournant(this, NomTexture, 0.5f, new Vector3(0, - MathHelper.PiOver2, 0), new Vector3(0, -50, 0));
             Components.Add(DémoTexture);
+        }
+
+        void ChangerTexture()
+        {
+            NomTexture = "Veteran Tiger Forest";
+            IllustrerTank();
         }
 
         void Retour()
