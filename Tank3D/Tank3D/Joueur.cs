@@ -15,16 +15,21 @@ namespace AtelierXNA
     /// <summary>
     /// This is a game component that implements IUpdateable.
     /// </summary>
-    public class Joueur : ModèleMobile
+    public class Joueur : ModèleMobile, IActivable, IModel
     {
+        VertexPositionColor[] ListePointsColor { get; set; }
+        Vector3[] ListePoints { get; set; }
+        protected BasicEffect EffetDeBase { get; set; }
+
         // Constantes
         protected const float DISTANCE_POURSUITE = 20f;
         protected const float HAUTEUR_CAM_DÉFAULT = 10f;
         const float INCRÉMENT_ROTATION_TOUR = 0.00005f;
+        const float INCRÉMENT_DÉPLACEMENT = 1f;
         const float INTERVALLE_FUMÉE = 0.6f;
+        const float HAUTEUR_DÉFAULT = 1f;
 
         // Propriétés
-        Game Jeu { get; set; }
         CaméraSubjective Caméra { get; set; }
         Projectile ProjectileTank { get; set; }
         Vector3 RotationYawTour { get; set; }
@@ -34,11 +39,11 @@ namespace AtelierXNA
         Vector2 DeltaRotationCanon { get; set; }
         Matrix MondeTour { get; set; }
         Matrix MondeCanon { get; set; }
+        Matrix MondeBoundingBox { get; set; }
         float ÉchelleTour { get; set; }
         float ÉchelleCanon { get; set; }
         float ÉchelleRoues { get; set; }
-        Vector2 AnglesIncréments { get; set; }
-        Vector2 AncienAnglesIncréments { get; set; }
+        Vector2 ObjectifAnglesNormales { get; set; }
         float TempsÉcouléMAJFumée { get; set; }
         Sprite Fumée { get; set; }
         Sprite Terre { get; set; }
@@ -49,34 +54,47 @@ namespace AtelierXNA
                 return new Vector2(Position.X, Position.Z);
             }
         }
+        public Vector3 GetPosition
+        {
+            get
+            {
+                return Caméra.Position;
+            }
+        }
+
+        public BoundingSphere Sphere
+        {
+            get
+            {
+                return SphereCollision;
+            }
+        }
 
         public Joueur(Game jeu, string nomModèle, float échelleInitiale, Vector3 rotationInitiale, Vector3 positionInitiale, float intervalleMAJ)
             : base(jeu, nomModèle, échelleInitiale, rotationInitiale, positionInitiale, intervalleMAJ)
         {
-            Jeu = jeu;
-            Caméra = new CaméraSubjective(jeu, new Vector3(positionInitiale.X, positionInitiale.Y + HAUTEUR_CAM_DÉFAULT, positionInitiale.Z + DISTANCE_POURSUITE),
-                                               new Vector3(Position.X, Position.Y + 4, Position.Z),
-                                               Vector3.Up, IntervalleMAJ);
-            Game.Components.Add(Caméra);
-            Game.Services.AddService(typeof(Caméra), Caméra);
         }
 
         public override void Initialize()
         {
             base.Initialize();
-            RotationYawTour = new Vector3(-MathHelper.PiOver2, 0, MathHelper.PiOver2);
+            ListePointsColor = new VertexPositionColor[8];
+            ListePoints = new Vector3[8];
+            EffetDeBase = new BasicEffect(GraphicsDevice);
+	        RotationYawTour = new Vector3(-MathHelper.PiOver2, 0, MathHelper.PiOver2);
             RotationPitchCanon = new Vector3(-MathHelper.PiOver2, 0.02f, MathHelper.PiOver2);
+            SphereCollision = new BoundingSphere(Position, RAYON_COLLISION);
             ÉchelleTour = 0.0035f;
             ÉchelleCanon = 0.005f;
             ÉchelleRoues = 0.05f;
             TempsÉcouléMAJFumée = 0f;
-            Mouse.SetPosition(400, 200);
         }
 
         protected override void LoadContent()
         {
+            Caméra = Game.Services.GetService(typeof(Caméra)) as CaméraSubjective;
             base.LoadContent();
-            
+
         }
 
         public override void Update(GameTime gameTime)
@@ -88,7 +106,7 @@ namespace AtelierXNA
             if (AÉtéCliqué)
             {
                 float Y = -200 * RotationPitchCanon.X;
-                Fumée = new Fumée(Jeu, new Vector2(Game.Window.ClientBounds.Width / 2, Y), 0.2f);
+                Fumée = new Fumée(Game, new Vector2(Game.Window.ClientBounds.Width / 2, Y), 0.2f);
                 Game.Components.Add(Fumée);
                 GestionProjectile();
             }
@@ -107,15 +125,12 @@ namespace AtelierXNA
             base.Update(gameTime);
         }
 
-        #region Méthodes pour la gestion des mouvements
-        void CalculerMonde()
+        public void ModifierActivation()
         {
-            Monde = Matrix.Identity;
-            Monde *= Matrix.CreateScale(Échelle);
-            Monde *= Matrix.CreateFromYawPitchRoll(Rotation.Y, Rotation.X, Rotation.Z);
-            Monde *= Matrix.CreateTranslation(Position);
+
         }
 
+        #region Méthodes pour la gestion des déplacements et rotations du modèle
         protected void GestionMouvements()
         {
             GestionProjectile();
@@ -124,7 +139,7 @@ namespace AtelierXNA
             RotationCanon();
 
             Caméra.Cible = new Vector3(Position.X, Position.Y + 4, Position.Z);
-            Caméra.Position= new Vector3(((float)Math.Sin(RotationYawTour.Y) * DISTANCE_POURSUITE) + Position.X,
+            Caméra.Position = new Vector3(((float)Math.Sin(RotationYawTour.Y) * DISTANCE_POURSUITE) + Position.X,
                                          ((float)Math.Tan(MathHelper.PiOver2 - RotationPitchCanon.X) * DISTANCE_POURSUITE) + Position.Y + HAUTEUR_CAM_DÉFAULT,
                                          ((float)Math.Cos(RotationYawTour.Y) * DISTANCE_POURSUITE) + Position.Z);
 
@@ -141,15 +156,12 @@ namespace AtelierXNA
             float rotationFinal = Rotation.Y - (IncrémentAngleRotation * rotation) / 3f;
             float posX = déplacement * (float)Math.Sin(rotationFinal);
             float posY = déplacement * (float)Math.Cos(rotationFinal);
-
             Vector2 déplacementFinal = new Vector2(posX, posY);
-            Rotation = new Vector3(Rotation.X, rotationFinal, Rotation.Z);
             float posXFinal = Position.X - déplacementFinal.X;
             float posZFinal = Position.Z - déplacementFinal.Y;
-
+            
+            Rotation = new Vector3(Rotation.X, rotationFinal, Rotation.Z);
             nouvellesCoords = TerrainJeu.ConvertionCoordonnées(new Vector3(posXFinal, 0, posZFinal));
-
-
 
             if (!EstHorsDesBornes(nouvellesCoords))
             {
@@ -166,25 +178,41 @@ namespace AtelierXNA
                 TraitementNormales(nouvellesCoords, "X");
                 TraitementNormales(nouvellesCoords, "Y");
                 AncienAnglesIncréments = AnglesIncréments;
+                SphereCollision = new BoundingSphere(Position, RAYON_COLLISION);
             }
             CalculerMonde();
         }
 
         void TraitementNormales(Point coords, string axe)
         {
-            switch(axe)
+            int sens;
+            switch (axe)
             {
                 case "X":
-
-                    Rotation = new Vector3(AnglesIncréments.Y, Rotation.Y, Rotation.Z);
+                    sens = (ObjectifAnglesNormales.X < Rotation.X) ? 1 : -1;
+                    if (ApproximationÉgalité(ObjectifAnglesNormales.X, Rotation.X))
+                    {
+                        ObjectifAnglesNormales = GestionnaireDeNormales.GetNormale(coords);
+                    }
+                    else
+                    {
+                        Rotation = new Vector3(Rotation.X + sens * IncrémentAngleRotation, Rotation.Y, Rotation.Z);
+                    }
                     break;
 
                 case "Y":
-                    Rotation = new Vector3(Rotation.X, Rotation.Y, Rotation.Z);
+                    sens = (ObjectifAnglesNormales.Y < Rotation.Z) ? 1 : -1;
+                    if (ApproximationÉgalité(ObjectifAnglesNormales.Y, Rotation.Z))
+                    {
+                        ObjectifAnglesNormales = GestionnaireDeNormales.GetNormale(coords);
+                    }
+                    else
+                    {
+                        Rotation = new Vector3(Rotation.X, Rotation.Y, Rotation.Z + sens * IncrémentAngleRotation);
+                    }
                     break;
             }
         }
-
 
         bool ApproximationÉgalité(float valeur1, float valeur2)
         {
@@ -234,7 +262,7 @@ namespace AtelierXNA
         {
             if (AÉtéCliqué)
             {
-                ProjectileTank = new Projectile(Jeu, "Projectile", 0.1f, 
+                ProjectileTank = new Projectile(Game, "Projectile", 0.1f,
                                                 new Vector3(2 * RotationPitchCanon.X + MathHelper.Pi, RotationPitchCanon.Y - 0.05f, RotationPitchCanon.Z),
                                                 new Vector3(PositionCanon.X, PositionCanon.Y + 4.6f, PositionCanon.Z), IntervalleMAJ, 2f, 0.02f, false);
                 Game.Components.Add(ProjectileTank);
@@ -266,6 +294,20 @@ namespace AtelierXNA
 
         public override void Draw(GameTime gameTime)
         {
+            /*
+       ListePointsColor = new VertexPositionColor[8];
+       EffetDeBase.World = MondeBoundingBox;
+       EffetDeBase.View = CaméraJeu.Vue;
+       EffetDeBase.Projection = CaméraJeu.Projection;
+       EffetDeBase.CurrentTechnique.Passes[0].Apply();
+       
+       for (int i = 0; i < SphereCollision.ListePoints.Count(); i++)
+       {
+           ListePointsColor[i] = new VertexPositionColor(SphereCollision.ListePoints[i], Color.Red);
+       }
+       GraphicsDevice.DrawUserPrimitives<VertexPositionColor>(PrimitiveType.LineStrip, ListePointsColor, 0, 7);
+       */
+
             GraphicsDevice.BlendState = BlendState.Opaque;
             GraphicsDevice.DepthStencilState = DepthStencilState.Default;
 
@@ -296,6 +338,7 @@ namespace AtelierXNA
                 }
                 maille.Draw();
             }
+            
         }
         #endregion
     }
