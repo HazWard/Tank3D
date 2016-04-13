@@ -15,7 +15,7 @@ namespace AtelierXNA
     /// <summary>
     /// This is a game component that implements IUpdateable.
     /// </summary>
-    public class Joueur : ModèleMobile, IActivable
+    public class Joueur : ModèleMobile, IActivable, IModel
     {
         VertexPositionColor[] ListePointsColor { get; set; }
         Vector3[] ListePoints { get; set; }
@@ -62,6 +62,14 @@ namespace AtelierXNA
             }
         }
 
+        public BoundingSphere Sphere
+        {
+            get
+            {
+                return SphereCollision;
+            }
+        }
+
         public Joueur(Game jeu, string nomModèle, float échelleInitiale, Vector3 rotationInitiale, Vector3 positionInitiale, float intervalleMAJ)
             : base(jeu, nomModèle, échelleInitiale, rotationInitiale, positionInitiale, intervalleMAJ)
         {
@@ -75,11 +83,10 @@ namespace AtelierXNA
             EffetDeBase = new BasicEffect(GraphicsDevice);
 	    RotationYawTour = new Vector3(-MathHelper.PiOver2, 0, MathHelper.PiOver2);
             RotationPitchCanon = new Vector3(-MathHelper.PiOver2, 0.02f, MathHelper.PiOver2);
-            BoundingBoxModèle = new BoundingBoxSimple(Game, Position);
-            Game.Components.Add(BoundingBoxModèle);
-            ÉchelleTour = 0.00175f;
-            ÉchelleCanon = 0.0025f;
-            ÉchelleRoues = 0.025f;
+            SphereCollision = new BoundingSphere(Position, RAYON_COLLISION);
+            ÉchelleTour = 0.0035f;
+            ÉchelleCanon = 0.005f;
+            ÉchelleRoues = 0.05f;
             TempsÉcouléMAJFumée = 0f;
         }
 
@@ -161,10 +168,9 @@ namespace AtelierXNA
                 AncienneHauteurTerrain = NouvelleHauteurTerrain;
                 NouvelleHauteurTerrain = TerrainJeu.GetHauteur(nouvellesCoords);
                 Position = new Vector3(posXFinal, NouvelleHauteurTerrain + HAUTEUR_DÉFAULT, posZFinal);
-                BoundingBoxModèle.MettreÀJour(déplacementFinal.X, déplacementFinal.Y);
-                MondeBoundingBox = TransformationsMeshes(0.05f, Rotation, Position);
                 ObjectifAnglesNormales = GestionnaireDeNormales.GetNormale(nouvellesCoords);
                 Rotation = Rotation = new Vector3(ObjectifAnglesNormales.Y, Rotation.Y, ObjectifAnglesNormales.X);
+                SphereCollision = new BoundingSphere(Position, RAYON_COLLISION);
             }
             CalculerMonde();
         }
@@ -280,18 +286,19 @@ namespace AtelierXNA
 
         public override void Draw(GameTime gameTime)
         {
-            ListePointsColor = new VertexPositionColor[8];
-            EffetDeBase.World = MondeBoundingBox;
-            EffetDeBase.View = CaméraJeu.Vue;
-            EffetDeBase.Projection = CaméraJeu.Projection;
-            EffetDeBase.CurrentTechnique.Passes[0].Apply();
-
-            for (int i = 0; i < BoundingBoxModèle.ListePoints.Count(); i++)
-            {
-                ListePointsColor[i] = new VertexPositionColor(BoundingBoxModèle.ListePoints[i], Color.Red);
-            }
-            GraphicsDevice.DrawUserPrimitives<VertexPositionColor>(PrimitiveType.LineStrip, ListePointsColor, 0, 7);
-
+            /*
+       ListePointsColor = new VertexPositionColor[8];
+       EffetDeBase.World = MondeBoundingBox;
+       EffetDeBase.View = CaméraJeu.Vue;
+       EffetDeBase.Projection = CaméraJeu.Projection;
+       EffetDeBase.CurrentTechnique.Passes[0].Apply();
+       
+       for (int i = 0; i < SphereCollision.ListePoints.Count(); i++)
+       {
+           ListePointsColor[i] = new VertexPositionColor(SphereCollision.ListePoints[i], Color.Red);
+       }
+       GraphicsDevice.DrawUserPrimitives<VertexPositionColor>(PrimitiveType.LineStrip, ListePointsColor, 0, 7);
+       */
 
             GraphicsDevice.BlendState = BlendState.Opaque;
             GraphicsDevice.DepthStencilState = DepthStencilState.Default;

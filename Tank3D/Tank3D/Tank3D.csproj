@@ -92,6 +92,7 @@
     <Compile Include="Fumée.cs" />
     <Compile Include="GestionnaireEnnemis.cs" />
     <Compile Include="IActivable.cs" />
+    <Compile Include="IModel.cs" />
     <Compile Include="InputManager.cs" />
     <Compile Include="ObjetTournant.cs" />
     <Compile Include="ZoneContextuelle.cs" />

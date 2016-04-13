@@ -14,7 +14,9 @@ namespace AtelierXNA
 {
     public class BoundingBoxSimple : Microsoft.Xna.Framework.GameComponent
     {
-        BoundingBox BoundingBoxModèle { get; set; }
+        const float MARGE_X = 55f;
+        const float MARGE_Z = 200f;
+        public BoundingBox BoundingBoxModèle { get; set; }
         public List<Vector3> ListePoints { get; set; }
         Vector3 Position { get; set; }
         public BoundingBoxSimple(Game game, Vector3 position)
@@ -38,26 +40,32 @@ namespace AtelierXNA
         public void MettreÀJour(float déplacementEnX, float déplacementEnZ)
         {
             MovePoints(déplacementEnX, déplacementEnZ);
+            BoundingBoxModèle = new BoundingBox();
             BoundingBoxModèle = BoundingBox.CreateFromPoints(ListePoints);
         }
-        public void CreatePoints()
+        void CreatePoints()
         {
             ListePoints = new List<Vector3>();
-            ListePoints.Add(new Vector3(Position.X - 55, Position.Y, Position.Z - 200));
-            ListePoints.Add(new Vector3(Position.X - 55, Position.Y + 100, Position.Z - 200));
-            ListePoints.Add(new Vector3(Position.X + 55, Position.Y, Position.Z - 200));
-            ListePoints.Add(new Vector3(Position.X + 55, Position.Y + 100, Position.Z - 200));
-            ListePoints.Add(new Vector3(Position.X + 55, Position.Y, Position.Z));
-            ListePoints.Add(new Vector3(Position.X + 55, Position.Y + 100, Position.Z));
-            ListePoints.Add(new Vector3(Position.X - 55, Position.Y, Position.Z));
-            ListePoints.Add(new Vector3(Position.X - 55, Position.Y + 100, Position.Z));
+            ListePoints.Add(new Vector3(Position.X - MARGE_X, Position.Y, Position.Z - MARGE_Z));
+            ListePoints.Add(new Vector3(Position.X - MARGE_X, Position.Y + 100, Position.Z - MARGE_Z));
+            ListePoints.Add(new Vector3(Position.X + MARGE_X, Position.Y, Position.Z - MARGE_Z));
+            ListePoints.Add(new Vector3(Position.X + MARGE_X, Position.Y + 100, Position.Z - MARGE_Z));
+            ListePoints.Add(new Vector3(Position.X + MARGE_X, Position.Y, Position.Z));
+            ListePoints.Add(new Vector3(Position.X + MARGE_X, Position.Y + 100, Position.Z));
+            ListePoints.Add(new Vector3(Position.X - MARGE_X, Position.Y, Position.Z));
+            ListePoints.Add(new Vector3(Position.X - MARGE_X, Position.Y + 100, Position.Z));
         }
-        public void MovePoints(float déplacementEnX, float déplacementEnZ)
+        void MovePoints(float déplacementEnX, float déplacementEnZ)
         {
             for (int i = 0; i < ListePoints.Count(); i++)
             {
                 ListePoints[i] = new Vector3(ListePoints[i].X - déplacementEnX, ListePoints[i].Y, ListePoints[i].Z - déplacementEnZ);
             }
+        }
+
+        public bool EstEnCollision(BoundingBox cible)
+        {
+            return BoundingBoxModèle.Intersects(cible);
         }
     }
 }

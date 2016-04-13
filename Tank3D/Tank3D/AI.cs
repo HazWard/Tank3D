@@ -15,7 +15,7 @@ namespace AtelierXNA
     /// <summary>
     /// This is a game component that implements IUpdateable.
     /// </summary>
-    public class AI : ModèleMobile, IActivable
+    public class AI : ModèleMobile, IActivable, IModel
     {
         const float INCRÉMENT_DÉPLACEMENT_AI = 0.1f;
         const float EST_PROCHE = 50f;
@@ -29,6 +29,7 @@ namespace AtelierXNA
         Game Jeu { get; set; }
         public BarreDeVie VieAI { get; set; }
         float PourcentageVie { get; set; }
+        int CompteurCollision { get; set; }
        
         public Vector3 GetRotation
         {
@@ -51,6 +52,8 @@ namespace AtelierXNA
         public override void Initialize()
         {
             PourcentageVie = 1;
+            SphereCollision = new BoundingSphere();
+            CompteurCollision = 0;
             base.Initialize();
         }
 
@@ -68,6 +71,7 @@ namespace AtelierXNA
                 }
 
                 GestionMouvements();
+
                 Compteur++;
                 TempsÉcouléDepuisMAJ = 0;
 
@@ -87,16 +91,6 @@ namespace AtelierXNA
            
             //VieJoueur.CalculerVie(RotationPitchCanon, RotationYawTour, PositionTour);
         }
-        public bool EstDétruit()
-        {
-            estDétruit = false;
-            if (Compteur == 1000)
-            {
-                estDétruit = true;
-            }
-            return estDétruit;
-        }
-
         public void ModifierActivation()
         {
 
@@ -157,9 +151,20 @@ namespace AtelierXNA
             {
                 NouvelleHauteurTerrain = TerrainJeu.GetHauteur(nouvellesCoords);
                 Position = new Vector3(posXFinal, NouvelleHauteurTerrain + HAUTEUR_DÉFAULT, posZFinal);
+                SphereCollision = new BoundingSphere(Position, RAYON_COLLISION);
             }
 
             Rotation = new Vector3(Rotation.X, orientation, Rotation.Z);
+
+            if (SphereCollision.Intersects(Cible.Sphere))
+            {
+                Console.WriteLine("---- COLLISION {0} ----", ++CompteurCollision);
+            }
+
+            if (EstDétruit)
+            {
+                Game.Components.Remove(this);
+            }
 
             CalculerMonde();
         }

@@ -12,11 +12,14 @@ using Microsoft.Xna.Framework.Media;
 
 namespace AtelierXNA
 {
-    public abstract class ModèleMobile : ObjetDeBase
+    public abstract class ModèleMobile : ObjetDeBase, IModel
     {
-        protected BoundingBoxSimple BoundingBoxModèle { get; set; }
-        protected Vector3 PositionBoundingBox1 { get; set; }
-        protected Vector3 PositionBoundingBox2 { get; set; }
+
+        // Constantes
+        protected const float RAYON_COLLISION = 5f;
+        
+        // Propriétés
+        public BoundingSphere SphereCollision { get; set; }
         protected InputManager GestionInput { get; set; }
         protected float IncrémentAngleRotation { get; set; }
         protected float TempsÉcouléDepuisMAJ { get; set; }
@@ -27,6 +30,8 @@ namespace AtelierXNA
         protected float IntervalleMAJ { get; set; }
         protected Point nouvellesCoords { get; set; }
         protected bool AÉtéCliqué { get; set; }
+
+        public bool EstDétruit { get; set; }
 
         public ModèleMobile(Game jeu, string nomModèle, float échelleInitiale, Vector3 rotationInitiale, Vector3 positionInitiale, float intervalleMAJ)
             : base(jeu, nomModèle, échelleInitiale, rotationInitiale, positionInitiale)

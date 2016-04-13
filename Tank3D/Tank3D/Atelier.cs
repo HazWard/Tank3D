@@ -16,7 +16,7 @@ namespace AtelierXNA
         const float INTERVALLE_MAJ_STANDARD = 1f / 60f;
         protected const float HAUTEUR_CAM_DÉFAULT = 10f;
         protected const float DISTANCE_POURSUITE = 20f;
-        public const float ÉCHELLE_OBJET = 0.025f;
+        public const float ÉCHELLE_OBJET = 0.05f;
 
         MenuPause MenuPause { get; set; }
         List<GameComponent> ListeGameComponentsMenu { get; set; }

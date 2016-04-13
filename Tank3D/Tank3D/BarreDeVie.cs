@@ -123,12 +123,12 @@ namespace AtelierXNA
             VecteurBarreDeVieCaméra = new Vector3(PositionJoueur.X, Position.Y,PositionJoueur.Z) - new Vector3(Position.X,PositionJoueur.Y,Position.Z);
             VecteurBarreDeVieCaméra = Vector3.Normalize(VecteurBarreDeVieCaméra);
 
-            Console.WriteLine(Vector3.Dot(NormaleBarreDeVie, VecteurBarreDeVieCaméra));
+            //Console.WriteLine(Vector3.Dot(NormaleBarreDeVie, VecteurBarreDeVieCaméra));
             ProduitScalaire = Vector3.Dot(NormaleBarreDeVie, VecteurBarreDeVieCaméra);
             AngleEntreBarreCaméraPremier = (float)Math.Acos(ProduitScalaire);
 
 
-            Console.WriteLine("ANGLE : {0}", MathHelper.ToDegrees(AngleEntreBarreCaméraPremier));
+            //Console.WriteLine("ANGLE : {0}", MathHelper.ToDegrees(AngleEntreBarreCaméraPremier));
             AjusterAngleBarreDeVie(AngleEntreBarreCaméraPremier, ProduitScalaire);
 
         }
@@ -137,7 +137,6 @@ namespace AtelierXNA
             if (produitScalaire >= 0)
             {
                 AngleLacet = AngleLacet + angle + MathHelper.PiOver2;
-                //if()
             }
             else
             {
