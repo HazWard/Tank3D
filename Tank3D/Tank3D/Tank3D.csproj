@@ -63,7 +63,6 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.QualityTools.Testing.Fakes, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.Xna.Framework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
     <Reference Include="Microsoft.Xna.Framework.Game, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
     <Reference Include="Microsoft.Xna.Framework.Graphics, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
@@ -81,6 +80,8 @@
     <Compile Include="AI.cs" />
     <Compile Include="ArrièrePlan.cs" />
     <Compile Include="Atelier.cs" />
+    <Compile Include="BarreDeVie.cs" />
+    <Compile Include="BoundingBoxSimple.cs" />
     <Compile Include="BoutonDeCommande.cs" />
     <Compile Include="CalculateurFPS.cs" />
     <Compile Include="Caméra.cs" />
@@ -91,10 +92,13 @@
     <Compile Include="Fumée.cs" />
     <Compile Include="GestionnaireEnnemis.cs" />
     <Compile Include="IActivable.cs" />
+    <Compile Include="IModel.cs" />
     <Compile Include="InputManager.cs" />
-    <Compile Include="Instructions.cs" />
+    <Compile Include="ObjetTournant.cs" />
+    <Compile Include="ZoneContextuelle.cs" />
     <Compile Include="Joueur.cs" />
-    <Compile Include="Menu.cs" />
+    <Compile Include="MenuPause.cs" />
+    <Compile Include="MenuPrincipal.cs" />
     <Compile Include="ModèleMobile.cs" />
     <Compile Include="NormalesManager.cs" />
     <Compile Include="ObjetDeBase.cs" />

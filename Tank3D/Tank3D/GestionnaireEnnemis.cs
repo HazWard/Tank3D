@@ -51,5 +51,14 @@ namespace AtelierXNA
                 Game.Components.Add(ListeEnnemis[i]);
             }
         }
+
+        public void EffacerEnnemis()
+        {
+            foreach (AI ennemi in ListeEnnemis)
+            {
+                Game.Components.Remove(ennemi.VieAI);
+                Game.Components.Remove(ennemi);
+            }
+        }
     }
 }

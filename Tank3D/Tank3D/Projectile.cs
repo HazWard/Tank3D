@@ -12,8 +12,9 @@ using Microsoft.Xna.Framework.Media;
 
 namespace AtelierXNA
 {
-    public class Projectile:ModèleMobile
+    public class Projectile : ModèleMobile
     {
+        const float RAYON_COLLISION_PROJECTILE = 1f;
         bool SeDésintègre { get; set; }
         int Compteur { get; set; }
         float VitesseDépart { get; set; }
@@ -53,21 +54,7 @@ namespace AtelierXNA
             base.Initialize();
         }
 
-        public bool EstDétruit()
-        {
-            bool estDétruit = false;
-            return estDétruit;
-        }
-
         #region Méthodes pour la gestion des déplacements et rotations du modèle
-        void CalculerMonde()
-        {
-            Monde = Matrix.Identity;
-            Monde *= Matrix.CreateScale(Échelle);
-            Monde *= Matrix.CreateFromYawPitchRoll(Rotation.Y, Rotation.X, Rotation.Z);
-            Monde *= Matrix.CreateTranslation(Position);
-        }
-
         protected void GestionMouvements()
         {
             ModificationParamètres();
@@ -98,13 +85,12 @@ namespace AtelierXNA
                     Rotation = new Vector3(Rotation.X - 0.01f, Rotation.Y, Rotation.Z + 0.2f);
                 }
             }
-
-            EffacerProjectile(EstHorsDesBornes(nouvellesCoords),posXFinal,posZFinal,déplacementFinal, hauteurMinimale);
+            EffacerProjectile(EstHorsDesBornes(nouvellesCoords),posXFinal,posZFinal, hauteurMinimale);
 
             CalculerMonde();
         }
 
-        private void EffacerProjectile(bool sortie, float posX,float posZ, Vector2 déplacementFinale, float hauteurMin)
+        private void EffacerProjectile(bool sortie, float posX,float posZ, float hauteurMin)
         {
             if (Position.Y <= 0 || sortie || Position.Y <= hauteurMin)
             {
@@ -115,13 +101,31 @@ namespace AtelierXNA
                     Game.Components.Add(new Explosion(Game, "Projectile", 0.1f, new Vector3(0,angleExplosion,0), new Vector3(posX, hauteurMin, posZ), IntervalleMAJ));
                     angleExplosion += MathHelper.PiOver4;
                 }
-                Console.WriteLine("Projectile effacé!");
             }
+            VérificationImpact(hauteurMin);
         }
 
         void GestionForces()
         {
             IncrémentHauteurProjectile -= DeltaHauteur;
+        }
+
+        void VérificationImpact(float hauteur)
+        {
+            foreach (GameComponent gc in Game.Components)
+            {
+                if (gc is IModel)
+                {
+                    ModèleMobile m = gc as ModèleMobile;
+                    if (SphereCollision.Intersects(m.SphereCollision))
+                    {
+                        Console.WriteLine("Toucher!");
+                        m.EstDétruit = true;
+                        EffacerProjectile(true, Position.X, Position.Z, hauteur);
+                        break;
+                    }
+                }
+            }
         }
         #endregion
     }

@@ -15,14 +15,14 @@ namespace AtelierXNA
     /// <summary>
     /// This is a game component that implements IUpdateable.
     /// </summary>
-    public class AI : ModèleMobile
+    public class AI : ModèleMobile, IActivable, IModel
     {
         const float INCRÉMENT_DÉPLACEMENT_AI = 0.1f;
+
         const float EST_PROCHE = 35f;
         const int DÉLAI_MOUVEMENT = 5;
         const int DÉLAI_TIR = 71;
         // const float INCRÉMENT_ROTATION = 0.05f;
-
         Joueur Cible { get; set; }
         bool estDétruit { get; set; }
         int NuméroAI { get; set; }
@@ -32,6 +32,21 @@ namespace AtelierXNA
         Projectile ProjectileTank { get; set; }
         Vector2 ObjectifAnglesNormales { get; set; }
         float Orientation { get; set; }
+        int Compteur { get; set; }
+        ModèleMobile ProjectileTank { get; set; }
+        Game Jeu { get; set; }
+        public BarreDeVie VieAI { get; set; }
+        float PourcentageVie { get; set; }
+        int CompteurCollision { get; set; }
+       
+        public Vector3 GetRotation
+        {
+            get
+            {
+                return Rotation;
+            }
+            private set { }
+        }
 
         public AI(Game jeu, string nomModèle, float échelleInitiale, Vector3 rotationInitiale, Vector3 positionInitiale, float intervalleMAJ, Joueur cible, int numéroAI)
             : base(jeu, nomModèle, échelleInitiale, rotationInitiale, positionInitiale, intervalleMAJ)
@@ -41,7 +56,18 @@ namespace AtelierXNA
             CompteurMouvement = 0;
             Orientation = 0;
             NuméroAI = numéroAI;
+            Compteur = 0;
+            VieAI = new BarreDeVie(jeu, échelleInitiale, rotationInitiale, positionInitiale, new Vector2(100, 50), new Vector2(5, 10), "FondInstructions", IntervalleMAJ);
+            Game.Components.Add(VieAI);
         }
+        public override void Initialize()
+        {
+            PourcentageVie = 1;
+            SphereCollision = new BoundingSphere();
+            CompteurCollision = 0;
+            base.Initialize();
+        }
+
         public override void Update(GameTime gameTime)
         {
             TempsÉcouléDepuisMAJ += (float)gameTime.ElapsedGameTime.TotalSeconds;
@@ -63,14 +89,30 @@ namespace AtelierXNA
                 }
 
                 ++CompteurTir;
+                GestionMouvements();
+
+                Compteur++;
                 TempsÉcouléDepuisMAJ = 0;
+
+                CalculBarreDeVie();
+                //VieAI.CalculerVie();
+
             }
             base.Update(gameTime);
         }
-        public bool EstDétruit()
+        void CalculBarreDeVie()
         {
-            estDétruit = false;
-            return estDétruit;
+            VieAI.Position = new Vector3(Position.X, Position.Y +7 , Position.Z);
+            VieAI.AngleLacet = Rotation.Y;
+            VieAI.PositionJoueur = Cible.GetPosition;
+            
+            VieAI.PourcentageVie = PourcentageVie;
+           
+            //VieJoueur.CalculerVie(RotationPitchCanon, RotationYawTour, PositionTour);
+        }
+        public void ModifierActivation()
+        {
+
         }
 
         #region Méthodes pour les mouvements
@@ -78,9 +120,10 @@ namespace AtelierXNA
         {
             ProjectileTank = new Projectile(Game, "Projectile", 0.1f, Rotation, 
                                             new Vector3(Position.X, Position.Y + 4f, Position.Z), IntervalleMAJ, 2f, 0.02f, false);
+           
             Game.Components.Add(ProjectileTank);
         }
-        
+
         void CalculerMonde()
         {
             Monde = Matrix.Identity;
@@ -147,16 +190,24 @@ namespace AtelierXNA
 
                 nouvellesCoords = TerrainJeu.ConvertionCoordonnées(new Vector3(posXFinal, 0, posZFinal));
 
-                if (!EstHorsDesBornes(nouvellesCoords))
-                {
-                    NouvelleHauteurTerrain = TerrainJeu.GetHauteur(nouvellesCoords);
-                    Position = new Vector3(posXFinal, NouvelleHauteurTerrain + HAUTEUR_DÉFAULT, posZFinal);
-                    //ObjectifAnglesNormales = GestionnaireDeNormales.GetNormale(nouvellesCoords, Rotation.Y);
-                    //Rotation = new Vector3(ObjectifAnglesNormales.Y, Rotation.Y, ObjectifAnglesNormales.X);
-                }
+            if (!EstHorsDesBornes(nouvellesCoords))
+            {
+                NouvelleHauteurTerrain = TerrainJeu.GetHauteur(nouvellesCoords);
+                Position = new Vector3(posXFinal, NouvelleHauteurTerrain + HAUTEUR_DÉFAULT, posZFinal);
+                SphereCollision = new BoundingSphere(Position, RAYON_COLLISION);
             }
 
             Rotation = new Vector3(Rotation.X, orientation, Rotation.Z);
+
+            if (SphereCollision.Intersects(Cible.Sphere))
+            {
+                Console.WriteLine("---- COLLISION {0} ----", ++CompteurCollision);
+            }
+
+            if (EstDétruit)
+            {
+                Game.Components.Remove(this);
+            }
 
             CalculerMonde();
         }

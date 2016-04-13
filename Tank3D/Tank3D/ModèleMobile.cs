@@ -12,14 +12,14 @@ using Microsoft.Xna.Framework.Media;
 
 namespace AtelierXNA
 {
-    public abstract class ModèleMobile : ObjetDeBase
+    public abstract class ModèleMobile : ObjetDeBase, IModel
     {
-        // Constantes
-        protected const float FACTEUR_ACCÉLÉRATION = 1f / 60f;
-        protected const float INCRÉMENT_DÉPLACEMENT = 0.5f;
-        protected const float HAUTEUR_DÉFAULT = 0.5f;
 
+        // Constantes
+        protected const float RAYON_COLLISION = 5f;
+        
         // Propriétés
+        public BoundingSphere SphereCollision { get; set; }
         protected InputManager GestionInput { get; set; }
         protected float IncrémentAngleRotation { get; set; }
         protected float TempsÉcouléDepuisMAJ { get; set; }
@@ -31,6 +31,8 @@ namespace AtelierXNA
         protected Point nouvellesCoords { get; set; }
         protected bool AÉtéCliqué { get; set; }
 
+        public bool EstDétruit { get; set; }
+
         public ModèleMobile(Game jeu, string nomModèle, float échelleInitiale, Vector3 rotationInitiale, Vector3 positionInitiale, float intervalleMAJ)
             : base(jeu, nomModèle, échelleInitiale, rotationInitiale, positionInitiale)
         {
@@ -41,6 +43,7 @@ namespace AtelierXNA
         {
             TempsÉcouléDepuisMAJ = 0;
             IncrémentAngleRotation = MathHelper.TwoPi * IntervalleMAJ;
+            
             base.Initialize();
         }
 
@@ -61,8 +64,8 @@ namespace AtelierXNA
         {
             bool estHorsDesBornes = false;
 
-            if (coords.X >= TerrainJeu.Extrêmes - 5 || coords.Y >= TerrainJeu.Extrêmes - 5 || 
-                coords.X <= 5 || coords.Y <= 5)
+            if (coords.X >= TerrainJeu.Extrêmes - 2 || coords.Y >= TerrainJeu.Extrêmes - 2 || 
+                coords.X <= 2 || coords.Y <= 2)
             {
                 estHorsDesBornes = true;
             }

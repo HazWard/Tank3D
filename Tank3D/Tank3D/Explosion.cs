@@ -95,13 +95,6 @@ namespace AtelierXNA
 
             //Position = new Vector3(Position.X, Position.Y + 0.05f, Position.Z);
         }
-        void CalculerMonde()
-        {
-            Monde = Matrix.Identity;
-            Monde *= Matrix.CreateScale(Échelle);
-            Monde *= Matrix.CreateFromYawPitchRoll(Rotation.Y, Rotation.X, Rotation.Z);
-            Monde *= Matrix.CreateTranslation(Position);
-        }
         void EffacerExplosion()
         {
             Game.Components.Remove(this);
