@@ -37,12 +37,15 @@ namespace AtelierXNA
         Vector3 PositionCanon { get; set; }
         Vector3 PositionTour { get; set; }
         Vector2 DeltaRotationCanon { get; set; }
+        Vector2 AnglesIncréments { get; set; }
+        Vector2 AncienAnglesIncréments { get; set; }
         Matrix MondeTour { get; set; }
         Matrix MondeCanon { get; set; }
         Matrix MondeBoundingBox { get; set; }
         float ÉchelleTour { get; set; }
         float ÉchelleCanon { get; set; }
         float ÉchelleRoues { get; set; }
+        
         Vector2 ObjectifAnglesNormales { get; set; }
         float TempsÉcouléMAJFumée { get; set; }
         Sprite Fumée { get; set; }
@@ -185,31 +188,14 @@ namespace AtelierXNA
 
         void TraitementNormales(Point coords, string axe)
         {
-            int sens;
             switch (axe)
             {
                 case "X":
-                    sens = (ObjectifAnglesNormales.X < Rotation.X) ? 1 : -1;
-                    if (ApproximationÉgalité(ObjectifAnglesNormales.X, Rotation.X))
-                    {
-                        ObjectifAnglesNormales = GestionnaireDeNormales.GetNormale(coords);
-                    }
-                    else
-                    {
-                        Rotation = new Vector3(Rotation.X + sens * IncrémentAngleRotation, Rotation.Y, Rotation.Z);
-                    }
+                        Rotation = new Vector3(AnglesIncréments.Y, Rotation.Y, Rotation.Z);
                     break;
 
                 case "Y":
-                    sens = (ObjectifAnglesNormales.Y < Rotation.Z) ? 1 : -1;
-                    if (ApproximationÉgalité(ObjectifAnglesNormales.Y, Rotation.Z))
-                    {
-                        ObjectifAnglesNormales = GestionnaireDeNormales.GetNormale(coords);
-                    }
-                    else
-                    {
-                        Rotation = new Vector3(Rotation.X, Rotation.Y, Rotation.Z + sens * IncrémentAngleRotation);
-                    }
+                        Rotation = new Vector3(Rotation.X, Rotation.Y, AnglesIncréments.X);
                     break;
             }
         }

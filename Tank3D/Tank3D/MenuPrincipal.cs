@@ -244,6 +244,7 @@ namespace AtelierXNA
         {
             Contenu = new ZoneContextuelle(this, "FondInstructions", "Instructions", new Rectangle(PositionZoneContenu, PositionZoneContenu, Window.ClientBounds.Width - Marge,
                                                 Window.ClientBounds.Height - Marge));
+            BtnQuitter.Enabled = false;
             Components.Add(Contenu);
             Components.Add(BtnFermerFenêtre);
             Components.Add(Instruction1);
@@ -258,7 +259,7 @@ namespace AtelierXNA
             Contenu = new ZoneContextuelle(this, "FondInstructions", "Options", new Rectangle(PositionZoneContenu, PositionZoneContenu, Window.ClientBounds.Width - Marge,
                                                 Window.ClientBounds.Height - Marge));
             BtnTextureTank = new BoutonDeCommande(this, "Choix de la texture", "Arial20", "BoutonRouge", "BoutonBleu", new Vector2(Window.ClientBounds.Width / 4, Window.ClientBounds.Height / 4), true, new FonctionÉvénemtielle(IllustrerTank));
-            
+            BtnQuitter.Enabled = false;
             Components.Add(Contenu);
             Components.Add(BtnFermerFenêtre);
             Components.Add(BtnTextureTank);
@@ -283,6 +284,7 @@ namespace AtelierXNA
 
         void Retour()
         {
+            BtnQuitter.Enabled = true;
             Components.Remove(Contenu);
             Components.Remove(BtnFermerFenêtre);
             Components.Remove(Instruction1);
@@ -291,6 +293,7 @@ namespace AtelierXNA
             Components.Remove(Instruction4);
             Components.Remove(BtnTextureTank);
             Components.Remove(DémoTexture);
+            Components.Remove(Texture1);
         }
 
         void ArrêterJeu()
