@@ -102,7 +102,7 @@ namespace AtelierXNA
                     angleExplosion += MathHelper.PiOver4;
                 }
             }
-            VérificationImpact(hauteurMin);
+            //VérificationImpact(hauteurMin);
         }
 
         void GestionForces()

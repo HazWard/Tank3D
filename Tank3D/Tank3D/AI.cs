@@ -56,7 +56,7 @@ namespace AtelierXNA
             Orientation = 0;
             NuméroAI = numéroAI;
             Compteur = 0;
-            VieAI = new BarreDeVie(jeu, échelleInitiale, rotationInitiale, positionInitiale, new Vector2(100, 50), new Vector2(5, 10), "FondInstructions", IntervalleMAJ);
+            VieAI = new BarreDeVie(jeu, échelleInitiale, rotationInitiale, new Vector3(positionInitiale.X, positionInitiale.Y + 15, positionInitiale.Z) , new Vector2(100, 17), new Vector2(5, 10), "FondInstructions", IntervalleMAJ);
             Game.Components.Add(VieAI);
         }
         public override void Initialize()
@@ -101,7 +101,7 @@ namespace AtelierXNA
         void CalculBarreDeVie()
         {
             VieAI.Position = new Vector3(Position.X, Position.Y + 7, Position.Z);
-            VieAI.AngleLacet = Rotation.Y;
+            //VieAI.AngleLacet = Rotation.Y;
             VieAI.PositionJoueur = Cible.GetPosition;
 
             VieAI.PourcentageVie = PourcentageVie;

@@ -68,8 +68,8 @@ namespace AtelierXNA
             if (Temps…coulÈDepuisMAJ > IntervalleMAJ)
             {
                 CalculerVie();
-                
                 CalculerNormales();
+                CalculerMatriceMonde();
                 
                 Temps…coulÈDepuisMAJ = 0;
             }
@@ -98,6 +98,7 @@ namespace AtelierXNA
             Vector3 Up = Vector3.Cross(Backwards, Right);
             Rot = new Matrix(Right.X, Right.Y, Right.Z, 0, Up.X, Up.Y, Up.Z, 0, Backwards.X, Backwards.Y, Backwards.Z, 0, 0, 0, 0, 1);
         }
+
         protected override void CalculerMatriceMonde()
         {
             Monde = Matrix.Identity *
