@@ -182,6 +182,19 @@ namespace AtelierXNA
                 TraitementNormales(nouvellesCoords, "Y");
                 AncienAnglesIncréments = AnglesIncréments;
                 SphereCollision = new BoundingSphere(Position, RAYON_COLLISION);
+
+                foreach (GameComponent gc in Game.Components)
+                {
+                    if (gc is IModel)
+                    {
+                        ModèleMobile m = gc as ModèleMobile;
+                        if (SphereCollision.Intersects(m.SphereCollision))
+                        {
+                            Console.WriteLine("---- COLLISION {0} ----");
+                        }
+                    }
+                }
+                
             }
             CalculerMonde();
         }
@@ -280,20 +293,6 @@ namespace AtelierXNA
 
         public override void Draw(GameTime gameTime)
         {
-            /*
-       ListePointsColor = new VertexPositionColor[8];
-       EffetDeBase.World = MondeBoundingBox;
-       EffetDeBase.View = CaméraJeu.Vue;
-       EffetDeBase.Projection = CaméraJeu.Projection;
-       EffetDeBase.CurrentTechnique.Passes[0].Apply();
-       
-       for (int i = 0; i < SphereCollision.ListePoints.Count(); i++)
-       {
-           ListePointsColor[i] = new VertexPositionColor(SphereCollision.ListePoints[i], Color.Red);
-       }
-       GraphicsDevice.DrawUserPrimitives<VertexPositionColor>(PrimitiveType.LineStrip, ListePointsColor, 0, 7);
-       */
-
             GraphicsDevice.BlendState = BlendState.Opaque;
             GraphicsDevice.DepthStencilState = DepthStencilState.Default;
 

@@ -16,7 +16,7 @@ namespace AtelierXNA
     {
 
         // Constantes
-        protected const float RAYON_COLLISION = 5f;
+        protected const float RAYON_COLLISION = 10f;
         
         // Propriétés
         public BoundingSphere SphereCollision { get; set; }

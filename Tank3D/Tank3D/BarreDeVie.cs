@@ -25,17 +25,8 @@ namespace AtelierXNA
         float TempsÉcouléDepuisMAJ { get; set; }
         float LargeurInitiale { get; set; }
         float LargeureImage { get; set; }
-        float AngleEntreBarreCaméraPremier { get; set; }
-        float AngleEntreBarreCaméraDeuxième { get; set; }
-        float ProduitScalaire { get; set; }
-        Vector3 RotationImage { get; set; }
-        Vector3 PointUn { get; set; }
-        Vector3 PointDeux { get; set; }
-        Vector3 VecteurUn { get; set; }
-        Vector3 VecteurDeux { get; set; }
-        Vector3 NormaleBarreDeVie { get; set; }
-        Vector3 VecteurBarreDeVieCaméra { get; set; }
         public Vector3 PositionJoueur { get; set; }
+        Matrix Rot { get; set; }
         
 
 
@@ -63,8 +54,7 @@ namespace AtelierXNA
         {
             
             
-            //RectangleSource = new Rectangle(0, 0, ImageDeFond.Width, ImageDeFond.Height);
-            base.LoadContent();
+           base.LoadContent();
         }
 
         /// <summary>
@@ -79,83 +69,45 @@ namespace AtelierXNA
             {
                 CalculerVie();
                 
-                //GérerAnimation();
-                //GérerDéplacement()
-                //CalculDeDommages();
-                CalculerNormale();
+                CalculerNormales();
                 
-                AjusterNormales();
                 TempsÉcouléDepuisMAJ = 0;
             }
             base.Update(gameTime);
         }
-        void AjusterNormales()
+
+
+//        The actual math involved, as long as O is not linearly dependent with U, is simple.
+//1) Create the vector D = (O-P).
+//2) Create the vector U cross D, and normalize. Call this "Right"
+//3) Create the vector Right cross U and normalize. Call this "Backwards"
+//4) Create the vector Backwards cross Right. Call this "Up"
+//4) Your matrix is now these three vectors written in rows (assuming row vectors on the right):
+//// O is your object's position
+//// P is the position of the object to face
+//// U is the nominal "up" vector (typically Vector3.Y)
+//// Note: this does not work when O is straight below or straight above P
+
+        void CalculerNormales()
         {
-            PointUn = new Vector3(Position.X - 1, Position.Y, Position.Z);
-            PointDeux = new Vector3(Position.X, Position.Y + 1, Position.Z);
-            VecteurUn = PointUn - Position;
-            VecteurDeux = PointDeux - Position;
-
-            NormaleBarreDeVie = Vector3.Cross(VecteurUn, VecteurDeux);
-            NormaleBarreDeVie = Vector3.Normalize(NormaleBarreDeVie);
-            VecteurBarreDeVieCaméra = new Vector3(PositionJoueur.X, Position.Y, PositionJoueur.Z) - new Vector3(Position.X, PositionJoueur.Y, Position.Z);
-            VecteurBarreDeVieCaméra = Vector3.Normalize(VecteurBarreDeVieCaméra);
-
-            //Console.WriteLine(Vector3.Dot(NormaleBarreDeVie, VecteurBarreDeVieCaméra));
-            ProduitScalaire = Vector3.Dot(NormaleBarreDeVie, VecteurBarreDeVieCaméra);
-            AngleEntreBarreCaméraDeuxième = (float)Math.Acos(ProduitScalaire);
-            if (AngleEntreBarreCaméraDeuxième > AngleEntreBarreCaméraPremier)
-            {
-                AngleLacet = AngleLacet - AngleEntreBarreCaméraDeuxième + MathHelper.PiOver2;
-                CalculerMatriceMonde();
-            }
-
-        }
-        void CalculerNormale()
-        {
-            PointUn = new Vector3(Position.X - 1, Position.Y, Position.Z);
-            PointDeux = new Vector3(Position.X, Position.Y +1, Position.Z);
-            VecteurUn = PointUn - Position;
-            VecteurDeux = PointDeux - Position;
-
-            NormaleBarreDeVie = Vector3.Cross(VecteurUn, VecteurDeux);
-            NormaleBarreDeVie = Vector3.Normalize(NormaleBarreDeVie);
-            VecteurBarreDeVieCaméra = new Vector3(PositionJoueur.X, Position.Y,PositionJoueur.Z) - new Vector3(Position.X,PositionJoueur.Y,Position.Z);
-            VecteurBarreDeVieCaméra = Vector3.Normalize(VecteurBarreDeVieCaméra);
-
-            //Console.WriteLine(Vector3.Dot(NormaleBarreDeVie, VecteurBarreDeVieCaméra));
-            ProduitScalaire = Vector3.Dot(NormaleBarreDeVie, VecteurBarreDeVieCaméra);
-            AngleEntreBarreCaméraPremier = (float)Math.Acos(ProduitScalaire);
-
-
-            //Console.WriteLine("ANGLE : {0}", MathHelper.ToDegrees(AngleEntreBarreCaméraPremier));
-            AjusterAngleBarreDeVie(AngleEntreBarreCaméraPremier, ProduitScalaire);
-
-        }
-        void AjusterAngleBarreDeVie(float angle, float produitScalaire)
-        {
-            if (produitScalaire >= 0)
-            {
-                AngleLacet = AngleLacet + angle + MathHelper.PiOver2;
-            }
-            else
-            {
-                AngleLacet = AngleLacet - angle - MathHelper.PiOver2;
-            }
-               
-            CalculerMatriceMonde();
+            Vector3 U = Vector3.Up;
+            Vector3 D = Position - PositionJoueur;
+            Vector3 Right = Vector3.Cross(U, D);
+            Vector3.Normalize(ref Right, out Right);
+            Vector3 Backwards = Vector3.Cross(Right, U);
+            Vector3 Up = Vector3.Cross(Backwards, Right);
+            Rot = new Matrix(Right.X, Right.Y, Right.Z, 0, Up.X, Up.Y, Up.Z, 0, Backwards.X, Backwards.Y, Backwards.Z, 0, 0, 0, 0, 1);
         }
         protected override void CalculerMatriceMonde()
         {
             Monde = Matrix.Identity *
                     Matrix.CreateScale(Homothétie) *
-                    Matrix.CreateFromYawPitchRoll(AngleLacet, AngleTangage, AngleRoulis) *
+                    Rot *
                     Matrix.CreateTranslation(Position);
         }
         public void CalculerVie()
         {
             LargeureImage = PourcentageVie * Étendue.X;
-            //RotationImage = new Vector3(rotationImageX.X, rotationImageY.Y, 0);
         }
         public override void Draw(GameTime gameTime)
         {
@@ -167,23 +119,5 @@ namespace AtelierXNA
             base.Draw(gameTime);
             EffetDeBase.GraphicsDevice.RasterizerState = ancienRasterizerState;
         }
-        //public void CalculerVie(Vector3 rotationImageX,Vector3 rotationImageY, Vector3 positionImage)
-        //{
-        //    LargeureImage = PourcentageVie * Étendue.X;
-        //    RotationImage = new Vector3(rotationImageX.X, rotationImageY.Y, 0);
-        //}
-        //private void GérerAnimation()
-        //{
-        //    RectangleSource = new Rectangle(0, 0, RectangleSource.Width - DELTA_X, RectangleSource.Height);
-
-        //    PositionImage1 = new Vector2(((PositionImage1.X + Échelle.X) % ZoneAffichage.Width), PositionImage1.Y);
-        //    PositionImage2 = new Vector2(PositionImage1.X - ZoneAffichage.Width, PositionImage1.Y);
-
-        //    if (PositionImage1.X == 0)
-        //    {
-        //        RectangleSource = new Rectangle(0, 0, ImageDeFond.Width, ImageDeFond.Height);
-        //    }
-        //}
-
     }
 }

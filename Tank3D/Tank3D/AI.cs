@@ -19,7 +19,7 @@ namespace AtelierXNA
     {
         const float INCRÉMENT_DÉPLACEMENT_AI = 0.1f;
         const float EST_PROCHE = 35f;
-        const int HAUTEUR_DÉFAULT = 5;
+        const int HAUTEUR_DÉFAULT = 1;
         const int DÉLAI_MOUVEMENT = 5;
         const int DÉLAI_TIR = 71;
         // const float INCRÉMENT_ROTATION = 0.05f;
@@ -168,7 +168,6 @@ namespace AtelierXNA
 
         void ModificationParamètres(float orientation, bool seDéplace)
         {
-
             if (seDéplace)
             {
                 float posX = INCRÉMENT_DÉPLACEMENT_AI * (float)Math.Sin(orientation);
