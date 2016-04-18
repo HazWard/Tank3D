@@ -30,6 +30,7 @@ namespace AtelierXNA
         float IntervalleMAJ { get; set; }
         float TempsÉcouléDepuisMAJ { get; set; }
         InputManager GestionInput { get; set; }
+        Joueur CibleJoueur { get; set; }
 
         bool estEnZoom;
         bool EstEnZoom
@@ -95,13 +96,26 @@ namespace AtelierXNA
             float TempsÉcoulé = (float)gameTime.ElapsedGameTime.TotalSeconds;
             TempsÉcouléDepuisMAJ += TempsÉcoulé;
             GestionClavier();
+
+            if (CibleJoueur == null)
+            {
+                CibleJoueur = Game.Services.GetService(typeof (Joueur)) as Joueur;
+            }
+
             if (TempsÉcouléDepuisMAJ >= IntervalleMAJ)
             {
-                //GérerAccélération();
-                GestionTouches();
-                GérerRotation();
-                CréerPointDeVue();
-                TempsÉcouléDepuisMAJ = 0;
+                if (CibleJoueur.EstEnCollision)
+                {
+
+                }
+                else
+                {
+                    //GérerAccélération();
+                    GestionTouches();
+                    GérerRotation();
+                    CréerPointDeVue();
+                    TempsÉcouléDepuisMAJ = 0;
+                }
             }
             base.Update(gameTime);
         }

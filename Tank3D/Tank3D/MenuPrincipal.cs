@@ -278,7 +278,7 @@ namespace AtelierXNA
 
         void ChangerTexture()
         {
-            NomTexture = "Veteran Tiger Forest";
+            NomTexture = "Veteran Tiger Body";
             IllustrerTank();
         }
 

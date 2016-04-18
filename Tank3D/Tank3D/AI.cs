@@ -62,7 +62,7 @@ namespace AtelierXNA
         public override void Initialize()
         {
             PourcentageVie = 1;
-            SphereCollision = new BoundingSphere();
+            SphereCollision = new BoundingSphere(Position, RAYON_COLLISION);
             CompteurCollision = 0;
             base.Initialize();
         }
@@ -74,17 +74,31 @@ namespace AtelierXNA
             Distance = new Vector2(Position.X - Cible.Coordonnées.X, Position.Z - Cible.Coordonnées.Y).Length();
             if (TempsÉcouléDepuisMAJ >= IntervalleMAJ)
             {
-                if (Distance <= EST_PROCHE)
+                if (EstEnCollision)
                 {
-                    if (CompteurTir % DÉLAI_TIR == 0)
-                    {
-                        GestionProjectile();
-                    }
-                    GestionMouvements(false);
+                    Recule();
+                    EstEnCollision = false;
                 }
                 else
                 {
-                    GestionMouvements(true);
+                    if (Distance <= EST_PROCHE)
+                    {
+                        if (CompteurTir % DÉLAI_TIR == 0)
+                        {
+                            GestionProjectile();
+                        }
+                        GestionMouvements(false);
+                    }
+                    else
+                    {
+                        GestionMouvements(true);
+                    }
+                }
+                
+                if (EstDétruit)
+                {
+                    Game.Components.Add(new ObjetDeBase(Game, "Veteran Tiger Forest", 0.05f, Vector3.Zero, Position));
+                    Game.Components.Remove(this);
                 }
 
                 ++CompteurTir;
@@ -188,19 +202,19 @@ namespace AtelierXNA
 
                 Rotation = new Vector3(Rotation.X, orientation, Rotation.Z);
 
-                if (SphereCollision.Intersects(Cible.Sphere))
-                {
-                    Console.WriteLine("---- COLLISION {0} ----", ++CompteurCollision);
-                }
-
                 if (EstDétruit)
                 {
                     Game.Components.Remove(this);
                 }
-
                 CalculerMonde();
             }
         #endregion
+        }
+
+        void Recule()
+        {
+            Position = new Vector3(Position.X, Position.Y, Position.Z + 1f);
+            CalculerMonde();
         }
     }
 }

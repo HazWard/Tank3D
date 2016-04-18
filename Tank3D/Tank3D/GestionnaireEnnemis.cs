@@ -44,7 +44,7 @@ namespace AtelierXNA
             BorneMax = (int)TerrainJeu.Étendue.X / 2;
             for (int i = 0; i < NbEnnemis; i++)
             {
-                ListeEnnemis.Add(new AI(base.Game, "Veteran Tiger Forest", ÉchelleAI, Vector3.Zero, 
+                ListeEnnemis.Add(new AI(base.Game, "Veteran Tiger Desert", ÉchelleAI, Vector3.Zero, 
                                   new Vector3(GénérateurAléatoire.Next(BorneMin, BorneMax),
                                   TerrainJeu.GetHauteur(TerrainJeu.ConvertionCoordonnées(new Vector3(GénérateurAléatoire.Next(BorneMin + SAFE_SPOT_BORNES, BorneMax - SAFE_SPOT_BORNES), 0, GénérateurAléatoire.Next(BorneMin, BorneMax)))),
                                   GénérateurAléatoire.Next(BorneMin + SAFE_SPOT_BORNES, BorneMax - SAFE_SPOT_BORNES)), IntervalleMAJ, Cible, i + 1));

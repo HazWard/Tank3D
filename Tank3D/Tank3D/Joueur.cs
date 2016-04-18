@@ -122,7 +122,21 @@ namespace AtelierXNA
 
             if (TempsÉcouléDepuisMAJ >= IntervalleMAJ)
             {
-                GestionMouvements();
+                if (EstEnCollision)
+                {
+                    Position = new Vector3(Position.X, Position.Y, Position.Z - 1f);
+                    PositionCanon = new Vector3(Position.X, Position.Y - 1f, Position.Z - 1f);
+                    MondeCanon = TransformationsMeshes(ÉchelleCanon, RotationPitchCanon, PositionCanon);
+                    PositionTour = new Vector3(Position.X, Position.Y + 0.3f, Position.Z - 1f);
+                    MondeTour = TransformationsMeshes(ÉchelleTour, RotationYawTour, PositionTour);
+                    CalculerMonde();
+                    EstEnCollision = false;
+                }
+                else
+                {
+                    GestionMouvements();
+                }
+                
                 TempsÉcouléDepuisMAJ = 0;
             }
             base.Update(gameTime);
@@ -182,19 +196,6 @@ namespace AtelierXNA
                 TraitementNormales(nouvellesCoords, "Y");
                 AncienAnglesIncréments = AnglesIncréments;
                 SphereCollision = new BoundingSphere(Position, RAYON_COLLISION);
-
-                foreach (GameComponent gc in Game.Components)
-                {
-                    if (gc is IModel)
-                    {
-                        ModèleMobile m = gc as ModèleMobile;
-                        if (SphereCollision.Intersects(m.SphereCollision))
-                        {
-                            Console.WriteLine("---- COLLISION {0} ----");
-                        }
-                    }
-                }
-                
             }
             CalculerMonde();
         }

@@ -102,30 +102,11 @@ namespace AtelierXNA
                     angleExplosion += MathHelper.PiOver4;
                 }
             }
-            VérificationImpact(hauteurMin);
         }
 
         void GestionForces()
         {
             IncrémentHauteurProjectile -= DeltaHauteur;
-        }
-
-        void VérificationImpact(float hauteur)
-        {
-            foreach (GameComponent gc in Game.Components)
-            {
-                if (gc is IModel)
-                {
-                    ModèleMobile m = gc as ModèleMobile;
-                    if (SphereCollision.Intersects(m.SphereCollision))
-                    {
-                        Console.WriteLine("Toucher!");
-                        m.EstDétruit = true;
-                        EffacerProjectile(true, Position.X, Position.Z, hauteur);
-                        break;
-                    }
-                }
-            }
         }
         #endregion
     }

@@ -6,9 +6,10 @@ using Microsoft.Xna.Framework.Input;
 
 namespace AtelierXNA
 {
-    public class ObjetDeBase : Microsoft.Xna.Framework.DrawableGameComponent
+    public class ObjetDeBase : Microsoft.Xna.Framework.DrawableGameComponent, IModel
     {
         string NomModèle { get; set; }
+        public BoundingSphere SphereCollision { get; set; }
         RessourcesManager<Model> GestionnaireDeModèles { get; set; }
         protected Caméra CaméraJeu { get; set; }
         protected float Échelle { get; set; }
@@ -18,6 +19,7 @@ namespace AtelierXNA
         protected Model Modèle { get; private set; }
         protected Matrix[] TransformationsModèle { get; private set; }
         protected Matrix Monde { get; set; }
+        public bool EstEnCollision { get; set; }
 
         public ObjetDeBase(Game jeu, string nomModèle, float échelleInitiale, Vector3 rotationInitiale, Vector3 positionInitiale)
             : base(jeu)
@@ -49,6 +51,27 @@ namespace AtelierXNA
             Modèle = GestionnaireDeModèles.Find(NomModèle);
             TransformationsModèle = new Matrix[Modèle.Bones.Count];
             Modèle.CopyAbsoluteBoneTransformsTo(TransformationsModèle);
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            foreach (GameComponent gc in Game.Components)
+            {
+                if (gc is IModel && gc != this)
+                {
+                    ObjetDeBase m = gc as ObjetDeBase;
+                    if (SphereCollision.Intersects(m.SphereCollision))
+                    {
+                        EstEnCollision = true;
+                        break;
+                    }
+                    else
+                    {
+                        EstEnCollision = false;
+                    }
+                }
+            }
+            base.Update(gameTime);
         }
 
         public override void Draw(GameTime gameTime)
