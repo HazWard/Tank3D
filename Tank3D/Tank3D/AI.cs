@@ -18,8 +18,8 @@ namespace AtelierXNA
     public class AI : ModèleMobile, IActivable, IModel
     {
         const float INCRÉMENT_DÉPLACEMENT_AI = 0.1f;
-
         const float EST_PROCHE = 35f;
+        const int HAUTEUR_DÉFAULT = 5;
         const int DÉLAI_MOUVEMENT = 5;
         const int DÉLAI_TIR = 71;
         // const float INCRÉMENT_ROTATION = 0.05f;
@@ -33,12 +33,11 @@ namespace AtelierXNA
         Vector2 ObjectifAnglesNormales { get; set; }
         float Orientation { get; set; }
         int Compteur { get; set; }
-        ModèleMobile ProjectileTank { get; set; }
         Game Jeu { get; set; }
         public BarreDeVie VieAI { get; set; }
         float PourcentageVie { get; set; }
         int CompteurCollision { get; set; }
-       
+
         public Vector3 GetRotation
         {
             get
@@ -89,7 +88,6 @@ namespace AtelierXNA
                 }
 
                 ++CompteurTir;
-                GestionMouvements();
 
                 Compteur++;
                 TempsÉcouléDepuisMAJ = 0;
@@ -102,12 +100,12 @@ namespace AtelierXNA
         }
         void CalculBarreDeVie()
         {
-            VieAI.Position = new Vector3(Position.X, Position.Y +7 , Position.Z);
+            VieAI.Position = new Vector3(Position.X, Position.Y + 7, Position.Z);
             VieAI.AngleLacet = Rotation.Y;
             VieAI.PositionJoueur = Cible.GetPosition;
-            
+
             VieAI.PourcentageVie = PourcentageVie;
-           
+
             //VieJoueur.CalculerVie(RotationPitchCanon, RotationYawTour, PositionTour);
         }
         public void ModifierActivation()
@@ -118,18 +116,10 @@ namespace AtelierXNA
         #region Méthodes pour les mouvements
         void GestionProjectile()
         {
-            ProjectileTank = new Projectile(Game, "Projectile", 0.1f, Rotation, 
+            ProjectileTank = new Projectile(Game, "Projectile", 0.1f, Rotation,
                                             new Vector3(Position.X, Position.Y + 4f, Position.Z), IntervalleMAJ, 2f, 0.02f, false);
-           
-            Game.Components.Add(ProjectileTank);
-        }
 
-        void CalculerMonde()
-        {
-            Monde = Matrix.Identity;
-            Monde *= Matrix.CreateScale(Échelle);
-            Monde *= Matrix.CreateFromYawPitchRoll(Rotation.Y, Rotation.X, Rotation.Z);
-            Monde *= Matrix.CreateTranslation(Position);
+            Game.Components.Add(ProjectileTank);
         }
 
         protected void GestionMouvements(bool seDéplace)
@@ -146,7 +136,7 @@ namespace AtelierXNA
                 // Déplacement normal
                 ModificationParamètres(Orientation, seDéplace);
             }
-            
+
         }
 
         float CalculOrientation(Vector2 cible)
@@ -178,8 +168,8 @@ namespace AtelierXNA
 
         void ModificationParamètres(float orientation, bool seDéplace)
         {
-            
-            if(seDéplace)
+
+            if (seDéplace)
             {
                 float posX = INCRÉMENT_DÉPLACEMENT_AI * (float)Math.Sin(orientation);
                 float posY = INCRÉMENT_DÉPLACEMENT_AI * (float)Math.Cos(orientation);
@@ -190,27 +180,28 @@ namespace AtelierXNA
 
                 nouvellesCoords = TerrainJeu.ConvertionCoordonnées(new Vector3(posXFinal, 0, posZFinal));
 
-            if (!EstHorsDesBornes(nouvellesCoords))
-            {
-                NouvelleHauteurTerrain = TerrainJeu.GetHauteur(nouvellesCoords);
-                Position = new Vector3(posXFinal, NouvelleHauteurTerrain + HAUTEUR_DÉFAULT, posZFinal);
-                SphereCollision = new BoundingSphere(Position, RAYON_COLLISION);
+                if (!EstHorsDesBornes(nouvellesCoords))
+                {
+                    NouvelleHauteurTerrain = TerrainJeu.GetHauteur(nouvellesCoords);
+                    Position = new Vector3(posXFinal, NouvelleHauteurTerrain + HAUTEUR_DÉFAULT, posZFinal);
+                    SphereCollision = new BoundingSphere(Position, RAYON_COLLISION);
+                }
+
+                Rotation = new Vector3(Rotation.X, orientation, Rotation.Z);
+
+                if (SphereCollision.Intersects(Cible.Sphere))
+                {
+                    Console.WriteLine("---- COLLISION {0} ----", ++CompteurCollision);
+                }
+
+                if (EstDétruit)
+                {
+                    Game.Components.Remove(this);
+                }
+
+                CalculerMonde();
             }
-
-            Rotation = new Vector3(Rotation.X, orientation, Rotation.Z);
-
-            if (SphereCollision.Intersects(Cible.Sphere))
-            {
-                Console.WriteLine("---- COLLISION {0} ----", ++CompteurCollision);
-            }
-
-            if (EstDétruit)
-            {
-                Game.Components.Remove(this);
-            }
-
-            CalculerMonde();
-        }
         #endregion
+        }
     }
 }
