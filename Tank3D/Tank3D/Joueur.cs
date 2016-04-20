@@ -212,7 +212,7 @@ namespace AtelierXNA
         void RotationTour()
         {
             GestionSouris();
-            RotationYawTour = new Vector3(-MathHelper.PiOver2, RotationYawTour.Y + 2 * (-INCRÉMENT_ROTATION_TOUR * DeltaRotationCanon.X), MathHelper.PiOver2);
+            RotationYawTour = new Vector3(-MathHelper.PiOver2 + Rotation.X, RotationYawTour.Y + 2 * (-INCRÉMENT_ROTATION_TOUR * DeltaRotationCanon.X), MathHelper.PiOver2);
             PositionTour = new Vector3(Position.X, Position.Y + 0.3f, Position.Z);
             MondeTour = TransformationsMeshes(ÉchelleTour, RotationYawTour, PositionTour);
         }
@@ -253,7 +253,7 @@ namespace AtelierXNA
             {
                 ProjectileTank = new Projectile(Game, "Projectile", 0.1f,
                                                 new Vector3(2 * RotationPitchCanon.X + MathHelper.Pi, RotationPitchCanon.Y - 0.05f, RotationPitchCanon.Z),
-                                                new Vector3(PositionCanon.X, PositionCanon.Y + 4.6f, PositionCanon.Z), IntervalleMAJ, 2f, 0.02f, false);
+                                                new Vector3(PositionCanon.X, PositionCanon.Y + 4.6f, PositionCanon.Z), IntervalleMAJ, 2f, 0.02f, false, this);
                 Game.Components.Add(ProjectileTank);
             }
         }

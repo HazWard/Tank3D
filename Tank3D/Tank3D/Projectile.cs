@@ -21,15 +21,17 @@ namespace AtelierXNA
         float DeltaHauteur { get; set; }
         float IncrémentDéplacementProjectile { get; set; }
         float IncrémentHauteurProjectile { get; set; }
+        public ModèleMobile Lanceur { get; set; }
         
         Terrain Hauteur { get; set; }
 
-        public Projectile(Game jeu, string nomModèle, float échelleInitiale, Vector3 rotationInitiale, Vector3 positionInitiale, float intervalleMAJ, float vitesseInitiale, float deltaHauteur, bool seDésintègre)
+        public Projectile(Game jeu, string nomModèle, float échelleInitiale, Vector3 rotationInitiale, Vector3 positionInitiale, float intervalleMAJ, float vitesseInitiale, float deltaHauteur, bool seDésintègre, ModèleMobile lanceur)
             : base(jeu, nomModèle, échelleInitiale, rotationInitiale, positionInitiale, intervalleMAJ)
         {
             VitesseDépart = vitesseInitiale;
             DeltaHauteur = deltaHauteur;
             SeDésintègre = seDésintègre;
+            Lanceur = lanceur;
         }
 
         public override void Update(GameTime gameTime)
@@ -39,7 +41,14 @@ namespace AtelierXNA
 
             if (TempsÉcouléDepuisMAJ >= IntervalleMAJ)
             {
-                GestionMouvements();
+                if (EstEnCollision)
+                {
+                    Console.WriteLine("Collision");
+                }
+                else
+                {
+                    ModificationParamètres();
+                }
                 TempsÉcouléDepuisMAJ = 0;
                 Compteur++;
             }
@@ -51,14 +60,11 @@ namespace AtelierXNA
             Compteur = 0;
             IncrémentDéplacementProjectile = ((float)Math.Cos(Rotation.X) * VitesseDépart) * 2;
             IncrémentHauteurProjectile = ((float)Math.Sin(Rotation.X) * VitesseDépart) / 2;
+            SphereCollision = new BoundingSphere(Position, RAYON_COLLISION_PROJECTILE);
             base.Initialize();
         }
 
         #region Méthodes pour la gestion des déplacements et rotations du modèle
-        protected void GestionMouvements()
-        {
-            ModificationParamètres();
-        }
 
         void ModificationParamètres()
         {
@@ -85,6 +91,7 @@ namespace AtelierXNA
                     Rotation = new Vector3(Rotation.X - 0.01f, Rotation.Y, Rotation.Z + 0.2f);
                 }
             }
+            SphereCollision = new BoundingSphere(Position, RAYON_COLLISION_PROJECTILE);
             EffacerProjectile(EstHorsDesBornes(nouvellesCoords),posXFinal,posZFinal, hauteurMinimale);
 
             CalculerMonde();

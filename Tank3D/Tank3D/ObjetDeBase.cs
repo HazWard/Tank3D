@@ -62,7 +62,18 @@ namespace AtelierXNA
                     ObjetDeBase m = gc as ObjetDeBase;
                     if (SphereCollision.Intersects(m.SphereCollision))
                     {
-                        EstEnCollision = true;
+                        if (m is Projectile)
+                        {
+                            Projectile p = m as Projectile;
+                            if (p.Lanceur == this)
+                            {
+                                EstEnCollision = false;
+                            }
+                        }
+                        else
+                        {
+                            EstEnCollision = true;
+                        }
                         break;
                     }
                     else
