@@ -56,7 +56,7 @@ namespace AtelierXNA
             Orientation = 0;
             NuméroAI = numéroAI;
             Compteur = 0;
-            VieAI = new BarreDeVie(jeu, échelleInitiale, rotationInitiale, new Vector3(positionInitiale.X, positionInitiale.Y + 15, positionInitiale.Z) , new Vector2(100, 17), new Vector2(5, 10), "FondInstructions", IntervalleMAJ);
+            VieAI = new BarreDeVie(jeu, échelleInitiale, rotationInitiale, new Vector3(positionInitiale.X, positionInitiale.Y + 15, positionInitiale.Z), new Vector2(100, 17), new Vector2(5, 10), "FondInstructions", IntervalleMAJ);
             Game.Components.Add(VieAI);
         }
         public override void Initialize()
@@ -74,12 +74,7 @@ namespace AtelierXNA
             Distance = new Vector2(Position.X - Cible.Coordonnées.X, Position.Z - Cible.Coordonnées.Y).Length();
             if (TempsÉcouléDepuisMAJ >= IntervalleMAJ)
             {
-                if (EstEnCollision)
-                {
-                    Recule();
-                    EstEnCollision = false;
-                }
-                else
+                if (!EstEnCollision)
                 {
                     if (Distance <= EST_PROCHE)
                     {
@@ -87,14 +82,18 @@ namespace AtelierXNA
                         {
                             GestionProjectile();
                         }
-                        GestionMouvements(false);
+                        GestionMouvements(false, "pas");
                     }
                     else
                     {
-                        GestionMouvements(true);
+                        GestionMouvements(true, "pas");
                     }
                 }
-                
+                else
+                {
+                    GestionMouvements(true, "collision");
+                }
+
                 if (EstDétruit)
                 {
                     Game.Components.Add(new ObjetDeBase(Game, "Veteran Tiger Forest", 0.05f, Vector3.Zero, Position));
@@ -136,21 +135,28 @@ namespace AtelierXNA
             Game.Components.Add(ProjectileTank);
         }
 
-        protected void GestionMouvements(bool seDéplace)
+        protected void GestionMouvements(bool seDéplace, string collisionOuPas)
         {
             ++CompteurMouvement;
-            if (CompteurMouvement % DÉLAI_MOUVEMENT == 0)
+            switch (collisionOuPas)
             {
-                // Recalcul de la rotation
-                Orientation = CalculOrientation(Cible.Coordonnées);
-                ModificationParamètres(Orientation, seDéplace);
+                case "collision":
+                    ModificationParamètres(Orientation, seDéplace, collisionOuPas);
+                    break;
+                case "pas":
+                    if (CompteurMouvement % DÉLAI_MOUVEMENT == 0)
+                    {
+                        // Recalcul de la rotation
+                        Orientation = CalculOrientation(Cible.Coordonnées);
+                        ModificationParamètres(Orientation, seDéplace, collisionOuPas);
+                    }
+                    else
+                    {
+                        // Déplacement normal
+                        ModificationParamètres(Orientation, seDéplace, collisionOuPas);
+                    }
+                    break;
             }
-            else
-            {
-                // Déplacement normal
-                ModificationParamètres(Orientation, seDéplace);
-            }
-
         }
 
         float CalculOrientation(Vector2 cible)
@@ -180,16 +186,27 @@ namespace AtelierXNA
             return coeff + (float)Math.Atan(direction.X / direction.Y);
         }
 
-        void ModificationParamètres(float orientation, bool seDéplace)
+        void ModificationParamètres(float orientation, bool seDéplace, string collisionOuPas)
         {
             if (seDéplace)
             {
                 float posX = INCRÉMENT_DÉPLACEMENT_AI * (float)Math.Sin(orientation);
                 float posY = INCRÉMENT_DÉPLACEMENT_AI * (float)Math.Cos(orientation);
+                float posXFinal = 0;
+                float posZFinal = 0;
                 Vector2 déplacementFinal = new Vector2(posX, posY);
 
-                float posXFinal = Position.X - déplacementFinal.X;
-                float posZFinal = Position.Z - déplacementFinal.Y;
+                switch (collisionOuPas)
+                {
+                    case "collision":
+                        posXFinal = Position.X + déplacementFinal.X;
+                        posZFinal = Position.Z + déplacementFinal.Y;
+                        break;
+                    case "pas":
+                        posXFinal = Position.X - déplacementFinal.X;
+                        posZFinal = Position.Z - déplacementFinal.Y;
+                        break;
+                }
 
                 nouvellesCoords = TerrainJeu.ConvertionCoordonnées(new Vector3(posXFinal, 0, posZFinal));
 
@@ -209,12 +226,6 @@ namespace AtelierXNA
                 CalculerMonde();
             }
         #endregion
-        }
-
-        void Recule()
-        {
-            Position = new Vector3(Position.X, Position.Y, Position.Z + 1f);
-            CalculerMonde();
         }
     }
 }

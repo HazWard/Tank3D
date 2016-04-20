@@ -45,7 +45,7 @@ namespace AtelierXNA
         float ÉchelleTour { get; set; }
         float ÉchelleCanon { get; set; }
         float ÉchelleRoues { get; set; }
-        
+
         Vector2 ObjectifAnglesNormales { get; set; }
         float TempsÉcouléMAJFumée { get; set; }
         Sprite Fumée { get; set; }
@@ -84,7 +84,7 @@ namespace AtelierXNA
             ListePointsColor = new VertexPositionColor[8];
             ListePoints = new Vector3[8];
             EffetDeBase = new BasicEffect(GraphicsDevice);
-	        RotationYawTour = new Vector3(-MathHelper.PiOver2, 0, MathHelper.PiOver2);
+            RotationYawTour = new Vector3(-MathHelper.PiOver2, 0, MathHelper.PiOver2);
             RotationPitchCanon = new Vector3(-MathHelper.PiOver2, 0.02f, MathHelper.PiOver2);
             SphereCollision = new BoundingSphere(Position, RAYON_COLLISION);
             ÉchelleTour = 0.0035f;
@@ -122,21 +122,10 @@ namespace AtelierXNA
 
             if (TempsÉcouléDepuisMAJ >= IntervalleMAJ)
             {
-                if (EstEnCollision)
-                {
-                    Position = new Vector3(Position.X, Position.Y, Position.Z - 1f);
-                    PositionCanon = new Vector3(Position.X, Position.Y - 1f, Position.Z - 1f);
-                    MondeCanon = TransformationsMeshes(ÉchelleCanon, RotationPitchCanon, PositionCanon);
-                    PositionTour = new Vector3(Position.X, Position.Y + 0.3f, Position.Z - 1f);
-                    MondeTour = TransformationsMeshes(ÉchelleTour, RotationYawTour, PositionTour);
-                    CalculerMonde();
-                    EstEnCollision = false;
-                }
-                else
+                if (!EstEnCollision)
                 {
                     GestionMouvements();
                 }
-                
                 TempsÉcouléDepuisMAJ = 0;
             }
             base.Update(gameTime);
@@ -159,13 +148,13 @@ namespace AtelierXNA
             Caméra.Position = new Vector3(((float)Math.Sin(RotationYawTour.Y) * DISTANCE_POURSUITE) + Position.X,
                                          ((float)Math.Tan(MathHelper.PiOver2 - RotationPitchCanon.X) * DISTANCE_POURSUITE) + Position.Y + HAUTEUR_CAM_DÉFAULT,
                                          ((float)Math.Cos(RotationYawTour.Y) * DISTANCE_POURSUITE) + Position.Z);
-
             float déplacement = GérerTouche(Keys.W) - GérerTouche(Keys.S);
             float rotation = GérerTouche(Keys.D) - GérerTouche(Keys.A);
             if (déplacement != 0 || rotation != 0)
             {
                 ModificationParamètres(déplacement, rotation);
             }
+
         }
 
         void ModificationParamètres(float déplacement, float rotation)
@@ -176,7 +165,7 @@ namespace AtelierXNA
             Vector2 déplacementFinal = new Vector2(posX, posY);
             float posXFinal = Position.X - déplacementFinal.X;
             float posZFinal = Position.Z - déplacementFinal.Y;
-            
+
             Rotation = new Vector3(Rotation.X, rotationFinal, Rotation.Z);
             nouvellesCoords = TerrainJeu.ConvertionCoordonnées(new Vector3(posXFinal, 0, posZFinal));
 
@@ -205,11 +194,11 @@ namespace AtelierXNA
             switch (axe)
             {
                 case "X":
-                        Rotation = new Vector3(AnglesIncréments.Y, Rotation.Y, Rotation.Z);
+                    Rotation = new Vector3(AnglesIncréments.Y, Rotation.Y, Rotation.Z);
                     break;
 
                 case "Y":
-                        Rotation = new Vector3(Rotation.X, Rotation.Y, AnglesIncréments.X);
+                    Rotation = new Vector3(Rotation.X, Rotation.Y, AnglesIncréments.X);
                     break;
             }
         }
@@ -324,7 +313,7 @@ namespace AtelierXNA
                 }
                 maille.Draw();
             }
-            
+
         }
         #endregion
     }

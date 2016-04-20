@@ -110,10 +110,13 @@ namespace AtelierXNA
                                                new Vector3(positionObjet.X, positionObjet.Y + 4, positionObjet.Z),
                                                Vector3.Up, INTERVALLE_MAJ_STANDARD);
             Game.Components.Add(CaméraJoueur);
-            TerrainJeu = new Terrain(Game, 1f, Vector3.Zero, Vector3.Zero, new Vector3(256, 20, 256), "PetiteCarte", "DétailsDésertSable", 3, INTERVALLE_MAJ_STANDARD);
+            TerrainJeu = new Terrain(Game, 1f, Vector3.Zero, Vector3.Zero, new Vector3(256, 25, 256), "PetiteCarte", "DétailsDésert", 3, INTERVALLE_MAJ_STANDARD);
             GestionnaireDeNormales = new NormalesManager(Game);
             Utilisateur = new Joueur(Game, NomModèleJoueur, ÉCHELLE_OBJET, rotationObjet, positionObjet, INTERVALLE_MAJ_STANDARD);
-            Game.Services.AddService(typeof (Joueur), Utilisateur);
+            if (Game.Services.GetService(typeof(Joueur)) == null)
+            {
+                Game.Services.AddService(typeof(Joueur), Utilisateur);
+            }
             GestionEnnemis = new GestionnaireEnnemis(Game, Utilisateur, TerrainJeu, NbEnnemis, ÉCHELLE_OBJET, INTERVALLE_MAJ_STANDARD);
             MenuPause = new MenuPause(Game, ListeGameComponentsMenu, ListeGameComponents, GestionEnnemis);
             //PremierPlan = new PlanTexturé(Game, 1f, Vector3.Zero, new Vector3(0, 6, -126), new Vector2(256, 60), new Vector2(10, 10), "desertDunes", INTERVALLE_MAJ_STANDARD);
