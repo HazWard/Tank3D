@@ -57,9 +57,9 @@ namespace AtelierXNA
         {
             foreach (GameComponent gc in Game.Components)
             {
-                if (gc is IModel && gc != this)
+                if (gc is IModel && gc != this && gc != null)
                 {
-                    ModèleMobile m = gc as ModèleMobile;
+                    ObjetDeBase m = gc as ObjetDeBase;
                     
                     if (SphereCollision.Intersects(m.SphereCollision))
                     {

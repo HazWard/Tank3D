@@ -17,6 +17,7 @@ namespace AtelierXNA
         Game Jeu { get; set; }
         List<GameComponent> ListeGameComponentsMenu { get; set; }
         List<GameComponent> ListeGameComponentsAtelier { get; set; }
+        List<GameComponent> ListeGameComponentsTanksDétruits { get; set; }
         GestionnaireEnnemis GestionEnnemis { get; set; }
         ArrièrePlan ImageArrièrePlan { get; set; }
         BoutonDeCommande ReprendreJeu { get; set; }
@@ -40,6 +41,7 @@ namespace AtelierXNA
                     gc.Enabled = false;
                 }
             }
+            ListeGameComponentsTanksDétruits = new List<GameComponent>();
             ImageArrièrePlan = new ArrièrePlan(Game, "Background Transparent 60");
             ReprendreJeu = new BoutonDeCommande(Game, "Reprendre le jeu", "Arial20", "BoutonNormal", "BoutonEnfoncé", new Vector2(Game.Window.ClientBounds.Width / 8f, 9 * Game.Window.ClientBounds.Height / 10f), true, new FonctionÉvénemtielle(Play));
             BtnRetourMenuPrincipal = new BoutonDeCommande(Game, " X ", "Arial20", "BoutonRougeX", "BoutonBleuX", new Vector2(15f * (Game.Window.ClientBounds.Width / 16f), Game.Window.ClientBounds.Height / 10f), true, new FonctionÉvénemtielle(RetournerMenuPrincipal));
@@ -84,7 +86,17 @@ namespace AtelierXNA
             {
                 Game.Components.Remove(gc);
             }
-
+            foreach (GameComponent gc in Game.Components)
+            {
+                if (gc is TankDétruit)
+                {
+                    ListeGameComponentsTanksDétruits.Add(gc);
+                }
+            }
+            foreach (GameComponent gc in ListeGameComponentsTanksDétruits)
+            {
+                Game.Components.Remove(gc);
+            }
             GestionEnnemis.EffacerEnnemis();
             
             MenuPrincipal.ModifyComponents(true, ListeGameComponentsMenu);

@@ -97,8 +97,8 @@ namespace AtelierXNA
 
                 if (AÉtéTiré)
                 {
-                    VieAI.PourcentageVie -= 0.5f;
-                    if (AÉtéTiré)
+                    PourcentageVie -= 0.5f;
+                    if (VieAI.PourcentageVie <= 0)
                     {
                         EstDétruit = true;
                     }
@@ -107,7 +107,7 @@ namespace AtelierXNA
 
                 if (EstDétruit)
                 {
-                    Game.Components.Add(new ObjetDeBase(Game, "Veteran Tiger Destroyed", 0.05f, Rotation, Position));
+                    Game.Components.Add(new TankDétruit(Game, "Veteran Tiger Destroyed", 0.05f, Rotation, Position));
                     Game.Components.Remove(this);
                 }
 
