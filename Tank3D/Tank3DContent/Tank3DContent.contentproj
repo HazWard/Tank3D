@@ -64,18 +64,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Textures\BoutonBleu.png">
-      <Name>BoutonBleu</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Textures\BoutonRouge.png">
-      <Name>BoutonRouge</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="Textures\FondDialogue.png">
       <Name>FondDialogue</Name>
       <Importer>TextureImporter</Importer>
@@ -205,13 +193,13 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Textures\BoutonBleuX.png">
-      <Name>BoutonBleuX</Name>
+    <Compile Include="Textures\BoutonRougeX.png">
+      <Name>BoutonRougeX</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="Textures\BoutonRougeX.png">
-      <Name>BoutonRougeX</Name>
+    <Compile Include="Textures\BoutonBleuX.png">
+      <Name>BoutonBleuX</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
@@ -239,6 +227,47 @@
     </Compile>
     <Compile Include="Textures\TextureTerrain.png">
       <Name>TextureTerrain</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Textures\BtnTextureBody.png">
+      <Name>BtnTextureBody</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\BtnTextureDesert.png">
+      <Name>BtnTextureDesert</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\BtnTextureForest.png">
+      <Name>BtnTextureForest</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\BtnTextureSnow.png">
+      <Name>BtnTextureSnow</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Textures\BtnTextureSelect.png">
+      <Name>BtnTextureSelect</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Textures\BoutonEnfoncé.png">
+      <Name>BoutonEnfoncé</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\BoutonNormal.png">
+      <Name>BoutonNormal</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>

@@ -40,19 +40,19 @@ namespace AtelierXNA
 
             Vector2 PositionBouton = new Vector2(RectangleDialogue.X + RectangleDialogue.Width / 2f,
                                                  RectangleDialogue.Y + (NB_ZONES_DIALOGUE - 3) * hauteurBouton);
-            BtnDémarrer = new BoutonDeCommande(Game, "Démarrer", NomPoliceDeCaractère, "BoutonRouge", "BoutonBleu", PositionBouton, false, GérerPause);
+            BtnDémarrer = new BoutonDeCommande(Game, "Démarrer", NomPoliceDeCaractère, "BoutonNormal", "BoutonEnfoncé", PositionBouton, false, GérerPause);
 
             PositionBouton = new Vector2(RectangleDialogue.X + RectangleDialogue.Width / 2f,
                                                  RectangleDialogue.Y + (NB_ZONES_DIALOGUE - 2) * hauteurBouton);
-            BtnPause = new BoutonDeCommande(Game, "Pause", NomPoliceDeCaractère, "BoutonRouge", "BoutonBleu", PositionBouton, true, GérerPause);
+            BtnPause = new BoutonDeCommande(Game, "Pause", NomPoliceDeCaractère, "BoutonNormal", "BoutonEnfoncé", PositionBouton, true, GérerPause);
 
             PositionBouton = new Vector2(RectangleDialogue.X + RectangleDialogue.Width / 2f,
                                      RectangleDialogue.Y + (NB_ZONES_DIALOGUE - 1) * hauteurBouton);
-            BtnInstructions = new BoutonDeCommande(Game, "Instructions", NomPoliceDeCaractère, "BoutonRouge", "BoutonBleu", PositionBouton, true, GérerPause);
+            BtnInstructions = new BoutonDeCommande(Game, "Instructions", NomPoliceDeCaractère, "BoutonNormal", "BoutonEnfoncé", PositionBouton, true, GérerPause);
 
             PositionBouton = new Vector2(RectangleDialogue.X + RectangleDialogue.Width / 2f,
                                                  RectangleDialogue.Y + NB_ZONES_DIALOGUE * hauteurBouton);
-            BtnQuitter = new BoutonDeCommande(Game, "Quitter", NomPoliceDeCaractère, "BoutonRouge", "BoutonBleu", PositionBouton, true, Quitter);
+            BtnQuitter = new BoutonDeCommande(Game, "Quitter", NomPoliceDeCaractère, "BoutonNormal", "BoutonEnfoncé", PositionBouton, true, Quitter);
 
             Game.Components.Add(BtnDémarrer);
             Game.Components.Add(BtnPause);

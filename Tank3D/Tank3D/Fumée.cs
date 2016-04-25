@@ -15,7 +15,7 @@ namespace AtelierXNA
     public class Fumée : Sprite
     {
         const string NOM_TEXTURE = "Fumée";
-        const float DURÉE_AFFICHAGE = 5f;
+        const float DURÉE_AFFICHAGE = 3f;
         float TempsÉcouléDepuisMAJ { get; set; }
         public Fumée(Game game, Vector2 position, float échelle)
             : base(game, NOM_TEXTURE, position, échelle) { }

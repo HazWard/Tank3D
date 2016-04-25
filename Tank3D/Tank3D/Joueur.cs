@@ -41,15 +41,11 @@ namespace AtelierXNA
         Vector2 AncienAnglesIncréments { get; set; }
         Matrix MondeTour { get; set; }
         Matrix MondeCanon { get; set; }
-        Matrix MondeBoundingBox { get; set; }
         float ÉchelleTour { get; set; }
         float ÉchelleCanon { get; set; }
         float ÉchelleRoues { get; set; }
-
-        Vector2 ObjectifAnglesNormales { get; set; }
         float TempsÉcouléMAJFumée { get; set; }
         Sprite Fumée { get; set; }
-        Sprite Terre { get; set; }
         public Vector2 Coordonnées
         {
             get
@@ -203,12 +199,6 @@ namespace AtelierXNA
             }
         }
 
-        bool ApproximationÉgalité(float valeur1, float valeur2)
-        {
-            double tolérance = valeur1 * 0.0001; // 0.01 % de difference acceptable
-            return Math.Abs(valeur1 - valeur2) <= tolérance;
-        }
-
         void RotationTour()
         {
             GestionSouris();
@@ -257,14 +247,6 @@ namespace AtelierXNA
                 Game.Components.Add(ProjectileTank);
             }
         }
-
-        /*
-        public bool EstDétruit()
-        {
-            bool estDétruit = false;
-            return estDétruit;
-        }
-        */
 
         float GérerTouche(Keys touche)
         {
