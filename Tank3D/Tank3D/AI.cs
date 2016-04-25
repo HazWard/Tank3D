@@ -86,6 +86,7 @@ namespace AtelierXNA
                     }
                     else
                     {
+                        
                         GestionMouvements(true, "pas");
                     }
                 }
@@ -94,9 +95,19 @@ namespace AtelierXNA
                     GestionMouvements(true, "collision");
                 }
 
+                if (AÉtéTiré)
+                {
+                    VieAI.PourcentageVie -= 0.5f;
+                    if (AÉtéTiré)
+                    {
+                        EstDétruit = true;
+                    }
+                    AÉtéTiré = false;
+                }
+
                 if (EstDétruit)
                 {
-                    Game.Components.Add(new ObjetDeBase(Game, "Veteran Tiger Forest", 0.05f, Vector3.Zero, Position));
+                    Game.Components.Add(new ObjetDeBase(Game, "Veteran Tiger Destroyed", 0.05f, Rotation, Position));
                     Game.Components.Remove(this);
                 }
 
@@ -130,7 +141,7 @@ namespace AtelierXNA
         void GestionProjectile()
         {
             ProjectileTank = new Projectile(Game, "Projectile", 0.1f, Rotation,
-                                            new Vector3(Position.X, Position.Y + 4f, Position.Z), IntervalleMAJ, 2f, 0.02f, false, this);
+                                            new Vector3(Position.X - 5 * (float)Math.Sin(Rotation.Y), Position.Y + 4.5f, Position.Z - 5 * (float)Math.Cos(Rotation.Y)), IntervalleMAJ, 2f, 0.02f, false, this);
 
             Game.Components.Add(ProjectileTank);
         }

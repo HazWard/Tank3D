@@ -243,7 +243,7 @@ namespace AtelierXNA
             {
                 ProjectileTank = new Projectile(Game, "Projectile", 0.1f,
                                                 new Vector3(2 * RotationPitchCanon.X + MathHelper.Pi, RotationPitchCanon.Y - 0.05f, RotationPitchCanon.Z),
-                                                new Vector3(PositionCanon.X, PositionCanon.Y + 4.6f, PositionCanon.Z), IntervalleMAJ, 2f, 0.02f, false, this);
+                                                new Vector3(PositionCanon.X - 5 * (float)Math.Sin(RotationPitchCanon.Y), PositionCanon.Y + 4.5f, PositionCanon.Z - 5 * (float)Math.Cos(RotationPitchCanon.Y)), IntervalleMAJ, 2f, 0.02f, false, this);
                 Game.Components.Add(ProjectileTank);
             }
         }

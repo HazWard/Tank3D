@@ -97,7 +97,7 @@ namespace AtelierXNA
             CalculerMonde();
         }
 
-        private void EffacerProjectile(bool sortie, float posX,float posZ, float hauteurMin)
+        public void EffacerProjectile(bool sortie, float posX,float posZ, float hauteurMin)
         {
             if (Position.Y <= 0 || sortie || Position.Y <= hauteurMin)
             {

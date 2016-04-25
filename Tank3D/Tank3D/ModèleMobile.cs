@@ -30,6 +30,7 @@ namespace AtelierXNA
         protected float IntervalleMAJ { get; set; }
         protected Point nouvellesCoords { get; set; }
         protected bool AÉtéCliqué { get; set; }
+        public bool AÉtéTiré { get; set; }
 
         public bool EstDétruit { get; set; }
 
