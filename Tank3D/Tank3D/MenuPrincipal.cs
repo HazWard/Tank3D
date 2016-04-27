@@ -77,14 +77,13 @@ namespace AtelierXNA
             GestionSprites = new SpriteBatch(GraphicsDevice);
             Calculateur = new CalculateurFPS(this, INTERVALLE_CALCUL_FPS);
             CaméraMenu = new CaméraFixe(this, new Vector3(0, 0, 300), Vector3.Zero, Vector3.Up);
-            Services.AddService(typeof(Caméra), CaméraMenu);
             ListeGameComponents = new List<GameComponent>();
 
             ListeTextureModèles = Directory.EnumerateFiles(Racine + @"Tank3DContent\Modèles", "Veteran*").ToList<string>();
 
             NomTexture = "Veteran Tiger Body";
             BoutonsTextureAjoutés = false;
-            NbEnnemis = 1;
+            NbEnnemis = 3;
             AddServices();
             InitializeComponents();
 

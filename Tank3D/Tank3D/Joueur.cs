@@ -45,7 +45,9 @@ namespace AtelierXNA
         float ÉchelleCanon { get; set; }
         float ÉchelleRoues { get; set; }
         float TempsÉcouléMAJFumée { get; set; }
+        public bool EstMort { get; set; }
         Sprite Fumée { get; set; }
+        int Vie { get; set; }
         public Vector2 Coordonnées
         {
             get
@@ -57,7 +59,7 @@ namespace AtelierXNA
         {
             get
             {
-                return Caméra.Position;
+                return CaméraJeu.Position;
             }
         }
 
@@ -86,14 +88,13 @@ namespace AtelierXNA
             ÉchelleTour = 0.0035f;
             ÉchelleCanon = 0.005f;
             ÉchelleRoues = 0.05f;
+            Vie = 100;
             TempsÉcouléMAJFumée = 0f;
         }
 
         protected override void LoadContent()
         {
-            Caméra = Game.Services.GetService(typeof(Caméra)) as CaméraSubjective;
             base.LoadContent();
-
         }
 
         public override void Update(GameTime gameTime)
@@ -124,6 +125,18 @@ namespace AtelierXNA
                 }
                 TempsÉcouléDepuisMAJ = 0;
             }
+
+            if (AÉtéTiré)
+            {
+                Vie -= 10;
+                if (Vie <= 0)
+                {
+                    EstMort = true;
+                    CaméraJeu.Enabled = false;
+                    this.Enabled = false;
+                }
+                AÉtéTiré = false;
+            }
             base.Update(gameTime);
         }
 
@@ -140,8 +153,8 @@ namespace AtelierXNA
             RotationTour();
             RotationCanon();
 
-            Caméra.Cible = new Vector3(Position.X, Position.Y + 4, Position.Z);
-            Caméra.Position = new Vector3(((float)Math.Sin(RotationYawTour.Y) * DISTANCE_POURSUITE) + Position.X,
+            CaméraJeu.Cible = new Vector3(Position.X, Position.Y + 4, Position.Z);
+            CaméraJeu.Position = new Vector3(((float)Math.Sin(RotationYawTour.Y) * DISTANCE_POURSUITE) + Position.X,
                                          ((float)Math.Tan(MathHelper.PiOver2 - RotationPitchCanon.X) * DISTANCE_POURSUITE) + Position.Y + HAUTEUR_CAM_DÉFAULT,
                                          ((float)Math.Cos(RotationYawTour.Y) * DISTANCE_POURSUITE) + Position.Z);
             float déplacement = GérerTouche(Keys.W) - GérerTouche(Keys.S);
@@ -212,7 +225,7 @@ namespace AtelierXNA
             GestionSouris();
             RotationPitchCanon = new Vector3(RotationPitchCanon.X + (-INCRÉMENT_ROTATION_TOUR * DeltaRotationCanon.Y),
                                              RotationPitchCanon.Y + 2 * (-INCRÉMENT_ROTATION_TOUR * DeltaRotationCanon.X), RotationPitchCanon.Z);
-            if (RotationPitchCanon.X > -1.3 || RotationPitchCanon.X < -1.8)
+            if (RotationPitchCanon.X > -1.2f || RotationPitchCanon.X < -2.0f)
             {
                 RotationPitchCanon = new Vector3(RotationPitchCanon.X - (-INCRÉMENT_ROTATION_TOUR * DeltaRotationCanon.Y),
                                                  RotationPitchCanon.Y, RotationPitchCanon.Z);

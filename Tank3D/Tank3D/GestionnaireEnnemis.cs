@@ -24,6 +24,7 @@ namespace AtelierXNA
         Terrain TerrainJeu { get; set; }
         float ÉchelleAI { get; set; }
         float IntervalleMAJ { get; set; }
+        public bool DoitCréer { get; set; }
 
         public GestionnaireEnnemis(Game jeu, Joueur cible, Terrain terrainJeu, int nbEnnemis, float échelleAI, float intervalleMAJ)
             :base(jeu)
@@ -40,16 +41,31 @@ namespace AtelierXNA
         {
             base.Initialize();
             GénérateurAléatoire = new Random();
-            BorneMin = (int)-TerrainJeu.Étendue.X / 2 ;
-            BorneMax = (int)TerrainJeu.Étendue.X / 2;
+            DoitCréer = false;
+            BorneMin = (int)-TerrainJeu.Étendue.X / 2 + 10;
+            BorneMax = (int)TerrainJeu.Étendue.X / 2 - 10;
             for (int i = 0; i < NbEnnemis; i++)
             {
                 ListeEnnemis.Add(new AI(base.Game, "Veteran Tiger Desert", ÉchelleAI, Vector3.Zero, 
                                   new Vector3(GénérateurAléatoire.Next(BorneMin, BorneMax),
                                   TerrainJeu.GetHauteur(TerrainJeu.ConvertionCoordonnées(new Vector3(GénérateurAléatoire.Next(BorneMin + SAFE_SPOT_BORNES, BorneMax - SAFE_SPOT_BORNES), 0, GénérateurAléatoire.Next(BorneMin, BorneMax)))),
-                                  GénérateurAléatoire.Next(BorneMin + SAFE_SPOT_BORNES, BorneMax - SAFE_SPOT_BORNES)), IntervalleMAJ, Cible, i + 1));
+                                  GénérateurAléatoire.Next(BorneMin + SAFE_SPOT_BORNES, BorneMax - SAFE_SPOT_BORNES)), IntervalleMAJ, Cible, i + 1, this));
                 Game.Components.Add(ListeEnnemis[i]);
             }
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            if (DoitCréer)
+            {
+                ListeEnnemis.Add(new AI(base.Game, "Veteran Tiger Desert", ÉchelleAI, Vector3.Zero,
+                                    new Vector3(GénérateurAléatoire.Next(BorneMin, BorneMax),
+                                    TerrainJeu.GetHauteur(TerrainJeu.ConvertionCoordonnées(new Vector3(GénérateurAléatoire.Next(BorneMin + SAFE_SPOT_BORNES, BorneMax - SAFE_SPOT_BORNES), 0, GénérateurAléatoire.Next(BorneMin, BorneMax)))),
+                                    GénérateurAléatoire.Next(BorneMin + SAFE_SPOT_BORNES, BorneMax - SAFE_SPOT_BORNES)), IntervalleMAJ, Cible, NbEnnemis, this));
+                Game.Components.Add(ListeEnnemis[ListeEnnemis.Count() - 1]);
+                DoitCréer = false;
+            }
+            base.Update(gameTime);
         }
 
         public void EffacerEnnemis()

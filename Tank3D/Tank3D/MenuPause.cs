@@ -43,7 +43,7 @@ namespace AtelierXNA
             }
             ListeGameComponentsTanksDétruits = new List<GameComponent>();
             ImageArrièrePlan = new ArrièrePlan(Game, "Background Transparent 60");
-            ReprendreJeu = new BoutonDeCommande(Game, "Reprendre le jeu", "Arial20", "BoutonNormal", "BoutonEnfoncé", new Vector2(Game.Window.ClientBounds.Width / 8f, 9 * Game.Window.ClientBounds.Height / 10f), true, new FonctionÉvénemtielle(Play));
+            ReprendreJeu = new BoutonDeCommande(Game, "Reprendre le jeu", "Arial20", "BoutonNormal", "BoutonEnfoncé", new Vector2(2 * Game.Window.ClientBounds.Width / 8f, 6 * Game.Window.ClientBounds.Height / 10f), true, new FonctionÉvénemtielle(Play));
             BtnRetourMenuPrincipal = new BoutonDeCommande(Game, " X ", "Arial20", "BoutonRougeX", "BoutonBleuX", new Vector2(15f * (Game.Window.ClientBounds.Width / 16f), Game.Window.ClientBounds.Height / 10f), true, new FonctionÉvénemtielle(RetournerMenuPrincipal));
             Game.Components.Add(ImageArrièrePlan);
             Game.Components.Add(ReprendreJeu);
@@ -76,10 +76,9 @@ namespace AtelierXNA
             Game.Components.Remove(BtnRetourMenuPrincipal);
         }
 
-        void RetournerMenuPrincipal()
+        public void RetournerMenuPrincipal()
         {
             EffacerMenu();
-            
             Game.Services.RemoveService(typeof(Caméra));
 
             foreach (GameComponent gc in ListeGameComponentsAtelier)

@@ -24,6 +24,7 @@ namespace AtelierXNA
         const int DÉLAI_TIR = 71;
         // const float INCRÉMENT_ROTATION = 0.05f;
         Joueur Cible { get; set; }
+        GestionnaireEnnemis GestionEnnemis { get; set; }
         bool estDétruit { get; set; }
         int NuméroAI { get; set; }
         float Distance { get; set; }
@@ -47,7 +48,7 @@ namespace AtelierXNA
             private set { }
         }
 
-        public AI(Game jeu, string nomModèle, float échelleInitiale, Vector3 rotationInitiale, Vector3 positionInitiale, float intervalleMAJ, Joueur cible, int numéroAI)
+        public AI(Game jeu, string nomModèle, float échelleInitiale, Vector3 rotationInitiale, Vector3 positionInitiale, float intervalleMAJ, Joueur cible, int numéroAI, GestionnaireEnnemis gestionEnnemis)
             : base(jeu, nomModèle, échelleInitiale, rotationInitiale, positionInitiale, intervalleMAJ)
         {
             Cible = cible;
@@ -56,6 +57,7 @@ namespace AtelierXNA
             Orientation = 0;
             NuméroAI = numéroAI;
             Compteur = 0;
+            GestionEnnemis = gestionEnnemis;
             VieAI = new BarreDeVie(jeu, échelleInitiale, rotationInitiale, new Vector3(positionInitiale.X, positionInitiale.Y + 15, positionInitiale.Z), new Vector2(100, 17), new Vector2(5, 10), "FondInstructions", IntervalleMAJ);
             Game.Components.Add(VieAI);
         }
@@ -107,7 +109,9 @@ namespace AtelierXNA
 
                 if (EstDétruit)
                 {
+                    GestionEnnemis.DoitCréer = true;
                     Game.Components.Add(new TankDétruit(Game, "Veteran Tiger Destroyed", 0.05f, Rotation, Position));
+                    Game.Components.Remove(VieAI);
                     Game.Components.Remove(this);
                 }
 
@@ -230,10 +234,6 @@ namespace AtelierXNA
 
                 Rotation = new Vector3(Rotation.X, orientation, Rotation.Z);
 
-                if (EstDétruit)
-                {
-                    Game.Components.Remove(this);
-                }
                 CalculerMonde();
             }
         #endregion
