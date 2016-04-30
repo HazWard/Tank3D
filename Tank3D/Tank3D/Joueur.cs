@@ -129,6 +129,7 @@ namespace AtelierXNA
 
             if (AÉtéTiré)
             {
+                Game.Components.Add(new FiltreDommage(Game, IntervalleMAJ));
                 Vie -= 10;
                 if (Vie <= 0)
                 {

@@ -15,9 +15,9 @@ namespace AtelierXNA
     public class Filtre : Microsoft.Xna.Framework.GameComponent
     {
         string NomImage { get; set; }
-        ArrièrePlan FiltreÉcran { get; set; }
+        protected ArrièrePlan FiltreÉcran { get; set; }
         public bool Activation { get; set; }
-        bool EstDansComponents { get; set; }
+        protected bool EstDansComponents { get; set; }
 
         public Filtre(Game game, string nomImage)
             :base(game)
