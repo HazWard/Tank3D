@@ -34,16 +34,10 @@ namespace AtelierXNA
 
         public override void Initialize()
         {
-            foreach (GameComponent gc in Game.Components)
-            {
-                if (gc is IActivable)
-                {
-                    gc.Enabled = false;
-                }
-            }
+            ArrêterJeu();
             ListeGameComponentsTanksDétruits = new List<GameComponent>();
             ImageArrièrePlan = new ArrièrePlan(Game, "Background Transparent 60");
-            ReprendreJeu = new BoutonDeCommande(Game, "Reprendre le jeu", "Arial20", "BoutonNormal", "BoutonEnfoncé", new Vector2(2 * Game.Window.ClientBounds.Width / 8f, 6 * Game.Window.ClientBounds.Height / 10f), true, new FonctionÉvénemtielle(Play));
+            ReprendreJeu = new BoutonDeCommande(Game, "Reprendre le jeu", "Arial20", "BoutonNormal", "BoutonEnfoncé", new Vector2(3 * Game.Window.ClientBounds.Width / 8f, 6 * Game.Window.ClientBounds.Height / 10f), true, new FonctionÉvénemtielle(Play));
             BtnRetourMenuPrincipal = new BoutonDeCommande(Game, " X ", "Arial20", "BoutonRougeX", "BoutonBleuX", new Vector2(15f * (Game.Window.ClientBounds.Width / 16f), Game.Window.ClientBounds.Height / 10f), true, new FonctionÉvénemtielle(RetournerMenuPrincipal));
             Game.Components.Add(ImageArrièrePlan);
             Game.Components.Add(ReprendreJeu);
@@ -53,7 +47,6 @@ namespace AtelierXNA
 
         public override void Update(GameTime gameTime)
         {
-
             base.Update(gameTime);
         }
 

@@ -99,7 +99,7 @@ namespace AtelierXNA
 
             if (CibleJoueur == null)
             {
-                CibleJoueur = Game.Services.GetService(typeof (Joueur)) as Joueur;
+                CibleJoueur = Game.Services.GetService(typeof(Joueur)) as Joueur;
             }
 
             if (TempsÉcouléDepuisMAJ >= IntervalleMAJ)
@@ -111,7 +111,7 @@ namespace AtelierXNA
                 else
                 {
                     //GérerAccélération();
-                    GestionTouches();
+                    //GestionTouches();
                     GérerRotation();
                     CréerPointDeVue();
                     TempsÉcouléDepuisMAJ = 0;
@@ -130,16 +130,18 @@ namespace AtelierXNA
             }
         }
 
-        void ModificationParamètres(float déplacement, float rotation)
+        public void ModificationParamètres(float déplacement, float rotation)
         {
-            float rotationFinal = Rotation.Y - IncrémentAngleRotation * rotation;
-            float posX = déplacement * (float)Math.Sin(rotationFinal);
-            float posY = déplacement * (float)Math.Cos(rotationFinal);
-            Vector2 déplacementFinal = new Vector2(posX, posY);
-            Rotation = new Vector3(Rotation.X, rotationFinal, Rotation.Z);
-            Position = new Vector3(Position.X - déplacementFinal.X, Position.Y, Position.Z - déplacementFinal.Y);
-            Cible = new Vector3(Cible.X - déplacementFinal.X, Cible.Y, Cible.Z - déplacementFinal.Y);
-
+            if (déplacement != 0 || rotation != 0)
+            {
+                float rotationFinal = Rotation.Y - IncrémentAngleRotation * rotation;
+                float posX = déplacement * (float)Math.Sin(rotationFinal);
+                float posY = déplacement * (float)Math.Cos(rotationFinal);
+                Vector2 déplacementFinal = new Vector2(posX, posY);
+                Rotation = new Vector3(Rotation.X, rotationFinal, Rotation.Z);
+                Position = new Vector3(Position.X - déplacementFinal.X, Position.Y, Position.Z - déplacementFinal.Y);
+                Cible = new Vector3(Cible.X - déplacementFinal.X, Cible.Y, Cible.Z - déplacementFinal.Y);
+            }
         }
 
         private float GérerTouche(Keys touche)

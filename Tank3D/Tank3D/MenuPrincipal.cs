@@ -54,8 +54,6 @@ namespace AtelierXNA
         int Marge { get; set; }
         int PositionZoneContenu { get; set; }
         int NbEnnemis { get; set; }
-        List<string> ListeTextureModèles { get; set; }
-        string Racine { get; set; }
         bool BoutonsTextureAjoutés { get; set; }
 
         public MenuPrincipal()
@@ -68,7 +66,6 @@ namespace AtelierXNA
             PériphériqueGraphique.SynchronizeWithVerticalRetrace = false;
             IsFixedTimeStep = false;
             IsMouseVisible = true;
-            Racine = @"..\..\..\..\";
         }
 
         protected override void Initialize()
@@ -78,9 +75,7 @@ namespace AtelierXNA
             Calculateur = new CalculateurFPS(this, INTERVALLE_CALCUL_FPS);
             CaméraMenu = new CaméraFixe(this, new Vector3(0, 0, 300), Vector3.Zero, Vector3.Up);
             ListeGameComponents = new List<GameComponent>();
-
-            ListeTextureModèles = Directory.EnumerateFiles(Racine + @"Tank3DContent\Modèles", "Veteran*").ToList<string>();
-
+        
             NomTexture = "Veteran Tiger Body";
             BoutonsTextureAjoutés = false;
             NbEnnemis = 3;

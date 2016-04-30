@@ -95,6 +95,7 @@ namespace AtelierXNA
         protected override void LoadContent()
         {
             base.LoadContent();
+            Caméra = Game.Services.GetService(typeof(Caméra)) as CaméraSubjective;
         }
 
         public override void Update(GameTime gameTime)
@@ -168,6 +169,11 @@ namespace AtelierXNA
 
         void ModificationParamètres(float déplacement, float rotation)
         {
+            if (Caméra == null)
+            {
+                Caméra = Game.Services.GetService(typeof(Caméra)) as CaméraSubjective;
+            }
+
             float rotationFinal = Rotation.Y - (IncrémentAngleRotation * rotation) / 3f;
             float posX = déplacement * (float)Math.Sin(rotationFinal);
             float posY = déplacement * (float)Math.Cos(rotationFinal);
@@ -194,6 +200,7 @@ namespace AtelierXNA
                 TraitementNormales(nouvellesCoords, "Y");
                 AncienAnglesIncréments = AnglesIncréments;
                 SphereCollision = new BoundingSphere(Position, RAYON_COLLISION);
+                Caméra.ModificationParamètres(déplacement, rotation);
             }
             CalculerMonde();
         }
