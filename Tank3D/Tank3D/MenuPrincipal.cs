@@ -167,10 +167,10 @@ namespace AtelierXNA
             BtnFermerFenêtre = new BoutonDeCommande(this, " X ", "Arial20", "BoutonRougeX", "BoutonBleuX", new Vector2(9 * Window.ClientBounds.Width / 10, Window.ClientBounds.Height / 5), true, new FonctionÉvénemtielle(Retour));
 
             // Boutons de changement de texture
-            BtnTextureBody = new BoutonDeCommande(this, "  O  ", "Arial20", "BtnTextureBody", "BtnTextureSelect", new Vector2(Window.ClientBounds.Width / 8, 2.5f * Window.ClientBounds.Height / 6f), true, new FonctionÉvénemtielle(ChangeToBody));
-            BtnTextureForest = new BoutonDeCommande(this, "  O  ", "Arial20", "BtnTextureForest", "BtnTextureSelect", new Vector2(Window.ClientBounds.Width / 8, 3f * Window.ClientBounds.Height / 6f), true, new FonctionÉvénemtielle(ChangeToForest));
-            BtnTextureDesert = new BoutonDeCommande(this, "  O  ", "Arial20", "BtnTextureDesert", "BtnTextureSelect", new Vector2(Window.ClientBounds.Width / 8, 3.5f * Window.ClientBounds.Height / 6f), true, new FonctionÉvénemtielle(ChangeToDesert));
-            BtnTextureSnow = new BoutonDeCommande(this, "  O  ", "Arial20", "BtnTextureSnow", "BtnTextureSelect", new Vector2(Window.ClientBounds.Width / 8, 4f * Window.ClientBounds.Height / 6f), true, new FonctionÉvénemtielle(ChangeToSnow));
+            BtnTextureBody = new BoutonDeCommande(this, "  O  ", "Arial20", "Tank_Body_nocolor", "BtnTextureSelect", new Vector2(Window.ClientBounds.Width / 8, 2.5f * Window.ClientBounds.Height / 6f), true, new FonctionÉvénemtielle(ChangeToBody));
+            BtnTextureForest = new BoutonDeCommande(this, "  O  ", "Arial20", "Tank_Body_Forest", "BtnTextureSelect", new Vector2(Window.ClientBounds.Width / 8, 3f * Window.ClientBounds.Height / 6f), true, new FonctionÉvénemtielle(ChangeToForest));
+            BtnTextureDesert = new BoutonDeCommande(this, "  O  ", "Arial20", "Tank_Body_Desert", "BtnTextureSelect", new Vector2(Window.ClientBounds.Width / 8, 3.5f * Window.ClientBounds.Height / 6f), true, new FonctionÉvénemtielle(ChangeToDesert));
+            BtnTextureSnow = new BoutonDeCommande(this, "  O  ", "Arial20", "Tank_Body_Snow", "BtnTextureSelect", new Vector2(Window.ClientBounds.Width / 8, 4f * Window.ClientBounds.Height / 6f), true, new FonctionÉvénemtielle(ChangeToSnow));
         }
 
         void AddComponents()
