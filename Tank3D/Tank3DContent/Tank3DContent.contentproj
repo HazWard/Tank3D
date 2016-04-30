@@ -273,20 +273,33 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Textures\CrosshairZoom.png">
-      <Name>CrosshairZoom</Name>
+    <Compile Include="Textures\Tank_body.BMP">
+      <Name>Tank_body</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Textures\FondVie.png">
-      <Name>FondVie</Name>
+    <Compile Include="Textures\Tank_Body_Desert.BMP">
+      <Name>Tank_Body_Desert</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="Textures\VieVert.png">
-      <Name>VieVert</Name>
+    <Compile Include="Textures\Tank_Body_Destroyed.BMP">
+      <Name>Tank_Body_Destroyed</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Tank_Body_Forest.BMP">
+      <Name>Tank_Body_Forest</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Tank_body_nocolor.BMP">
+      <Name>Tank_body_nocolor</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Textures\Tank_Body_Snow.BMP">
+      <Name>Tank_Body_Snow</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
