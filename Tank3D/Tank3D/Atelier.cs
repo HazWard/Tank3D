@@ -70,7 +70,6 @@ namespace AtelierXNA
             CompteurMort = 0;
             ListeGameComponents = new List<GameComponent>();
 
-
             InitializeComponents();
 
             Game.Components.Add(GestionInput);

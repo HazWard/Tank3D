@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 namespace AtelierXNA
@@ -31,6 +32,7 @@ namespace AtelierXNA
         float TempsÉcouléDepuisMAJ { get; set; }
         InputManager GestionInput { get; set; }
         Joueur CibleJoueur { get; set; }
+        Filtre FiltreZoom { get; set; }
 
         bool estEnZoom;
         bool EstEnZoom
@@ -69,6 +71,9 @@ namespace AtelierXNA
             TempsÉcouléDepuisMAJ = 0;
             base.Initialize();
             GestionInput = Game.Services.GetService(typeof(InputManager)) as InputManager;
+            CibleJoueur = Game.Services.GetService(typeof(Joueur)) as Joueur;
+            FiltreZoom = new Filtre(Game, "CrosshairZoom");
+            Game.Components.Add(FiltreZoom);
         }
 
         protected override void CréerPointDeVue()
@@ -96,38 +101,23 @@ namespace AtelierXNA
             float TempsÉcoulé = (float)gameTime.ElapsedGameTime.TotalSeconds;
             TempsÉcouléDepuisMAJ += TempsÉcoulé;
             GestionClavier();
-
-            if (CibleJoueur == null)
-            {
-                CibleJoueur = Game.Services.GetService(typeof(Joueur)) as Joueur;
-            }
-
+            AfficherZoom();
             if (TempsÉcouléDepuisMAJ >= IntervalleMAJ)
             {
-                if (CibleJoueur.EstEnCollision)
-                {
-
-                }
-                else
-                {
-                    //GérerAccélération();
-                    //GestionTouches();
-                    GérerRotation();
-                    CréerPointDeVue();
-                    TempsÉcouléDepuisMAJ = 0;
-                }
+                CréerPointDeVue();
+                TempsÉcouléDepuisMAJ = 0;
             }
             base.Update(gameTime);
         }
 
-        void GestionTouches()
+        private void AfficherZoom()
         {
-            float déplacement = GérerTouche(Keys.W) - GérerTouche(Keys.S);
-            float rotation = GérerTouche(Keys.D) - GérerTouche(Keys.A);
-            if (déplacement != 0 || rotation != 0)
+            FiltreZoom.Activation = EstEnZoom;
+            if(CibleJoueur == null)
             {
-                ModificationParamètres(déplacement, rotation);
+                CibleJoueur = Game.Services.GetService(typeof(Joueur)) as Joueur;
             }
+            CibleJoueur.Visible = !EstEnZoom;
         }
 
         public void ModificationParamètres(float déplacement, float rotation)
@@ -144,41 +134,6 @@ namespace AtelierXNA
             }
         }
 
-        private float GérerTouche(Keys touche)
-        {
-            return GestionInput.EstEnfoncée(touche) ? INCRÉMENT_DÉPLACEMENT : 0;
-        }
-
-        private void GérerDéplacement(float déplacement, float rotation)
-        {
-            Vector3 nouvellePosition = Position;
-            Vector3 nouvelleCible = Cible;
-            float déplacementDirection = (GérerTouche(Keys.W) - GérerTouche(Keys.S)) * VitesseTranslation;
-            //float déplacementLatéral = (GérerTouche(Keys.A) - GérerTouche(Keys.D)) * VitesseTranslation;
-            float rotationFinal = Rotation.Y - IncrémentAngleRotation * rotation;
-            float posX = déplacement * (float)Math.Sin(rotationFinal);
-            float posY = déplacement * (float)Math.Cos(rotationFinal);
-            Vector2 déplacementFinal = new Vector2(posX, posY);
-
-            if (déplacementDirection != 0f)
-            {
-                nouvellePosition += Vector3.Forward * déplacementDirection;
-                nouvelleCible += Vector3.Forward * déplacementDirection;
-            }
-            //Cible = new Vector3(Position.X - déplacementFinal.X, Position.Y, Position.Z - déplacementFinal.Y);
-            Position = nouvellePosition;
-            //Cible = nouvelleCible;
-        }
-
-        private void GérerRotation()
-        {
-            float nb = GérerTouche(Keys.D) - GérerTouche(Keys.A);
-            if (nb != 0)
-            {
-                Direction = Vector3.Transform(Direction, Matrix.CreateFromAxisAngle(OrientationVerticale, (DELTA_LACET * nb) * VitesseRotation));
-            }
-        }
-
         private void GestionClavier()
         {
             if (GestionInput.EstNouvelleTouche(Keys.Z))
@@ -186,15 +141,6 @@ namespace AtelierXNA
                 EstEnZoom = !EstEnZoom;
             }
         }
-        //private void GérerAccélération()
-        //{
-        //    int valAccélération = (GérerTouche(Keys.Subtract) + GérerTouche(Keys.OemMinus)) - (GérerTouche(Keys.Add) + GérerTouche(Keys.OemPlus));
-        //    if (valAccélération != 0)
-        //    {
-        //        IntervalleMAJ += ACCÉLÉRATION * valAccélération;
-        //        IntervalleMAJ = MathHelper.Max(INTERVALLE_MAJ_STANDARD, IntervalleMAJ);
-        //    }
-        //}
 
         public void ModifierActivation()
         {

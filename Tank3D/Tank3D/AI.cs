@@ -58,7 +58,7 @@ namespace AtelierXNA
             NuméroAI = numéroAI;
             Compteur = 0;
             GestionEnnemis = gestionEnnemis;
-            VieAI = new BarreDeVie(jeu, échelleInitiale, rotationInitiale, new Vector3(positionInitiale.X, positionInitiale.Y + 15, positionInitiale.Z), new Vector2(100, 17), new Vector2(5, 10), "FondInstructions", IntervalleMAJ);
+            VieAI = new BarreDeVie(jeu, échelleInitiale, rotationInitiale, new Vector3(positionInitiale.X, positionInitiale.Y + 15, positionInitiale.Z), new Vector2(100, 17), new Vector2(5, 10), "FondVie", IntervalleMAJ);
             Game.Components.Add(VieAI);
         }
         public override void Initialize()

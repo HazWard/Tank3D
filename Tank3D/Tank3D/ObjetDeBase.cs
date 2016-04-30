@@ -78,7 +78,6 @@ namespace AtelierXNA
                             p.EffacerProjectile(true, p.Position.X, p.Position.Z, p.Position.Y);
                         }
                         EstEnCollision = true;
-                        Console.WriteLine("Collision effectuée !!");
                         break;
                     }
                     else
