@@ -74,21 +74,31 @@ namespace AtelierXNA
             EffacerMenu();
             Game.Services.RemoveService(typeof(Caméra));
 
+
+
             foreach (GameComponent gc in ListeGameComponentsAtelier)
             {
                 Game.Components.Remove(gc);
             }
+
             foreach (GameComponent gc in Game.Components)
             {
                 if (gc is TankDétruit || gc is Projectile || gc is Filtre)
                 {
+                    if(gc is Filtre)
+                    {
+                        Filtre f = gc as Filtre;
+                        ListeGameComponentsTanksDétruits.Add(f.FiltreÉcran);
+                    }
                     ListeGameComponentsTanksDétruits.Add(gc);
                 }
             }
+
             foreach (GameComponent gc in ListeGameComponentsTanksDétruits)
             {
                 Game.Components.Remove(gc);
             }
+
             GestionEnnemis.EffacerEnnemis();
             
             MenuPrincipal.ModifyComponents(true, ListeGameComponentsMenu);
@@ -103,11 +113,6 @@ namespace AtelierXNA
                     gc.Enabled = false;
                 }
             }
-        }
-
-        void RecommencerJeu()
-        {
-            Game.Components.Clear();
         }
     }
 }

@@ -81,6 +81,7 @@
     <Compile Include="ArrièrePlan.cs" />
     <Compile Include="Atelier.cs" />
     <Compile Include="BarreDeVie.cs" />
+    <Compile Include="BarreHUD.cs" />
     <Compile Include="BoundingBoxSimple.cs" />
     <Compile Include="BoutonDeCommande.cs" />
     <Compile Include="CalculateurFPS.cs" />
