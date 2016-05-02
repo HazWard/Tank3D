@@ -33,6 +33,7 @@ namespace AtelierXNA
         Vector2 DimensionPhrase { get; set; }
         bool BoutonsTextureAjoutés { get; set; }
         bool MenuEffacé { get; set; }
+        bool MenuExiste { get; set; }
         public string NomTexture { get; set; }
 
         public ZoneContextuelle(Game game, string nomImage, string typeMenu, Rectangle zone)
@@ -47,6 +48,7 @@ namespace AtelierXNA
             NomTexture = "Veteran Tiger Body";
             BoutonsTextureAjoutés = false;
             MenuEffacé = false;
+            MenuExiste = false;
             BtnTextureBody = new BoutonDeCommande(Game, "  O  ", "Arial20", "Tank_Body_nocolor", "BtnTextureSelect", new Vector2(Game.Window.ClientBounds.Width / 8, 2.5f * Game.Window.ClientBounds.Height / 6f), true, new FonctionÉvénemtielle(ChangeToBody));
             BtnTextureForest = new BoutonDeCommande(Game, "  O  ", "Arial20", "Tank_Body_Forest", "BtnTextureSelect", new Vector2(Game.Window.ClientBounds.Width / 8, 3f * Game.Window.ClientBounds.Height / 6f), true, new FonctionÉvénemtielle(ChangeToForest));
             BtnTextureDesert = new BoutonDeCommande(Game, "  O  ", "Arial20", "Tank_Body_Desert", "BtnTextureSelect", new Vector2(Game.Window.ClientBounds.Width / 8, 3.5f * Game.Window.ClientBounds.Height / 6f), true, new FonctionÉvénemtielle(ChangeToDesert));
@@ -63,21 +65,29 @@ namespace AtelierXNA
         {
             GestionSprites.Begin();
             GestionSprites.Draw(ImageDeFond, Zone, Color.White);
-            AfficherContenu();
+            if(!MenuEffacé)
+            {
+                AfficherContenu();
+            }
             GestionSprites.End();
         }
 
         void AfficherContenu()
         {
-            switch (TypeMenu)
+            if (!MenuExiste)
             {
-                case "Instructions":
-                    ÉcrireInstructions();
-                    break;
+                switch (TypeMenu)
+                {
+                    case "Instructions":
+                        ÉcrireInstructions();
+                        MenuExiste = true;
+                        break;
 
-                case "Options":
-                    ÉcrireOptions();
-                    break;
+                    case "Options":
+                        ÉcrireOptions();
+                        MenuExiste = true;
+                        break;
+                }
             }
         }
 
