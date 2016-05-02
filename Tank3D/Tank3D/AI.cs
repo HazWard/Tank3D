@@ -25,6 +25,7 @@ namespace AtelierXNA
         Vector2 ÉTENDUE = new Vector2(100,17);
         // const float INCRÉMENT_ROTATION = 0.05f;
         Joueur Cible { get; set; }
+        GestionnaireEnnemis GestionEnnemis { get; set; }
         bool estDétruit { get; set; }
         int NuméroAI { get; set; }
         float Distance { get; set; }
@@ -49,7 +50,7 @@ namespace AtelierXNA
             private set { }
         }
 
-        public AI(Game jeu, string nomModèle, float échelleInitiale, Vector3 rotationInitiale, Vector3 positionInitiale, float intervalleMAJ, Joueur cible, int numéroAI)
+        public AI(Game jeu, string nomModèle, float échelleInitiale, Vector3 rotationInitiale, Vector3 positionInitiale, float intervalleMAJ, Joueur cible, int numéroAI, GestionnaireEnnemis gestionEnnemis)
             : base(jeu, nomModèle, échelleInitiale, rotationInitiale, positionInitiale, intervalleMAJ)
         {
             Cible = cible;
@@ -58,7 +59,12 @@ namespace AtelierXNA
             Orientation = 0;
             NuméroAI = numéroAI;
             Compteur = 0;
+
             VieAI = new BarreDeVie(jeu, échelleInitiale, rotationInitiale, new Vector3(positionInitiale.X, positionInitiale.Y + 15, positionInitiale.Z), new Vector2(100, 17), new Vector2(1, 1), "BarreDeVieRectangle", IntervalleMAJ, 4);
+
+            GestionEnnemis = gestionEnnemis;
+           
+
             Game.Components.Add(VieAI);
             //VieAIFond = new BarreDeVie(jeu, échelleInitiale, rotationInitiale, new Vector3(positionInitiale.X + 3*(float)Math.Cos(Rotation.Y), positionInitiale.Y + 15, positionInitiale.Z + 3*(float)Math.Cos(Rotation.Y)), new Vector2(90, 14), new Vector2(1, 1), "FondVertBarreDeVie", IntervalleMAJ,4);
             //Game.Components.Add(VieAIFond);
@@ -90,6 +96,7 @@ namespace AtelierXNA
                     }
                     else
                     {
+                        
                         GestionMouvements(true, "pas");
                     }
                 }
@@ -98,9 +105,21 @@ namespace AtelierXNA
                     GestionMouvements(true, "collision");
                 }
 
+                if (AÉtéTiré)
+                {
+                    PourcentageVie -= 0.5f;
+                    if (VieAI.PourcentageVie <= 0)
+                    {
+                        EstDétruit = true;
+                    }
+                    AÉtéTiré = false;
+                }
+
                 if (EstDétruit)
                 {
-                    Game.Components.Add(new ObjetDeBase(Game, "Veteran Tiger Forest", 0.05f, Vector3.Zero, Position));
+                    GestionEnnemis.DoitCréer = true;
+                    Game.Components.Add(new TankDétruit(Game, "Veteran Tiger Destroyed", 0.05f, Rotation, Position));
+                    Game.Components.Remove(VieAI);
                     Game.Components.Remove(this);
                 }
 
@@ -138,7 +157,7 @@ namespace AtelierXNA
         void GestionProjectile()
         {
             ProjectileTank = new Projectile(Game, "Projectile", 0.1f, Rotation,
-                                            new Vector3(Position.X, Position.Y + 4f, Position.Z), IntervalleMAJ, 2f, 0.02f, false, this);
+                                            new Vector3(Position.X - 5 * (float)Math.Sin(Rotation.Y), Position.Y + 4.5f, Position.Z - 5 * (float)Math.Cos(Rotation.Y)), IntervalleMAJ, 2f, 0.02f, false, this);
 
             Game.Components.Add(ProjectileTank);
         }
@@ -227,10 +246,6 @@ namespace AtelierXNA
 
                 Rotation = new Vector3(Rotation.X, orientation, Rotation.Z);
 
-                if (EstDétruit)
-                {
-                    Game.Components.Remove(this);
-                }
                 CalculerMonde();
             }
         #endregion

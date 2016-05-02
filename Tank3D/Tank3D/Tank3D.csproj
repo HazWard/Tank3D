@@ -81,6 +81,7 @@
     <Compile Include="ArrièrePlan.cs" />
     <Compile Include="Atelier.cs" />
     <Compile Include="BarreDeVie.cs" />
+    <Compile Include="BarreHUD.cs" />
     <Compile Include="BoundingBoxSimple.cs" />
     <Compile Include="BoutonDeCommande.cs" />
     <Compile Include="CalculateurFPS.cs" />
@@ -89,6 +90,8 @@
     <Compile Include="CaméraSubjective.cs" />
     <Compile Include="Dialogue.cs" />
     <Compile Include="Explosion.cs" />
+    <Compile Include="Filtre.cs" />
+    <Compile Include="FiltreDommage.cs" />
     <Compile Include="Fumée.cs" />
     <Compile Include="GestionnaireCollisions.cs" />
     <Compile Include="GestionnaireEnnemis.cs" />
@@ -96,6 +99,7 @@
     <Compile Include="IModel.cs" />
     <Compile Include="InputManager.cs" />
     <Compile Include="ObjetTournant.cs" />
+    <Compile Include="TankDétruit.cs" />
     <Compile Include="ZoneContextuelle.cs" />
     <Compile Include="Joueur.cs" />
     <Compile Include="MenuPause.cs" />

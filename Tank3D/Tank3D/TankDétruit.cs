@@ -12,23 +12,24 @@ using Microsoft.Xna.Framework.Media;
 
 namespace AtelierXNA
 {
-    public class Fumée : Sprite
+    public class TankDétruit : ObjetDeBase, IModel
     {
-        const string NOM_TEXTURE = "Fumée";
-        const float DURÉE_AFFICHAGE = 3f;
-        float TempsÉcouléDepuisMAJ { get; set; }
-        public Fumée(Game game, Vector2 position, float échelle)
-            : base(game, NOM_TEXTURE, position, échelle) { }
-
-        protected override void LoadContent()
+        int Compteur { get; set; }
+        public TankDétruit(Game jeu, string nomModèle, float échelleInitiale, Vector3 rotationInitiale, Vector3 positionInitiale)
+            : base(jeu, nomModèle, échelleInitiale, rotationInitiale, positionInitiale)
         {
-            base.LoadContent();
+        }
+
+        public override void Initialize()
+        {
+
+            base.Initialize();
         }
 
         public override void Update(GameTime gameTime)
         {
-            TempsÉcouléDepuisMAJ += (float)gameTime.ElapsedGameTime.TotalSeconds;
-            if (TempsÉcouléDepuisMAJ >= DURÉE_AFFICHAGE)
+            Compteur++;
+            if (Compteur > 500)
             {
                 Game.Components.Remove(this);
             }

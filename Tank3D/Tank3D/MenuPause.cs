@@ -17,6 +17,7 @@ namespace AtelierXNA
         Game Jeu { get; set; }
         List<GameComponent> ListeGameComponentsMenu { get; set; }
         List<GameComponent> ListeGameComponentsAtelier { get; set; }
+        List<GameComponent> ListeGameComponentsTanksDétruits { get; set; }
         GestionnaireEnnemis GestionEnnemis { get; set; }
         ArrièrePlan ImageArrièrePlan { get; set; }
         BoutonDeCommande ReprendreJeu { get; set; }
@@ -33,15 +34,10 @@ namespace AtelierXNA
 
         public override void Initialize()
         {
-            foreach (GameComponent gc in Game.Components)
-            {
-                if (gc is IActivable)
-                {
-                    gc.Enabled = false;
-                }
-            }
+            ArrêterJeu();
+            ListeGameComponentsTanksDétruits = new List<GameComponent>();
             ImageArrièrePlan = new ArrièrePlan(Game, "Background Transparent 60");
-            ReprendreJeu = new BoutonDeCommande(Game, "Reprendre le jeu", "Arial20", "BoutonRouge", "BoutonBleu", new Vector2(Game.Window.ClientBounds.Width / 8f, 9 * Game.Window.ClientBounds.Height / 10f), true, new FonctionÉvénemtielle(Play));
+            ReprendreJeu = new BoutonDeCommande(Game, "Reprendre le jeu", "Arial20", "BoutonNormal", "BoutonEnfoncé", new Vector2(3 * Game.Window.ClientBounds.Width / 8f, 6 * Game.Window.ClientBounds.Height / 10f), true, new FonctionÉvénemtielle(Play));
             BtnRetourMenuPrincipal = new BoutonDeCommande(Game, " X ", "Arial20", "BoutonRougeX", "BoutonBleuX", new Vector2(15f * (Game.Window.ClientBounds.Width / 16f), Game.Window.ClientBounds.Height / 10f), true, new FonctionÉvénemtielle(RetournerMenuPrincipal));
             Game.Components.Add(ImageArrièrePlan);
             Game.Components.Add(ReprendreJeu);
@@ -51,7 +47,6 @@ namespace AtelierXNA
 
         public override void Update(GameTime gameTime)
         {
-
             base.Update(gameTime);
         }
 
@@ -74,13 +69,32 @@ namespace AtelierXNA
             Game.Components.Remove(BtnRetourMenuPrincipal);
         }
 
-        void RetournerMenuPrincipal()
+        public void RetournerMenuPrincipal()
         {
             EffacerMenu();
-            
             Game.Services.RemoveService(typeof(Caméra));
 
+
+
             foreach (GameComponent gc in ListeGameComponentsAtelier)
+            {
+                Game.Components.Remove(gc);
+            }
+
+            foreach (GameComponent gc in Game.Components)
+            {
+                if (gc is TankDétruit || gc is Projectile || gc is Filtre)
+                {
+                    if(gc is Filtre)
+                    {
+                        Filtre f = gc as Filtre;
+                        ListeGameComponentsTanksDétruits.Add(f.FiltreÉcran);
+                    }
+                    ListeGameComponentsTanksDétruits.Add(gc);
+                }
+            }
+
+            foreach (GameComponent gc in ListeGameComponentsTanksDétruits)
             {
                 Game.Components.Remove(gc);
             }
@@ -99,11 +113,6 @@ namespace AtelierXNA
                     gc.Enabled = false;
                 }
             }
-        }
-
-        void RecommencerJeu()
-        {
-            Game.Components.Clear();
         }
     }
 }

@@ -57,23 +57,33 @@ namespace AtelierXNA
         {
             foreach (GameComponent gc in Game.Components)
             {
-                if (gc is IModel && gc != this)
+                if (gc is IModel && gc != this && gc != null)
                 {
                     ObjetDeBase m = gc as ObjetDeBase;
+                    
                     if (SphereCollision.Intersects(m.SphereCollision))
                     {
-                        if (m is Projectile)
+                        if (this is Projectile)
                         {
-                            Projectile p = m as Projectile;
-                            if (p.Lanceur == this)
+                            ModèleMobile mm = m as ModèleMobile;
+                            Projectile p = this as Projectile;
+                            if (p.Lanceur != mm)
                             {
-                                EstEnCollision = false;
+                                mm.AÉtéTiré = true;
+                                p.EffacerProjectile(true, p.Position.X, p.Position.Z, p.Position.Y);
                             }
                         }
-                        else
+                        if (m is Projectile)
                         {
-                            EstEnCollision = true;
+                            ModèleMobile mm = this as ModèleMobile;
+                            Projectile p = m as Projectile;
+                            if (p.Lanceur != mm)
+                            {
+                                mm.AÉtéTiré = true;
+                                p.EffacerProjectile(true, p.Position.X, p.Position.Z, p.Position.Y);
+                            }
                         }
+                        EstEnCollision = true;
                         break;
                     }
                     else

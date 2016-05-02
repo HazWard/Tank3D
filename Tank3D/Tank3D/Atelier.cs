@@ -46,6 +46,7 @@ namespace AtelierXNA
 
         string NomModèleJoueur { get; set; }
         int NbEnnemis { get; set; }
+        int CompteurMort { get; set; }
 
         public Atelier(Game jeu, List<GameComponent> listeGameComponentsMenu, string nomModèleJoueur, int nbEnnemis)
             :base(jeu)
@@ -66,9 +67,8 @@ namespace AtelierXNA
             positionCaméraSubjective = new Vector3(0, 15, 15);
             positionCaméra = new Vector3(0, 100, 250);
             cibleCaméra = new Vector3(0, 0, -10);
-
+            CompteurMort = 0;
             ListeGameComponents = new List<GameComponent>();
-
 
             InitializeComponents();
 
@@ -119,11 +119,11 @@ namespace AtelierXNA
             }
             GestionEnnemis = new GestionnaireEnnemis(Game, Utilisateur, TerrainJeu, NbEnnemis, ÉCHELLE_OBJET, INTERVALLE_MAJ_STANDARD);
             MenuPause = new MenuPause(Game, ListeGameComponentsMenu, ListeGameComponents, GestionEnnemis);
-            //PremierPlan = new PlanTexturé(Game, 1f, Vector3.Zero, new Vector3(0, 6, -126), new Vector2(256, 60), new Vector2(10, 10), "desertDunes", INTERVALLE_MAJ_STANDARD);
-            //DeuxièmePlan = new PlanTexturé(Game, 1f, new Vector3(0, MathHelper.PiOver2, 0), new Vector3(-126, 6, 0), new Vector2(256, 60), new Vector2(10, 10), "desertDunesRéflexion", INTERVALLE_MAJ_STANDARD);
-            //TroisièmePlan = new PlanTexturé(Game, 1f, new Vector3(0, -(MathHelper.PiOver2), 0), new Vector3(126, 6, 0), new Vector2(256, 60), new Vector2(10, 10), "desertDunesRéflexion", INTERVALLE_MAJ_STANDARD);
-            //QuatrièmePlan = new PlanTexturé(Game, 1f, new Vector3(0, MathHelper.Pi, 0), new Vector3(0, 6, 126), new Vector2(256, 60), new Vector2(10, 10), "desertDunes", INTERVALLE_MAJ_STANDARD);
-            //Ciel = new PlanTexturé(Game, 1f, new Vector3(MathHelper.PiOver2, 0, 0), new Vector3(0, 35, 0), new Vector2(256, 256), new Vector2(10, 10), "ciel", INTERVALLE_MAJ_STANDARD);
+            PremierPlan = new PlanTexturé(Game, 1f, Vector3.Zero, new Vector3(0, 6, -126), new Vector2(256, 60), new Vector2(10, 10), "desertDunes", INTERVALLE_MAJ_STANDARD);
+            DeuxièmePlan = new PlanTexturé(Game, 1f, new Vector3(0, MathHelper.PiOver2, 0), new Vector3(-126, 6, 0), new Vector2(256, 60), new Vector2(10, 10), "desertDunesRéflexion", INTERVALLE_MAJ_STANDARD);
+            TroisièmePlan = new PlanTexturé(Game, 1f, new Vector3(0, -(MathHelper.PiOver2), 0), new Vector3(126, 6, 0), new Vector2(256, 60), new Vector2(10, 10), "desertDunesRéflexion", INTERVALLE_MAJ_STANDARD);
+            QuatrièmePlan = new PlanTexturé(Game, 1f, new Vector3(0, MathHelper.Pi, 0), new Vector3(0, 6, 126), new Vector2(256, 60), new Vector2(10, 10), "desertDunes", INTERVALLE_MAJ_STANDARD);
+            Ciel = new PlanTexturé(Game, 1f, new Vector3(MathHelper.PiOver2, 0, 0), new Vector3(0, 35, 0), new Vector2(256, 256), new Vector2(10, 10), "ciel", INTERVALLE_MAJ_STANDARD);
         }
 
         void AddComponents()
@@ -149,16 +149,43 @@ namespace AtelierXNA
 
         void AddTextures()
         {
-            //Game.Components.Add(PremierPlan);
-            //Game.Components.Add(DeuxièmePlan);
-            //Game.Components.Add(TroisièmePlan);
-            //Game.Components.Add(QuatrièmePlan);
-            //Game.Components.Add(Ciel);
+            Game.Components.Add(PremierPlan);
+            Game.Components.Add(DeuxièmePlan);
+            Game.Components.Add(TroisièmePlan);
+            Game.Components.Add(QuatrièmePlan);
+            Game.Components.Add(Ciel);
         }
 
         public override void Update(GameTime gameTime)
         {
             GérerClavier();
+            if (Utilisateur.EstMort)
+            {
+                CompteurMort++;
+            }
+            if (CompteurMort >= 1000)
+            {
+                Game.Services.RemoveService(typeof(Caméra));
+                List<GameComponent> ListeGameComponentsTanksDétruits = new List<GameComponent>();
+                foreach (GameComponent gc in ListeGameComponents)
+                {
+                    Game.Components.Remove(gc);
+                }
+                foreach (GameComponent gc in Game.Components)
+                {
+                    if (gc is TankDétruit || gc is Projectile || gc is Filtre)
+                    {
+                        ListeGameComponentsTanksDétruits.Add(gc);
+                    }
+                }
+                foreach (GameComponent gc in ListeGameComponentsTanksDétruits)
+                {
+                    Game.Components.Remove(gc);
+                }
+                GestionEnnemis.EffacerEnnemis();
+
+                MenuPrincipal.ModifyComponents(true, ListeGameComponentsMenu);
+            }
             base.Update(gameTime);
         }
 
