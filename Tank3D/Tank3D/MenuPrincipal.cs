@@ -59,10 +59,8 @@ namespace AtelierXNA
             GestionInput = new InputManager(this);
             GestionSprites = new SpriteBatch(GraphicsDevice);
             Calculateur = new CalculateurFPS(this, INTERVALLE_CALCUL_FPS);
-            CaméraMenu = new CaméraFixe(this, new Vector3(0, 0, 300), Vector3.Zero, Vector3.Up);
             ListeGameComponents = new List<GameComponent>();
-        
-
+            
             NbEnnemis = 3;
             AddServices();
             InitializeComponents();
@@ -163,6 +161,14 @@ namespace AtelierXNA
 
         void DémarrerJeu()
         {
+            if (Contenu == null)
+            {
+                NomTexture = "Veteran Tiger Body";
+            }
+            else
+            {
+                NomTexture = Contenu.NomTexture;
+            }
             Services.RemoveService(typeof(Caméra));
             ModifyComponents(false, ListeGameComponents);
             Jeu = new Atelier(this, ListeGameComponents, NomTexture, NbEnnemis);
@@ -210,27 +216,13 @@ namespace AtelierXNA
             Components.Add(BtnTextureTank);
         }
 
-
-
         void Retour()
         {
             BtnQuitter.Enabled = true;
+            Contenu.EffacerContenu();
             Components.Remove(Contenu);
             Components.Remove(BtnFermerFenêtre);
-            Contenu.EffacerContenu();
-
             BoutonsTextureAjoutés = false;
-        }
-
-        void ArrêterJeu()
-        {
-            foreach (GameComponent gc in Components)
-            {
-                if (gc is IActivable)
-                {
-                    gc.Enabled = false;
-                }
-            }
         }
     }
 }

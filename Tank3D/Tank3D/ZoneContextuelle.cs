@@ -32,18 +32,21 @@ namespace AtelierXNA
         BoutonDeCommande BtnTextureTank { get; set; }
         Vector2 DimensionPhrase { get; set; }
         bool BoutonsTextureAjoutés { get; set; }
-        string NomTexture { get; set; }
+        bool MenuEffacé { get; set; }
+        public string NomTexture { get; set; }
 
         public ZoneContextuelle(Game game, string nomImage, string typeMenu, Rectangle zone)
             : base(game, nomImage)
         {
             Zone = zone;
+            TypeMenu = typeMenu;
         }
         public override void Initialize()
         {
             // Boutons de changement de texture
             NomTexture = "Veteran Tiger Body";
             BoutonsTextureAjoutés = false;
+            MenuEffacé = false;
             BtnTextureBody = new BoutonDeCommande(Game, "  O  ", "Arial20", "Tank_Body_nocolor", "BtnTextureSelect", new Vector2(Game.Window.ClientBounds.Width / 8, 2.5f * Game.Window.ClientBounds.Height / 6f), true, new FonctionÉvénemtielle(ChangeToBody));
             BtnTextureForest = new BoutonDeCommande(Game, "  O  ", "Arial20", "Tank_Body_Forest", "BtnTextureSelect", new Vector2(Game.Window.ClientBounds.Width / 8, 3f * Game.Window.ClientBounds.Height / 6f), true, new FonctionÉvénemtielle(ChangeToForest));
             BtnTextureDesert = new BoutonDeCommande(Game, "  O  ", "Arial20", "Tank_Body_Desert", "BtnTextureSelect", new Vector2(Game.Window.ClientBounds.Width / 8, 3.5f * Game.Window.ClientBounds.Height / 6f), true, new FonctionÉvénemtielle(ChangeToDesert));
@@ -84,11 +87,6 @@ namespace AtelierXNA
                                     new Vector2(Game.Window.ClientBounds.Width / 4, Game.Window.ClientBounds.Height / 4),
                                     true, new FonctionÉvénemtielle(IllustrerTank));
             Game.Components.Add(BtnTextureTank);
-            Game.Components.Add(DémoTexture);
-            Game.Components.Add(BtnTextureBody);
-            Game.Components.Add(BtnTextureDesert);
-            Game.Components.Add(BtnTextureForest);
-            Game.Components.Add(BtnTextureSnow);
         }
 
         void ÉcrireInstructions()
@@ -146,24 +144,16 @@ namespace AtelierXNA
 
         public void EffacerContenu()
         {
-            switch (TypeMenu)
-            {
-                case "Instructions":
-                    Game.Components.Remove(Instruction1);
-                    Game.Components.Remove(Instruction2);
-                    Game.Components.Remove(Instruction3);
-                    Game.Components.Remove(Instruction4);
-                    break;
-
-                case "Options":
-                    Game.Components.Remove(BtnTextureTank);
-                    Game.Components.Remove(DémoTexture);
-                    Game.Components.Remove(BtnTextureBody);
-                    Game.Components.Remove(BtnTextureDesert);
-                    Game.Components.Remove(BtnTextureForest);
-                    Game.Components.Remove(BtnTextureSnow);
-                    break;
-            }
+            Game.Components.Remove(Instruction1);
+            Game.Components.Remove(Instruction2);
+            Game.Components.Remove(Instruction3);
+            Game.Components.Remove(Instruction4);
+            Game.Components.Remove(BtnTextureTank);
+            Game.Components.Remove(DémoTexture);
+            Game.Components.Remove(BtnTextureBody);
+            Game.Components.Remove(BtnTextureDesert);
+            Game.Components.Remove(BtnTextureForest);
+            Game.Components.Remove(BtnTextureSnow);
         }
 
         void IllustrerTank()
