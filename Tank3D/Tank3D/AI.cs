@@ -22,6 +22,7 @@ namespace AtelierXNA
         const int HAUTEUR_DÉFAULT = 1;
         const int DÉLAI_MOUVEMENT = 5;
         const int DÉLAI_TIR = 71;
+        Vector2 ÉTENDUE = new Vector2(100,17);
         // const float INCRÉMENT_ROTATION = 0.05f;
         Joueur Cible { get; set; }
         bool estDétruit { get; set; }
@@ -35,6 +36,7 @@ namespace AtelierXNA
         int Compteur { get; set; }
         Game Jeu { get; set; }
         public BarreDeVie VieAI { get; set; }
+        public BarreDeVie VieAIFond { get; set; }
         float PourcentageVie { get; set; }
         int CompteurCollision { get; set; }
 
@@ -56,8 +58,10 @@ namespace AtelierXNA
             Orientation = 0;
             NuméroAI = numéroAI;
             Compteur = 0;
-            VieAI = new BarreDeVie(jeu, échelleInitiale, rotationInitiale, new Vector3(positionInitiale.X, positionInitiale.Y + 15, positionInitiale.Z), new Vector2(100, 17), new Vector2(5, 10), "FondInstructions", IntervalleMAJ);
+            VieAI = new BarreDeVie(jeu, échelleInitiale, rotationInitiale, new Vector3(positionInitiale.X, positionInitiale.Y + 15, positionInitiale.Z), new Vector2(100, 17), new Vector2(1, 1), "BarreDeVieRectangle", IntervalleMAJ, 4);
             Game.Components.Add(VieAI);
+            //VieAIFond = new BarreDeVie(jeu, échelleInitiale, rotationInitiale, new Vector3(positionInitiale.X + 3*(float)Math.Cos(Rotation.Y), positionInitiale.Y + 15, positionInitiale.Z + 3*(float)Math.Cos(Rotation.Y)), new Vector2(90, 14), new Vector2(1, 1), "FondVertBarreDeVie", IntervalleMAJ,4);
+            //Game.Components.Add(VieAIFond);
         }
         public override void Initialize()
         {
@@ -114,12 +118,16 @@ namespace AtelierXNA
         void CalculBarreDeVie()
         {
             VieAI.Position = new Vector3(Position.X, Position.Y + 7, Position.Z);
-            //VieAI.AngleLacet = Rotation.Y;
+            //VieAIFond.Position = new Vector3(Position.X, Position.Y + 7, Position.Z);
             VieAI.PositionJoueur = Cible.GetPosition;
-
+            //VieAIFond.PositionJoueur = Cible.GetPosition;
             VieAI.PourcentageVie = PourcentageVie;
+            //VieAIFond.PourcentageVie = PourcentageVie;
+            if (EstEnCollision)
+            {
+                VieAI.Étendue = new Vector2(ÉTENDUE.X - 25, VieAI.Étendue.Y);
+            }
 
-            //VieJoueur.CalculerVie(RotationPitchCanon, RotationYawTour, PositionTour);
         }
         public void ModifierActivation()
         {

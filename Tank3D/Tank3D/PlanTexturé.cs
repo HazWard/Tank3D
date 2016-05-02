@@ -7,9 +7,9 @@ namespace AtelierXNA
    {
       string NomTexture { get; set; }
       RessourcesManager<Texture2D> TextureManager { get; set; }
-      Texture2D Texture { get; set; }
+      protected Texture2D Texture { get; set; }
       protected VertexPositionTexture[] Sommets { get; set; }
-      Vector2[,] PtsTexture { get; set; }
+      protected Vector2[,] PtsTexture { get; set; }
       BlendState GestionAlpha { get; set; }
       public PlanTexturé(Game jeu, float homothétieInitiale, Vector3 rotationInitiale, Vector3 positionInitiale, Vector2 étendue, Vector2 charpente, string nomTexture, float intervalleMAJ)
          : base(jeu, homothétieInitiale, rotationInitiale, positionInitiale, étendue, charpente, intervalleMAJ)

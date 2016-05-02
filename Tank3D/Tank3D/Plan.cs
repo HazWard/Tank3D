@@ -12,7 +12,7 @@ namespace AtelierXNA
       protected int NbRangées { get; private set; } // idem 
       protected int NbTrianglesParStrip { get; private set; } //...
       protected BasicEffect EffetDeBase { get; private set; } // 
-      protected Vector2 Étendue { get; set; }
+      public Vector2 Étendue { get; set; }
       Vector2 Charpente { get; set; }
 
       public Plan(Game jeu, float homothétieInitiale, Vector3 rotationInitiale, Vector3 positionInitiale, Vector2 étendue, Vector2 charpente, float intervalleMAJ)

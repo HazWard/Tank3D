@@ -20,21 +20,32 @@ namespace AtelierXNA
     {
         //float PourcentageVie { get; set; }
         //Joueur Joueur { get; set; }
+        public Vector3 PositionJoueur { get; set; }
+        public bool EstTouché { get;set; }
+
+
         Rectangle RectangleSource { get; set; }
         public float PourcentageVie { get; set; }
         float TempsÉcouléDepuisMAJ { get; set; }
         float LargeurInitiale { get; set; }
         float LargeureImage { get; set; }
-        public Vector3 PositionJoueur { get; set; }
-        Matrix Rot { get; set; }
         
+        Matrix Rot { get; set; }
+        int LigneSheet { get; set; }
+        int DeltaX { get; set; }
+        int DeltaY { get; set; }
+        float DeltaPointX { get; set; }
+        Rectangle RectangleSourceVie { get; set; }
+        int NbImages { get; set; }
+        SpriteBatch GestionnaireDeSprite { get; set; }
 
 
         //ModèleMobile Cible { get; set; }
         //public Vector3 Position { get; set; }
-        public BarreDeVie(Game jeu, float homothétieInitiale, Vector3 rotationInitiale, Vector3 positionInitiale, Vector2 étendue, Vector2 charpente, string nomTexture, float intervalleMAJ)
+        public BarreDeVie(Game jeu, float homothétieInitiale, Vector3 rotationInitiale, Vector3 positionInitiale, Vector2 étendue, Vector2 charpente, string nomTexture, float intervalleMAJ, int nbImages)
             : base(jeu, homothétieInitiale, rotationInitiale, positionInitiale, étendue, charpente,nomTexture, intervalleMAJ)
         {
+            NbImages = nbImages;
         }
 
         /// <summary>
@@ -44,6 +55,7 @@ namespace AtelierXNA
         public override void Initialize()
         {
             LargeurInitiale = Étendue.X;
+            //LigneSheet = 1;
             base.Initialize();
             
         }
@@ -52,10 +64,14 @@ namespace AtelierXNA
         }
         protected override void LoadContent()
         {
-            
-            
-           base.LoadContent();
+            base.LoadContent();
+            DeltaX = (int)(Texture.Width / NbImages);
+            DeltaY = (int)(Texture.Height);
+            //DeltaPointX = DeltaX / Texture.Width;
+            RectangleSourceVie = new Rectangle(0, 0, DeltaX, DeltaY);
+            GestionnaireDeSprite = Game.Services.GetService(typeof(SpriteBatch)) as SpriteBatch; 
         }
+       
 
         /// <summary>
         /// Allows the game component to update itself.
@@ -67,14 +83,25 @@ namespace AtelierXNA
             TempsÉcouléDepuisMAJ += TempsÉcoulé;
             if (TempsÉcouléDepuisMAJ > IntervalleMAJ)
             {
-                CalculerVie();
+                EstTouché = true;
+                if (EstTouché)
+                { 
+                    CalculerVie();
+                }
+                
                 CalculerNormales();
+                //CréerTableauPointsTexture();
+                //CréerTableauPoints();
                 CalculerMatriceMonde();
+              
+                    
+                
                 
                 TempsÉcouléDepuisMAJ = 0;
             }
             base.Update(gameTime);
         }
+
 
 
 //        The actual math involved, as long as O is not linearly dependent with U, is simple.
@@ -108,8 +135,44 @@ namespace AtelierXNA
         }
         public void CalculerVie()
         {
-            LargeureImage = PourcentageVie * Étendue.X;
+            if (LigneSheet < NbImages - 1)
+            { 
+                LigneSheet = LigneSheet + 1;    
+            }
+            RectangleSource = new Rectangle((RectangleSource.X + (DeltaX *LigneSheet)) % Texture.Width, 0, DeltaX, DeltaY);
+            
+            //LargeureImage = PourcentageVie * Étendue.X;
         }
+        //private void CréerTableauPointsTexture()
+        //{
+        //    PtsTexture = new Vector2[NbColonnes + 1, NbRangées + 1];
+        //    //float DeltaX = 1f / NbColonnes;
+        //    //float DeltaY = 1f / NbRangées;
+        //    int i = LigneSheet * DeltaX;
+        //    PtsTexture[0, 0] = new Vector2(0, 0);
+        //    PtsTexture[1, 0] = new Vector2(0 + DeltaPointX, 0);
+        //    PtsTexture[0, 1] = new Vector2(0, 1);
+        //    PtsTexture[1, 1] = new Vector2(0 + DeltaPointX, 1);
+
+        //    //for (int i = 0; i <= NbColonnes; ++i)
+        //    //{
+        //    //    for (int j = 0; j <= NbRangées; ++j)
+        //    //    {
+        //    //        PtsTexture[i, j] = new Vector2(i * DeltaX, (NbRangées - j) * DeltaY);
+        //    //    }
+        //    //}
+        //}
+        //private void CréerTableauPoints()
+        //{
+        //    for (int i = 0; i < PtsSommets.GetLength(0); ++i)
+        //    {
+        //        for (int j = 0; j < PtsSommets.GetLength(1); ++j)
+        //        {
+        //            PtsSommets[i, j] = new Vector3(0 + i * DeltaX, 0 + j * DeltaY, Origine.Z);
+        //        }
+        //    }
+
+        //}
         public override void Draw(GameTime gameTime)
         {
             RasterizerState JeuRasterizerState = new RasterizerState();
@@ -117,6 +180,9 @@ namespace AtelierXNA
             JeuRasterizerState.CullMode = CullMode.None;
             JeuRasterizerState.FillMode = ancienRasterizerState.FillMode;
             EffetDeBase.GraphicsDevice.RasterizerState = JeuRasterizerState;
+            //GestionnaireDeSprite.Begin();
+            //GestionnaireDeSprite.Draw(Texture,Position, RectangleSource, Color.White,Rot,Origine,SpriteEffects.None,1f);
+            //GestionnaireDeSprite.End();
             base.Draw(gameTime);
             EffetDeBase.GraphicsDevice.RasterizerState = ancienRasterizerState;
         }
