@@ -14,6 +14,7 @@ namespace AtelierXNA
 {
     public class TankDétruit : ObjetDeBase, IModel
     {
+        int Compteur { get; set; }
         public TankDétruit(Game jeu, string nomModèle, float échelleInitiale, Vector3 rotationInitiale, Vector3 positionInitiale)
             : base(jeu, nomModèle, échelleInitiale, rotationInitiale, positionInitiale)
         {
@@ -27,7 +28,11 @@ namespace AtelierXNA
 
         public override void Update(GameTime gameTime)
         {
-
+            Compteur++;
+            if (Compteur > 500)
+            {
+                Game.Components.Remove(this);
+            }
             base.Update(gameTime);
         }
     }

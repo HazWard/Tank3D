@@ -103,20 +103,6 @@ namespace AtelierXNA
             float TempsÉcoulé = (float)gameTime.ElapsedGameTime.TotalSeconds;
             TempsÉcouléDepuisMAJ += TempsÉcoulé;
             TempsÉcouléMAJFumée += TempsÉcoulé;
-            AÉtéCliqué = GestionInput.EstNouveauClicGauche();
-            if (AÉtéCliqué)
-            {
-                float Y = -200 * RotationPitchCanon.X;
-                Fumée = new Fumée(Game, new Vector2(Game.Window.ClientBounds.Width / 2, Y), 0.2f);
-                Game.Components.Add(Fumée);
-                GestionProjectile();
-            }
-
-            if (TempsÉcouléMAJFumée > INTERVALLE_FUMÉE)
-            {
-                Game.Components.Remove(Fumée);
-                TempsÉcouléMAJFumée = 0;
-            }
 
             if (TempsÉcouléDepuisMAJ >= IntervalleMAJ)
             {
@@ -125,6 +111,29 @@ namespace AtelierXNA
                     GestionMouvements();
                 }
                 TempsÉcouléDepuisMAJ = 0;
+            }
+
+            AÉtéCliqué = GestionInput.EstNouveauClicGauche();
+            if (AÉtéCliqué)
+            {
+                float Y = -200 * RotationPitchCanon.X;
+                Fumée = new Fumée(Game, new Vector2(Game.Window.ClientBounds.Width / 2, Y), 0.2f);
+                Game.Components.Add(Fumée);
+
+                if (!Visible)
+                {
+                    GestionProjectile(2.5f);
+                }
+                else
+                {
+                    GestionProjectile(2f);
+                }
+            }
+
+            if (TempsÉcouléMAJFumée > INTERVALLE_FUMÉE)
+            {
+                Game.Components.Remove(Fumée);
+                TempsÉcouléMAJFumée = 0;
             }
 
             if (AÉtéTiré)
@@ -150,7 +159,7 @@ namespace AtelierXNA
         #region Méthodes pour la gestion des déplacements et rotations du modèle
         protected void GestionMouvements()
         {
-            GestionProjectile();
+            GestionProjectile(2f);
             GestionSouris();
             RotationTour();
             RotationCanon();
@@ -159,13 +168,15 @@ namespace AtelierXNA
             CaméraJeu.Position = new Vector3(((float)Math.Sin(RotationYawTour.Y) * DISTANCE_POURSUITE) + Position.X,
                                          ((float)Math.Tan(MathHelper.PiOver2 - RotationPitchCanon.X) * DISTANCE_POURSUITE) + Position.Y + HAUTEUR_CAM_DÉFAULT,
                                          ((float)Math.Cos(RotationYawTour.Y) * DISTANCE_POURSUITE) + Position.Z);
-            float déplacement = GérerTouche(Keys.W) - GérerTouche(Keys.S);
-            float rotation = GérerTouche(Keys.D) - GérerTouche(Keys.A);
-            if (déplacement != 0 || rotation != 0)
+            if (Visible)
             {
-                ModificationParamètres(déplacement, rotation);
+                float déplacement = GérerTouche(Keys.W) - GérerTouche(Keys.S);
+                float rotation = GérerTouche(Keys.D) - GérerTouche(Keys.A);
+                if (déplacement != 0 || rotation != 0)
+                {
+                    ModificationParamètres(déplacement, rotation);
+                }
             }
-
         }
 
         void ModificationParamètres(float déplacement, float rotation)
@@ -222,7 +233,6 @@ namespace AtelierXNA
 
         void RotationTour()
         {
-            GestionSouris();
             RotationYawTour = new Vector3(-MathHelper.PiOver2 + Rotation.X, RotationYawTour.Y + 2 * (-INCRÉMENT_ROTATION_TOUR * DeltaRotationCanon.X), MathHelper.PiOver2);
             PositionTour = new Vector3(Position.X, Position.Y + 0.3f, Position.Z);
             MondeTour = TransformationsMeshes(ÉchelleTour, RotationYawTour, PositionTour);
@@ -230,14 +240,25 @@ namespace AtelierXNA
 
         void RotationCanon()
         {
-            GestionSouris();
             RotationPitchCanon = new Vector3(RotationPitchCanon.X + (-INCRÉMENT_ROTATION_TOUR * DeltaRotationCanon.Y),
                                              RotationPitchCanon.Y + 2 * (-INCRÉMENT_ROTATION_TOUR * DeltaRotationCanon.X), RotationPitchCanon.Z);
-            if (RotationPitchCanon.X > -1.2f || RotationPitchCanon.X < -2.0f)
+            if (Visible)
             {
-                RotationPitchCanon = new Vector3(RotationPitchCanon.X - (-INCRÉMENT_ROTATION_TOUR * DeltaRotationCanon.Y),
-                                                 RotationPitchCanon.Y, RotationPitchCanon.Z);
+                if (RotationPitchCanon.X > -1.2f || RotationPitchCanon.X < -2.0f)
+                {
+                    RotationPitchCanon = new Vector3(RotationPitchCanon.X - (-INCRÉMENT_ROTATION_TOUR * DeltaRotationCanon.Y),
+                                                     RotationPitchCanon.Y, RotationPitchCanon.Z);
+                }
             }
+            else
+            {
+                if (RotationPitchCanon.X > -1.0f || RotationPitchCanon.X < -1.8f)
+                {
+                    RotationPitchCanon = new Vector3(RotationPitchCanon.X - (-INCRÉMENT_ROTATION_TOUR * DeltaRotationCanon.Y),
+                                                     RotationPitchCanon.Y, RotationPitchCanon.Z);
+                }
+            }
+            
             PositionCanon = new Vector3(Position.X, Position.Y - 1f, Position.Z);
             MondeCanon = TransformationsMeshes(ÉchelleCanon, RotationPitchCanon, PositionCanon);
         }
@@ -258,12 +279,12 @@ namespace AtelierXNA
             }
         }
 
-        void GestionProjectile()
+        void GestionProjectile(float indiceRotation)
         {
             if (AÉtéCliqué)
             {
                 ProjectileTank = new Projectile(Game, "Projectile", 0.1f,
-                                                new Vector3(2 * RotationPitchCanon.X + MathHelper.Pi, RotationPitchCanon.Y - 0.05f, RotationPitchCanon.Z),
+                                                new Vector3(indiceRotation * RotationPitchCanon.X + MathHelper.Pi, RotationPitchCanon.Y - 0.05f, RotationPitchCanon.Z),
                                                 new Vector3(PositionCanon.X - 5 * (float)Math.Sin(RotationPitchCanon.Y), PositionCanon.Y + 4.5f, PositionCanon.Z - 5 * (float)Math.Cos(RotationPitchCanon.Y)), IntervalleMAJ, 2f, 0.02f, false, this);
                 Game.Components.Add(ProjectileTank);
             }

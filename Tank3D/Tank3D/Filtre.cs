@@ -18,6 +18,7 @@ namespace AtelierXNA
         protected ArriËrePlan Filtre…cran { get; set; }
         public bool Activation { get; set; }
         protected bool EstDansComponents { get; set; }
+        Joueur Utilisateur { get; set; }
 
         public Filtre(Game game, string nomImage)
             :base(game)
@@ -26,6 +27,7 @@ namespace AtelierXNA
         }
         public override void Initialize()
         {
+            Utilisateur = Game.Services.GetService(typeof(Joueur)) as Joueur;
             Game.Components.Add(Filtre…cran);
             EstDansComponents = true;
             base.Initialize();
@@ -33,7 +35,11 @@ namespace AtelierXNA
 
         public override void Update(GameTime gameTime)
         {
-            if(Activation)
+            if (Utilisateur == null)
+            {
+                Utilisateur = Game.Services.GetService(typeof(Joueur)) as Joueur;
+            }
+            if (Activation && !Utilisateur.EstMort)
             {
                 if (!EstDansComponents)
                 {

@@ -66,16 +66,22 @@ namespace AtelierXNA
                         if (this is Projectile)
                         {
                             ModèleMobile mm = m as ModèleMobile;
-                            mm.AÉtéTiré = true;
                             Projectile p = this as Projectile;
-                            p.EffacerProjectile(true, p.Position.X, p.Position.Z, p.Position.Y);
+                            if (p.Lanceur != mm)
+                            {
+                                mm.AÉtéTiré = true;
+                                p.EffacerProjectile(true, p.Position.X, p.Position.Z, p.Position.Y);
+                            }
                         }
                         if (m is Projectile)
                         {
                             ModèleMobile mm = this as ModèleMobile;
-                            mm.AÉtéTiré = true;
                             Projectile p = m as Projectile;
-                            p.EffacerProjectile(true, p.Position.X, p.Position.Z, p.Position.Y);
+                            if (p.Lanceur != mm)
+                            {
+                                mm.AÉtéTiré = true;
+                                p.EffacerProjectile(true, p.Position.X, p.Position.Z, p.Position.Y);
+                            }
                         }
                         EstEnCollision = true;
                         break;

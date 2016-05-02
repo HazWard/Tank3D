@@ -80,7 +80,7 @@ namespace AtelierXNA
             }
             foreach (GameComponent gc in Game.Components)
             {
-                if (gc is TankDétruit)
+                if (gc is TankDétruit || gc is Projectile || gc is Filtre)
                 {
                     ListeGameComponentsTanksDétruits.Add(gc);
                 }
