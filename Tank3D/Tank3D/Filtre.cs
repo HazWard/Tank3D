@@ -17,7 +17,7 @@ namespace AtelierXNA
         public ArrièrePlan FiltreÉcran { get; set; }
         public bool Activation { get; set; }
         protected bool EstDansComponents { get; set; }
-        Joueur Utilisateur { get; set; }
+        protected Joueur Utilisateur { get; set; }
 
         public Filtre(Game game, string nomImage)
             :base(game)

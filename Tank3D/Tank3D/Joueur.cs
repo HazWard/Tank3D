@@ -81,6 +81,8 @@ namespace AtelierXNA
         public override void Initialize()
         {
             base.Initialize();
+            OrientationTank = Matrix.Identity;
+            OrientationTank *= Matrix.CreateScale(Échelle);
             ListePointsColor = new VertexPositionColor[8];
             ListePoints = new Vector3[8];
             EffetDeBase = new BasicEffect(GraphicsDevice);
@@ -199,19 +201,6 @@ namespace AtelierXNA
                 NouvelleHauteurTerrain = TerrainJeu.GetHauteur(nouvellesCoords);
                 Position = new Vector3(posXFinal, NouvelleHauteurTerrain + HAUTEUR_DÉFAULT, posZFinal);
 
-                /*
-                AnglesIncréments = GestionnaireDeNormales.GetNormale(nouvellesCoords, Rotation);
-
-                if (Math.Abs(Rotation.Y % MathHelper.TwoPi) >= MathHelper.PiOver2 && Math.Abs(Rotation.Y % MathHelper.TwoPi) <= MathHelper.PiOver2 * 3)
-                {
-                    AnglesIncréments = new Vector2(AnglesIncréments.X, -AnglesIncréments.Y);
-                }
-
-                TraitementNormales(nouvellesCoords, "X");
-                TraitementNormales(nouvellesCoords, "Y");
-                AncienAnglesIncréments = AnglesIncréments;
-                */
-
                 // Utilisation d'une matrice
                 OrientationTank = Matrix.CreateRotationY(RotationYaw);
                 OrientationTank.Up = GestionnaireDeNormales.GetNormaleVec(nouvellesCoords);
@@ -304,9 +293,15 @@ namespace AtelierXNA
 
         Matrix TransformationsMeshes(float échelle, Vector3 rotation, Vector3 position)
         {
+            /*
             Matrix monde = Matrix.Identity;
             monde *= Matrix.CreateScale(échelle);
             monde *= Matrix.CreateFromYawPitchRoll(rotation.Y, rotation.X, rotation.Z);
+            monde *= Matrix.CreateTranslation(position);
+            */
+
+            Matrix monde = Matrix.CreateFromYawPitchRoll(rotation.Y, rotation.X, rotation.Z);
+            monde *= Matrix.CreateScale(échelle);
             monde *= Matrix.CreateTranslation(position);
 
             return monde;
@@ -350,25 +345,33 @@ namespace AtelierXNA
         */
         public override void Draw(GameTime gameTime)
         {
-
-
-            // now that we've updated the wheels' transforms, we can create an array
-            // of absolute transforms for all of the bones, and then use it to draw.
             Matrix[] boneTransforms = new Matrix[Modèle.Bones.Count];
             Modèle.CopyAbsoluteBoneTransformsTo(boneTransforms);
 
-            // calculate the tank's world matrix, which will be a combination of our
-            // orientation and a translation matrix that will put us at at the correct
-            // position.
             Matrix worldMatrix = OrientationTank * Matrix.CreateTranslation(Position);
 
             foreach (ModelMesh mesh in Modèle.Meshes)
             {
+                Matrix mondeLocal;
+
+                if (mesh.Name == "Tour")
+                {
+                    mondeLocal = MondeTour;
+                }
+                else if (mesh.Name == "Canon")
+                {
+                    mondeLocal = MondeCanon;
+                }
+                else
+                {
+                    mondeLocal = TransformationsModèle[mesh.ParentBone.Index] * worldMatrix; ;
+                }
+
                 foreach (BasicEffect effect in mesh.Effects)
                 {
                     effect.View = CaméraJeu.Vue;
                     effect.Projection = CaméraJeu.Projection;
-                    effect.World = boneTransforms[mesh.ParentBone.Index] * worldMatrix;
+                    effect.World = mondeLocal;
                     effect.EnableDefaultLighting();
                     effect.PreferPerPixelLighting = true;
                 }

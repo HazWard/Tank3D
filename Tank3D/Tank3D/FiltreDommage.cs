@@ -38,7 +38,7 @@ namespace AtelierXNA
 
         void RÈduireAlpha()
         {
-            if (Filtre…cran.Couleur.A <= 0)
+            if (Filtre…cran.Couleur.A <= 0 || Utilisateur.EstMort)
             {
                 Activation = false;
                 Game.Components.Remove(this);
