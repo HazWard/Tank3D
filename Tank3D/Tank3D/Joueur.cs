@@ -40,13 +40,16 @@ namespace AtelierXNA
         Vector2 AncienAnglesIncréments { get; set; }
         Matrix MondeTour { get; set; }
         Matrix MondeCanon { get; set; }
+        float RotationYaw { get; set; }
         float ÉchelleTour { get; set; }
         float ÉchelleCanon { get; set; }
         float ÉchelleRoues { get; set; }
         float TempsÉcouléMAJFumée { get; set; }
         public bool EstMort { get; set; }
         Sprite Fumée { get; set; }
+        Matrix OrientationTank;
         int Vie { get; set; }
+
         public Vector2 Coordonnées
         {
             get
@@ -88,6 +91,7 @@ namespace AtelierXNA
             ÉchelleCanon = 0.005f;
             ÉchelleRoues = 0.05f;
             Vie = 100;
+            RotationYaw = 0;
             TempsÉcouléMAJFumée = 0f;
         }
 
@@ -179,14 +183,14 @@ namespace AtelierXNA
 
         void ModificationParamètres(float déplacement, float rotation)
         {
-            float rotationFinal = Rotation.Y - (IncrémentAngleRotation * rotation) / 3f;
-            float posX = déplacement * (float)Math.Sin(rotationFinal);
-            float posY = déplacement * (float)Math.Cos(rotationFinal);
+            RotationYaw = Rotation.Y - (IncrémentAngleRotation * rotation) / 3f;
+            float posX = déplacement * (float)Math.Sin(RotationYaw);
+            float posY = déplacement * (float)Math.Cos(RotationYaw);
             Vector2 déplacementFinal = new Vector2(posX, posY);
             float posXFinal = Position.X - déplacementFinal.X;
             float posZFinal = Position.Z - déplacementFinal.Y;
 
-            Rotation = new Vector3(Rotation.X, rotationFinal, Rotation.Z);
+            Rotation = new Vector3(Rotation.X, RotationYaw, Rotation.Z);
             nouvellesCoords = TerrainJeu.ConvertionCoordonnées(new Vector3(posXFinal, 0, posZFinal));
 
             if (!EstHorsDesBornes(nouvellesCoords))
@@ -194,6 +198,8 @@ namespace AtelierXNA
                 AncienneHauteurTerrain = NouvelleHauteurTerrain;
                 NouvelleHauteurTerrain = TerrainJeu.GetHauteur(nouvellesCoords);
                 Position = new Vector3(posXFinal, NouvelleHauteurTerrain + HAUTEUR_DÉFAULT, posZFinal);
+
+                /*
                 AnglesIncréments = GestionnaireDeNormales.GetNormale(nouvellesCoords, Rotation);
 
                 if (Math.Abs(Rotation.Y % MathHelper.TwoPi) >= MathHelper.PiOver2 && Math.Abs(Rotation.Y % MathHelper.TwoPi) <= MathHelper.PiOver2 * 3)
@@ -204,8 +210,17 @@ namespace AtelierXNA
                 TraitementNormales(nouvellesCoords, "X");
                 TraitementNormales(nouvellesCoords, "Y");
                 AncienAnglesIncréments = AnglesIncréments;
+                */
+
+                // Utilisation d'une matrice
+                OrientationTank = Matrix.CreateRotationY(RotationYaw);
+                OrientationTank.Up = GestionnaireDeNormales.GetNormaleVec(nouvellesCoords);
+                OrientationTank.Right = Vector3.Normalize(Vector3.Cross(OrientationTank.Forward, OrientationTank.Up));
+                OrientationTank.Forward = Vector3.Normalize(Vector3.Cross(OrientationTank.Up, OrientationTank.Right));
+                OrientationTank *= Matrix.CreateScale(Échelle);
                 SphereCollision = new BoundingSphere(Position, RAYON_COLLISION);
             }
+
             CalculerMonde();
         }
 
@@ -297,6 +312,7 @@ namespace AtelierXNA
             return monde;
         }
 
+        /*
         public override void Draw(GameTime gameTime)
         {
             GraphicsDevice.BlendState = BlendState.Opaque;
@@ -331,6 +347,36 @@ namespace AtelierXNA
             }
 
         }
+        */
+        public override void Draw(GameTime gameTime)
+        {
+
+
+            // now that we've updated the wheels' transforms, we can create an array
+            // of absolute transforms for all of the bones, and then use it to draw.
+            Matrix[] boneTransforms = new Matrix[Modèle.Bones.Count];
+            Modèle.CopyAbsoluteBoneTransformsTo(boneTransforms);
+
+            // calculate the tank's world matrix, which will be a combination of our
+            // orientation and a translation matrix that will put us at at the correct
+            // position.
+            Matrix worldMatrix = OrientationTank * Matrix.CreateTranslation(Position);
+
+            foreach (ModelMesh mesh in Modèle.Meshes)
+            {
+                foreach (BasicEffect effect in mesh.Effects)
+                {
+                    effect.View = CaméraJeu.Vue;
+                    effect.Projection = CaméraJeu.Projection;
+                    effect.World = boneTransforms[mesh.ParentBone.Index] * worldMatrix;
+                    effect.EnableDefaultLighting();
+                    effect.PreferPerPixelLighting = true;
+                }
+                mesh.Draw();
+            }
+        }
+
+
         #endregion
     }
 }

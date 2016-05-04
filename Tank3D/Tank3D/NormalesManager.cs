@@ -16,11 +16,11 @@ namespace AtelierXNA
     public class NormalesManager : Microsoft.Xna.Framework.DrawableGameComponent
     {
         const float ANGLE_MAX = MathHelper.Pi / 16f;
-        
+
         Terrain TerrainJeu { get; set; }
-        
+
         public NormalesManager(Game game)
-            : base(game) {}
+            : base(game) { }
 
         public override void Initialize()
         {
@@ -57,6 +57,11 @@ namespace AtelierXNA
             return angles;
         }
 
+        public Vector3 GetNormaleVec(Point coords)
+        {
+            return TerrainJeu.Normales[coords.X, coords.Y];
+        }
+
         Vector2 CalculMoyenne(Vector2 norm1, Vector2 norm2)
         {
             float moyenneX = (norm1.X + norm2.X) / 2f;
@@ -67,9 +72,9 @@ namespace AtelierXNA
         public Vector2 GetDroites(Vector2 position, float rotation)
         {
             Vector2 pointXAvant = new Vector2(position.X + (float)(3f * Math.Cos(rotation)), position.Y + (float)(3f * Math.Sin(rotation)));
-            Vector2 pointX= new Vector2(position.X + (float)(3f * Math.Cos(rotation)), position.Y + (float)(3f * Math.Sin(rotation)));
-            
-            
+            Vector2 pointX = new Vector2(position.X + (float)(3f * Math.Cos(rotation)), position.Y + (float)(3f * Math.Sin(rotation)));
+
+
             Vector2 pointAvant = new Vector2(position.X + (float)(3f * Math.Cos(rotation)), position.Y + (float)(3f * Math.Sin(rotation)));
 
             return Vector2.Zero;
