@@ -17,7 +17,7 @@ namespace AtelierXNA
     /// </summary>
     public class TexteCentré : Microsoft.Xna.Framework.DrawableGameComponent
     {
-        string TexteÀAfficher { get; set; }
+        public string TexteÀAfficher { get; set; }
         string NomFont { get; set; }
         Rectangle ZoneAffichage { get; set; }
         Rectangle ZoneAffichageMarge { get; set; }

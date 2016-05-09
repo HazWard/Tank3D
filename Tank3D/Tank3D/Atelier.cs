@@ -29,6 +29,7 @@ namespace AtelierXNA
         InputManager GestionInput { get; set; }
         Terrain TerrainJeu { get; set; }
         Joueur Utilisateur { get; set; }
+        TexteCentré MessageFin { get; set; }
 
         PlanTexturé PremierPlan { get; set; }
         PlanTexturé DeuxièmePlan { get; set; }
@@ -59,7 +60,7 @@ namespace AtelierXNA
         public override void Initialize()
         {
             Mouse.SetPosition(Game.Window.ClientBounds.Width / 2, Game.Window.ClientBounds.Height / 2);
-
+            
             positionObjet = new Vector3(0, 10, 0);
             positionAI = new Vector3(-20, 10, 50);
             positionTerrain = new Vector3(0, 0, 0);
@@ -161,12 +162,20 @@ namespace AtelierXNA
             GérerClavier();
             if (Utilisateur.EstMort)
             {
+                if (!Game.Components.Contains(MessageFin))
+                {
+                    string score = Utilisateur.Score.ToString();
+                    MessageFin = new TexteCentré(Game, "Vous avez marqués " + score + " points", "Arial20", new Rectangle(Game.Window.ClientBounds.Width / 4, Game.Window.ClientBounds.Height / 3, Game.Window.ClientBounds.Width / 2, Game.Window.ClientBounds.Height / 8), Color.Red, 0f);
+                    ListeGameComponents.Add(MessageFin);
+                    Game.Components.Add(MessageFin);
+                }
                 CompteurMort++;
             }
             if (CompteurMort >= 1000)
             {
                 Game.Services.RemoveService(typeof(Caméra));
                 List<GameComponent> ListeGameComponentsTanksDétruits = new List<GameComponent>();
+                Game.Components.Remove(Utilisateur.TexteScore);
                 foreach (GameComponent gc in ListeGameComponents)
                 {
                     Game.Components.Remove(gc);

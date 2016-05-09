@@ -117,6 +117,7 @@ namespace AtelierXNA
 
                 if (EstDétruit)
                 {
+                    Cible.Score++;
                     GestionEnnemis.DoitCréer = true;
                     Game.Components.Add(new TankDétruit(Game, "Veteran Tiger Destroyed", 0.05f, Rotation, Position));
                     Game.Components.Remove(VieAI);

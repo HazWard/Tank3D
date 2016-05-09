@@ -75,9 +75,12 @@ namespace AtelierXNA
             Game.Services.RemoveService(typeof(Caméra));
 
 
-
             foreach (GameComponent gc in ListeGameComponentsAtelier)
             {
+                if (gc is Joueur)
+                {
+                    Game.Components.Remove((gc as Joueur).TexteScore);
+                }
                 Game.Components.Remove(gc);
             }
 

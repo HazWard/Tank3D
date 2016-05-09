@@ -30,6 +30,7 @@ namespace AtelierXNA
         const float HAUTEUR_DÉFAULT = 1f;
 
         // Propriétés
+        public TexteCentré TexteScore { get; set; }
         Projectile ProjectileTank { get; set; }
         Vector3 RotationYawTour { get; set; }
         Vector3 RotationPitchCanon { get; set; }
@@ -49,6 +50,7 @@ namespace AtelierXNA
         Sprite Fumée { get; set; }
         Matrix OrientationTank;
         int Vie { get; set; }
+        public int Score { get; set; }
 
         public Vector2 Coordonnées
         {
@@ -83,6 +85,7 @@ namespace AtelierXNA
             base.Initialize();
             OrientationTank = Matrix.Identity;
             OrientationTank *= Matrix.CreateScale(Échelle);
+            TexteScore = new TexteCentré(Game, Score.ToString(), "Arial20", new Rectangle(Game.Window.ClientBounds.Width / 12, Game.Window.ClientBounds.Height / 10, 100, 100), Color.Red, 0f);
             ListePointsColor = new VertexPositionColor[8];
             ListePoints = new Vector3[8];
             EffetDeBase = new BasicEffect(GraphicsDevice);
@@ -107,6 +110,13 @@ namespace AtelierXNA
             float TempsÉcoulé = (float)gameTime.ElapsedGameTime.TotalSeconds;
             TempsÉcouléDepuisMAJ += TempsÉcoulé;
             TempsÉcouléMAJFumée += TempsÉcoulé;
+
+            TexteScore.TexteÀAfficher = Score.ToString();
+
+            if (!Game.Components.Contains(TexteScore))
+            {
+                Game.Components.Add(TexteScore);
+            }
 
             if (TempsÉcouléDepuisMAJ >= IntervalleMAJ)
             {
@@ -143,7 +153,7 @@ namespace AtelierXNA
             if (AÉtéTiré)
             {
                 Game.Components.Add(new FiltreDommage(Game, IntervalleMAJ));
-                Vie -= 10;
+                Vie -= 20;
                 if (Vie <= 0)
                 {
                     EstMort = true;
