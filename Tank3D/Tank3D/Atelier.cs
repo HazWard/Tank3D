@@ -171,7 +171,7 @@ namespace AtelierXNA
                 }
                 CompteurMort++;
             }
-            if (CompteurMort >= 1000)
+            if (CompteurMort >= 2000)
             {
                 Game.Services.RemoveService(typeof(Caméra));
                 List<GameComponent> ListeGameComponentsTanksDétruits = new List<GameComponent>();

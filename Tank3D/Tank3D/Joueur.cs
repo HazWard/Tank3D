@@ -100,24 +100,34 @@ namespace AtelierXNA
             TempsÉcouléMAJFumée = 0f;
         }
 
-        protected override void LoadContent()
-        {
-            base.LoadContent();
-        }
-
         public override void Update(GameTime gameTime)
         {
             float TempsÉcoulé = (float)gameTime.ElapsedGameTime.TotalSeconds;
             TempsÉcouléDepuisMAJ += TempsÉcoulé;
             TempsÉcouléMAJFumée += TempsÉcoulé;
 
+            GestionScore();
+            GestionCollisions();
+            GestionTirs();
+            GestionFumée();
+            GestionTirsRecus();
+            
+            base.Update(gameTime);
+        }
+
+        #region Gestion des comportements du tank
+        void GestionScore()
+        {
             TexteScore.TexteÀAfficher = Score.ToString();
 
             if (!Game.Components.Contains(TexteScore))
             {
                 Game.Components.Add(TexteScore);
             }
+        }
 
+        void GestionCollisions()
+        {
             if (TempsÉcouléDepuisMAJ >= IntervalleMAJ)
             {
                 if (!EstEnCollision)
@@ -126,7 +136,10 @@ namespace AtelierXNA
                 }
                 TempsÉcouléDepuisMAJ = 0;
             }
+        }
 
+        void GestionTirs()
+        {
             AÉtéCliqué = GestionInput.EstNouveauClicGauche();
             if (AÉtéCliqué)
             {
@@ -143,13 +156,17 @@ namespace AtelierXNA
                     GestionProjectile(2f);
                 }
             }
-
+        }
+        void GestionFumée()
+        {
             if (TempsÉcouléMAJFumée > INTERVALLE_FUMÉE)
             {
                 Game.Components.Remove(Fumée);
                 TempsÉcouléMAJFumée = 0;
             }
-
+        }
+        void GestionTirsRecus()
+        {
             if (AÉtéTiré)
             {
                 Game.Components.Add(new FiltreDommage(Game, IntervalleMAJ));
@@ -162,13 +179,8 @@ namespace AtelierXNA
                 }
                 AÉtéTiré = false;
             }
-            base.Update(gameTime);
         }
-
-        public void ModifierActivation()
-        {
-
-        }
+        #endregion
 
         #region Méthodes pour la gestion des déplacements et rotations du modèle
         protected void GestionMouvements()
@@ -303,13 +315,6 @@ namespace AtelierXNA
 
         Matrix TransformationsMeshes(float échelle, Vector3 rotation, Vector3 position)
         {
-            /*
-            Matrix monde = Matrix.Identity;
-            monde *= Matrix.CreateScale(échelle);
-            monde *= Matrix.CreateFromYawPitchRoll(rotation.Y, rotation.X, rotation.Z);
-            monde *= Matrix.CreateTranslation(position);
-            */
-
             Matrix monde = Matrix.CreateFromYawPitchRoll(rotation.Y, rotation.X, rotation.Z);
             monde *= Matrix.CreateScale(échelle);
             monde *= Matrix.CreateTranslation(position);
@@ -317,42 +322,6 @@ namespace AtelierXNA
             return monde;
         }
 
-        /*
-        public override void Draw(GameTime gameTime)
-        {
-            GraphicsDevice.BlendState = BlendState.Opaque;
-            GraphicsDevice.DepthStencilState = DepthStencilState.Default;
-
-            foreach (ModelMesh maille in Modèle.Meshes)
-            {
-                Matrix mondeLocal;
-
-                if (maille.Name == "Tour")
-                {
-                    mondeLocal = MondeTour;
-                }
-                else if (maille.Name == "Canon")
-                {
-                    mondeLocal = MondeCanon;
-                }
-                else
-                {
-                    mondeLocal = TransformationsModèle[maille.ParentBone.Index] * GetMonde();
-                }
-
-                foreach (ModelMeshPart portionDeMaillage in maille.MeshParts)
-                {
-                    BasicEffect effet = (BasicEffect)portionDeMaillage.Effect;
-                    effet.EnableDefaultLighting();
-                    effet.Projection = CaméraJeu.Projection;
-                    effet.View = CaméraJeu.Vue;
-                    effet.World = mondeLocal;
-                }
-                maille.Draw();
-            }
-
-        }
-        */
         public override void Draw(GameTime gameTime)
         {
             Matrix[] boneTransforms = new Matrix[Modèle.Bones.Count];
@@ -388,8 +357,7 @@ namespace AtelierXNA
                 mesh.Draw();
             }
         }
-
-
         #endregion
+        public void ModifierActivation() { }
     }
 }
