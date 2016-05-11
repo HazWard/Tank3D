@@ -59,6 +59,7 @@ namespace AtelierXNA
             Orientation = 0;
             NuméroAI = numéroAI;
             Compteur = 0;
+            Jeu = jeu;
 
             VieAI = new BarreDeVie(jeu, échelleInitiale, rotationInitiale, new Vector3(positionInitiale.X, positionInitiale.Y + 15, positionInitiale.Z), new Vector2(100, 17), new Vector2(1, 1), "BarreDeVieRectangleComplète", IntervalleMAJ, 4);
 
@@ -109,12 +110,26 @@ namespace AtelierXNA
                 {
 
                     PourcentageVie -= 0.25f;
-                    Game.Components.Remove(VieAI);
-                    //VieAI = new BarreDeVie(Jeu, Échelle, Rotation, new Vector3(Position.X, Position.Y + 15, Position.Z), new Vector2(100, 17), new Vector2(1, 1), "BarreDeVieRectangleTroisQuart", IntervalleMAJ, 4);
+                    if (PourcentageVie == 0.75f)
+                    {
+                        Game.Components.Remove(VieAI);
+                        VieAI = new BarreDeVie(Jeu, Échelle, Rotation, new Vector3(Position.X, Position.Y + 15, Position.Z), new Vector2(100, 17), new Vector2(1, 1), "BarreDeVieRectangleTroisQuart", IntervalleMAJ, 4);
+                        Game.Components.Add(VieAI);
+                    }
+                    if (PourcentageVie == 0.50f)
+                    {
+                        Game.Components.Remove(VieAI);
+                        VieAI = new BarreDeVie(Jeu, Échelle, Rotation, new Vector3(Position.X, Position.Y + 15, Position.Z), new Vector2(100, 17), new Vector2(1, 1), "BarreDeVieRectangleDemie", IntervalleMAJ, 4);
+                        Game.Components.Add(VieAI);
+                    }
+                    if (PourcentageVie == 0.25f)
+                    {
+                        Game.Components.Remove(VieAI);
+                        VieAI = new BarreDeVie(Jeu, Échelle, Rotation, new Vector3(Position.X, Position.Y + 15, Position.Z), new Vector2(100, 17), new Vector2(1, 1), "BarreDeVieRectangleQuart", IntervalleMAJ, 4);
+                        Game.Components.Add(VieAI);
+                    }
                     
-                    VieAI.NomTexture = "BarreDeVieRectangleTroisQuart";
-                    Game.Components.Add(VieAI);
-                    if (VieAI.PourcentageVie <= 0)
+                    if (PourcentageVie <= 0)
                     {
                         EstDétruit = true;
                     }

@@ -22,7 +22,11 @@ namespace AtelierXNA
          Texture = TextureManager.Find(NomTexture);
          base.LoadContent();
       }
-
+      public void ChargerTexture()
+      {
+          TextureManager = Game.Services.GetService(typeof(RessourcesManager<Texture2D>)) as RessourcesManager<Texture2D>;
+          Texture = TextureManager.Find(NomTexture);
+      }
       private void CréerTableauPointsTexture()
       {
          PtsTexture = new Vector2[NbColonnes + 1, NbRangées + 1];

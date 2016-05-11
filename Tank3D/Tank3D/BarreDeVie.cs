@@ -59,6 +59,7 @@ namespace AtelierXNA
             base.Initialize();
             
         }
+        
         public void ModifierActivation()
         { 
         }
