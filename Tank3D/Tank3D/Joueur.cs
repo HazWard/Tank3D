@@ -51,6 +51,7 @@ namespace AtelierXNA
         Matrix OrientationTank;
         int Vie { get; set; }
         public int Score { get; set; }
+        int CompteurTir { get; set; }
 
         public Vector2 Coordonnées
         {
@@ -97,6 +98,7 @@ namespace AtelierXNA
             ÉchelleRoues = 0.05f;
             Vie = 100;
             RotationYaw = 0;
+            CompteurTir = 0;
             TempsÉcouléMAJFumée = 0f;
         }
 
@@ -141,7 +143,7 @@ namespace AtelierXNA
         void GestionTirs()
         {
             AÉtéCliqué = GestionInput.EstNouveauClicGauche();
-            if (AÉtéCliqué)
+            if (AÉtéCliqué && CompteurTir >= 1000)
             {
                 float Y = -200 * RotationPitchCanon.X;
                 Fumée = new Fumée(Game, new Vector2(Game.Window.ClientBounds.Width / 2, Y), 0.2f);
@@ -155,7 +157,9 @@ namespace AtelierXNA
                 {
                     GestionProjectile(2f);
                 }
+                CompteurTir = 0;
             }
+            CompteurTir++;
         }
         void GestionFumée()
         {
