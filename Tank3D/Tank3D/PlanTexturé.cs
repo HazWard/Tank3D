@@ -5,7 +5,7 @@ namespace AtelierXNA
 {
    public class PlanTexturé : Plan
    {
-      string NomTexture { get; set; }
+      public string NomTexture { get; set; }
       RessourcesManager<Texture2D> TextureManager { get; set; }
       protected Texture2D Texture { get; set; }
       protected VertexPositionTexture[] Sommets { get; set; }

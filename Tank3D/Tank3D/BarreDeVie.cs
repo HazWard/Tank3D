@@ -139,7 +139,7 @@ namespace AtelierXNA
             { 
                 LigneSheet = LigneSheet + 1;    
             }
-            RectangleSource = new Rectangle((RectangleSource.X + (DeltaX *LigneSheet)) % Texture.Width, 0, DeltaX, DeltaY);
+            RectangleSource = new Rectangle((RectangleSource.X + (DeltaX * 0)) % Texture.Width, 0, DeltaX, DeltaY);
             
             //LargeureImage = PourcentageVie * Étendue.X;
         }
@@ -181,7 +181,7 @@ namespace AtelierXNA
             JeuRasterizerState.FillMode = ancienRasterizerState.FillMode;
             EffetDeBase.GraphicsDevice.RasterizerState = JeuRasterizerState;
             //GestionnaireDeSprite.Begin();
-            //GestionnaireDeSprite.Draw(Texture,Position, RectangleSource, Color.White,Rot,Origine,SpriteEffects.None,1f);
+            //GestionnaireDeSprite.Draw(Texture, new Rectangle((int)Position.X,(int)Position.Y, Texture.Width,Texture.Height), RectangleSource, Color.White, Rot, Origine, SpriteEffects.None, 1f);
             //GestionnaireDeSprite.End();
             base.Draw(gameTime);
             EffetDeBase.GraphicsDevice.RasterizerState = ancienRasterizerState;

@@ -60,7 +60,7 @@ namespace AtelierXNA
             NuméroAI = numéroAI;
             Compteur = 0;
 
-            VieAI = new BarreDeVie(jeu, échelleInitiale, rotationInitiale, new Vector3(positionInitiale.X, positionInitiale.Y + 15, positionInitiale.Z), new Vector2(100, 17), new Vector2(1, 1), "BarreDeVieRectangle", IntervalleMAJ, 4);
+            VieAI = new BarreDeVie(jeu, échelleInitiale, rotationInitiale, new Vector3(positionInitiale.X, positionInitiale.Y + 15, positionInitiale.Z), new Vector2(100, 17), new Vector2(1, 1), "BarreDeVieRectangleComplète", IntervalleMAJ, 4);
 
             GestionEnnemis = gestionEnnemis;
            
@@ -107,7 +107,13 @@ namespace AtelierXNA
 
                 if (AÉtéTiré)
                 {
-                    PourcentageVie -= 0.5f;
+
+                    PourcentageVie -= 0.25f;
+                    Game.Components.Remove(VieAI);
+                    //VieAI = new BarreDeVie(Jeu, Échelle, Rotation, new Vector3(Position.X, Position.Y + 15, Position.Z), new Vector2(100, 17), new Vector2(1, 1), "BarreDeVieRectangleTroisQuart", IntervalleMAJ, 4);
+                    
+                    VieAI.NomTexture = "BarreDeVieRectangleTroisQuart";
+                    Game.Components.Add(VieAI);
                     if (VieAI.PourcentageVie <= 0)
                     {
                         EstDétruit = true;
