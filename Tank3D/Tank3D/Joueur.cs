@@ -143,7 +143,7 @@ namespace AtelierXNA
         void GestionTirs()
         {
             A…tÈCliquÈ = GestionInput.EstNouveauClicGauche();
-            if (A…tÈCliquÈ && CompteurTir >= 1000)
+            if (A…tÈCliquÈ && CompteurTir >= 500)
             {
                 float Y = -200 * RotationPitchCanon.X;
                 FumÈe = new FumÈe(Game, new Vector2(Game.Window.ClientBounds.Width / 2, Y), 0.2f);
@@ -291,11 +291,11 @@ namespace AtelierXNA
             {
                 DeltaRotationCanon = new Vector2(GestionInput.Nouvel…tatSouris.X - (Game.GraphicsDevice.Viewport.Width / 2), GestionInput.Nouvel…tatSouris.Y - (Game.GraphicsDevice.Viewport.Height / 2));
             }
-            if ((GestionInput.Nouvel…tatSouris.X < (Game.Window.ClientBounds.Width / 2) + 20 && GestionInput.Nouvel…tatSouris.X > (Game.Window.ClientBounds.Width / 2) - 20))
+            if ((GestionInput.Nouvel…tatSouris.X < (Game.Window.ClientBounds.Width / 2) + (Game.Window.ClientBounds.Width / 32) && GestionInput.Nouvel…tatSouris.X > (Game.Window.ClientBounds.Width / 2) - (Game.Window.ClientBounds.Width / 32)))
             {
                 DeltaRotationCanon = new Vector2(0, DeltaRotationCanon.Y);
             }
-            if ((GestionInput.Nouvel…tatSouris.Y < (Game.Window.ClientBounds.Height / 2) + 20 && GestionInput.Nouvel…tatSouris.Y > (Game.Window.ClientBounds.Height / 2) - 20))
+            if ((GestionInput.Nouvel…tatSouris.Y < (Game.Window.ClientBounds.Height / 2) + (Game.Window.ClientBounds.Height / 16) && GestionInput.Nouvel…tatSouris.Y > (Game.Window.ClientBounds.Height / 2) - (Game.Window.ClientBounds.Height / 16)))
             {
                 DeltaRotationCanon = new Vector2(DeltaRotationCanon.X, 0);
             }
