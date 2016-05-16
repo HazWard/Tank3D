@@ -18,6 +18,9 @@ namespace AtelierXNA
         float TempsÉcouléTotal { get; set; }
         const float INTERVALLE_EXPLOSION = 0.4f;
         const float VITESSE_EXPLOSION = 0.0001f;
+        const float VARIATION_HAUTEUR_PROJ = 0.04f;
+        const float INCRÉMENT_HAUTEUR = 0.02F;
+        const int INCRÉMENT_PROJECTILE = 2;
         Vector3 PositionInitiale { get; set; }
 
         const float AccélérationGravitationelle = -0.98f;
@@ -48,8 +51,8 @@ namespace AtelierXNA
         }
         protected override void LoadContent()
         {
-            IncrémentDéplacementProjectile = ((float)Math.Cos(Rotation.X) * VitesseDépart) * 2;
-            IncrémentHauteurProjectile = ((float)Math.Sin(Rotation.X) * VitesseDépart) / 2;
+            IncrémentDéplacementProjectile = ((float)Math.Cos(Rotation.X) * VitesseDépart) * INCRÉMENT_PROJECTILE;
+            IncrémentHauteurProjectile = ((float)Math.Sin(Rotation.X) * VitesseDépart) / INCRÉMENT_PROJECTILE;
             base.LoadContent();
         }
 
@@ -62,7 +65,6 @@ namespace AtelierXNA
             float TempsÉcoulé = (float)gameTime.ElapsedGameTime.TotalSeconds;
             TempsÉcouléDepuisMAJ += TempsÉcoulé;
             TempsÉcouléTotal += (float)gameTime.ElapsedGameTime.TotalSeconds;
-            
 
             if (TempsÉcouléDepuisMAJ >= IntervalleMAJ)
             {
@@ -84,7 +86,6 @@ namespace AtelierXNA
             float posX = IncrémentDéplacementProjectile * (float)Math.Sin(Rotation.Y);
             float posY = IncrémentDéplacementProjectile * (float)Math.Cos(Rotation.Y);
 
-            //if(posY>Hauteur.GetHauteur)
             Vector2 déplacementFinal = new Vector2(posX, posY);
             float posXFinal = Position.X - déplacementFinal.X;
             float posZFinal = Position.Z - déplacementFinal.Y;
@@ -93,7 +94,6 @@ namespace AtelierXNA
             Position = new Vector3(posXFinal, Position.Y + HauteurProj, posZFinal);
             Rotation = new Vector3(Rotation.X - 0.01f, Rotation.Y, Rotation.Z + 0.2f);
 
-            //Position = new Vector3(Position.X, Position.Y + 0.05f, Position.Z);
         }
         void EffacerExplosion()
         {
@@ -101,8 +101,8 @@ namespace AtelierXNA
         }
         void GestionForces()
         {
-            HauteurProj -= 0.04f;
-            IncrémentHauteurProjectile += 0.02f;
+            HauteurProj -= VARIATION_HAUTEUR_PROJ;
+            IncrémentHauteurProjectile += INCRÉMENT_HAUTEUR;
         }
     }
 }

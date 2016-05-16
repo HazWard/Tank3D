@@ -61,14 +61,12 @@ namespace AtelierXNA
             Compteur = 0;
             Jeu = jeu;
 
-            VieAI = new BarreDeVie(jeu, échelleInitiale, rotationInitiale, new Vector3(positionInitiale.X, positionInitiale.Y + 15, positionInitiale.Z), new Vector2(100, 17), new Vector2(1, 1), "BarreDeVieRectangleComplète", IntervalleMAJ, 4);
+            VieAI = new BarreDeVie(jeu, échelleInitiale, rotationInitiale, new Vector3(positionInitiale.X, positionInitiale.Y + 15, positionInitiale.Z), new Vector2(100, 17), new Vector2(1, 1), "BarreDeVieRectangleComplète", IntervalleMAJ);
 
             GestionEnnemis = gestionEnnemis;
            
 
             Game.Components.Add(VieAI);
-            //VieAIFond = new BarreDeVie(jeu, échelleInitiale, rotationInitiale, new Vector3(positionInitiale.X + 3*(float)Math.Cos(Rotation.Y), positionInitiale.Y + 15, positionInitiale.Z + 3*(float)Math.Cos(Rotation.Y)), new Vector2(90, 14), new Vector2(1, 1), "FondVertBarreDeVie", IntervalleMAJ,4);
-            //Game.Components.Add(VieAIFond);
         }
         public override void Initialize()
         {
@@ -113,19 +111,19 @@ namespace AtelierXNA
                     if (PourcentageVie == 0.75f)
                     {
                         Game.Components.Remove(VieAI);
-                        VieAI = new BarreDeVie(Jeu, Échelle, Rotation, new Vector3(Position.X, Position.Y + 15, Position.Z), new Vector2(100, 17), new Vector2(1, 1), "BarreDeVieRectangleTroisQuart", IntervalleMAJ, 4);
+                        VieAI = new BarreDeVie(Jeu, Échelle, Rotation, new Vector3(Position.X, Position.Y + 15, Position.Z), new Vector2(100, 17), new Vector2(1, 1), "BarreDeVieRectangleTroisQuart", IntervalleMAJ);
                         Game.Components.Add(VieAI);
                     }
                     if (PourcentageVie == 0.50f)
                     {
                         Game.Components.Remove(VieAI);
-                        VieAI = new BarreDeVie(Jeu, Échelle, Rotation, new Vector3(Position.X, Position.Y + 15, Position.Z), new Vector2(100, 17), new Vector2(1, 1), "BarreDeVieRectangleDemie", IntervalleMAJ, 4);
+                        VieAI = new BarreDeVie(Jeu, Échelle, Rotation, new Vector3(Position.X, Position.Y + 15, Position.Z), new Vector2(100, 17), new Vector2(1, 1), "BarreDeVieRectangleDemie", IntervalleMAJ);
                         Game.Components.Add(VieAI);
                     }
                     if (PourcentageVie == 0.25f)
                     {
                         Game.Components.Remove(VieAI);
-                        VieAI = new BarreDeVie(Jeu, Échelle, Rotation, new Vector3(Position.X, Position.Y + 15, Position.Z), new Vector2(100, 17), new Vector2(1, 1), "BarreDeVieRectangleQuart", IntervalleMAJ, 4);
+                        VieAI = new BarreDeVie(Jeu, Échelle, Rotation, new Vector3(Position.X, Position.Y + 15, Position.Z), new Vector2(100, 17), new Vector2(1, 1), "BarreDeVieRectangleQuart", IntervalleMAJ);
                         Game.Components.Add(VieAI);
                     }
                     
@@ -151,23 +149,19 @@ namespace AtelierXNA
                 TempsÉcouléDepuisMAJ = 0;
 
                 CalculBarreDeVie();
-                //VieAI.CalculerVie();
+                
 
             }
             base.Update(gameTime);
         }
+
+        /// <summary>
+        /// CalculerBarreDeVie donne la position de l'Ai et la position du joueur à la classe BarreDeVie
+        /// </summary>
         void CalculBarreDeVie()
         {
             VieAI.Position = new Vector3(Position.X, Position.Y + 7, Position.Z);
-            //VieAIFond.Position = new Vector3(Position.X, Position.Y + 7, Position.Z);
             VieAI.PositionJoueur = Cible.GetPosition;
-            //VieAIFond.PositionJoueur = Cible.GetPosition;
-            VieAI.PourcentageVie = PourcentageVie;
-            //VieAIFond.PourcentageVie = PourcentageVie;
-            if (EstEnCollision)
-            {
-                VieAI.Étendue = new Vector2(ÉTENDUE.X - 25, VieAI.Étendue.Y);
-            }
 
         }
         public void ModifierActivation()
