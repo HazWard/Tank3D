@@ -25,7 +25,6 @@ namespace AtelierXNA
         SpriteBatch GestionSprites { get; set; }
         CaméraSubjective CaméraJoueur { get; set; }
         GestionnaireEnnemis GestionEnnemis { get; set; }
-        NormalesManager GestionnaireDeNormales { get; set; }
         InputManager GestionInput { get; set; }
         Terrain TerrainJeu { get; set; }
         Joueur Utilisateur { get; set; }
@@ -91,12 +90,6 @@ namespace AtelierXNA
             }
 
             Game.Components.Add(GestionEnnemis);
-            Game.Components.Add(GestionnaireDeNormales);
-
-            if (Game.Services.GetService(typeof(NormalesManager)) as NormalesManager == null)
-            {
-                Game.Services.AddService(typeof(NormalesManager), GestionnaireDeNormales);
-            }
 
             Game.Components.Add(Utilisateur);
 
@@ -112,7 +105,6 @@ namespace AtelierXNA
                                                Vector3.Up, INTERVALLE_MAJ_STANDARD);
             Game.Components.Add(CaméraJoueur);
             TerrainJeu = new Terrain(Game, 1f, Vector3.Zero, Vector3.Zero, new Vector3(256, 25, 256), "PetiteCarte", "DétailsDésert", 3, INTERVALLE_MAJ_STANDARD);
-            GestionnaireDeNormales = new NormalesManager(Game);
             Utilisateur = new Joueur(Game, NomModèleJoueur, ÉCHELLE_OBJET, rotationObjet, positionObjet, INTERVALLE_MAJ_STANDARD);
             if (Game.Services.GetService(typeof(Joueur)) == null)
             {

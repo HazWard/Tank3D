@@ -35,7 +35,7 @@ namespace AtelierXNA
         Filtre FiltreZoom { get; set; }
 
         bool estEnZoom;
-        bool EstEnZoom
+        public override bool EstEnZoom
         {
             get { return estEnZoom; }
             set

@@ -24,7 +24,6 @@ namespace AtelierXNA
         protected float IncrémentAngleRotation { get; set; }
         protected float TempsÉcouléDepuisMAJ { get; set; }
         protected Terrain TerrainJeu { get; set; }
-        protected NormalesManager GestionnaireDeNormales { get; set; }
         protected float NouvelleHauteurTerrain { get; set; }
         protected float AncienneHauteurTerrain { get; set; }
         protected float IntervalleMAJ { get; set; }
@@ -52,7 +51,6 @@ namespace AtelierXNA
         {
             base.LoadContent();
             TerrainJeu = Game.Services.GetService(typeof(Terrain)) as Terrain;
-            GestionnaireDeNormales = Game.Services.GetService(typeof(NormalesManager)) as NormalesManager;
             GestionInput = Game.Services.GetService(typeof(InputManager)) as InputManager;
         }
 

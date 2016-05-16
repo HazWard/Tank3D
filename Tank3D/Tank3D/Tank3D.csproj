@@ -109,7 +109,6 @@
     <Compile Include="MenuPause.cs" />
     <Compile Include="MenuPrincipal.cs" />
     <Compile Include="ModèleMobile.cs" />
-    <Compile Include="NormalesManager.cs" />
     <Compile Include="ObjetDeBase.cs" />
     <Compile Include="Plan.cs" />
     <Compile Include="PlanExplosion.cs" />

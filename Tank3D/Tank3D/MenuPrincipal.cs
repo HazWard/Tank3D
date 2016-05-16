@@ -21,7 +21,6 @@ namespace AtelierXNA
 
         Atelier Jeu { get; set; }
         CalculateurFPS Calculateur { get; set; }
-        CaméraFixe CaméraMenu { get; set; }
         TexteCentré Titre { get; set; }
         GraphicsDeviceManager PériphériqueGraphique { get; set; }
         SpriteBatch GestionSprites { get; set; }
@@ -45,9 +44,11 @@ namespace AtelierXNA
         public MenuPrincipal()
         {
             PériphériqueGraphique = new GraphicsDeviceManager(this);
+            /*
             PériphériqueGraphique.IsFullScreen = true;
             PériphériqueGraphique.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
             PériphériqueGraphique.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
+            */
             Content.RootDirectory = "Content";
             PériphériqueGraphique.SynchronizeWithVerticalRetrace = false;
             IsFixedTimeStep = false;
@@ -123,20 +124,6 @@ namespace AtelierXNA
             ListeGameComponents.Add(BtnInstructions);
             ListeGameComponents.Add(BtnOptions);
             ListeGameComponents.Add(BtnQuitter);
-        }
-
-        void RemoveComponents()
-        {
-            Components.Remove(Titre);
-            Components.Remove(ImageArrièrePlan);
-            Components.Remove(BtnJouer);
-            Components.Remove(BtnInstructions);
-            Components.Remove(BtnOptions);
-            Components.Remove(BtnQuitter);
-            if (Components.Contains(Jeu))
-            {
-                Components.Remove(Jeu);
-            }
         }
 
         public static void ModifyComponents(bool créer, List<GameComponent> listeGameComponents)

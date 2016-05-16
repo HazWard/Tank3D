@@ -24,8 +24,6 @@ namespace AtelierXNA
         Vector3 PositionCanon { get; set; }
         Vector3 PositionTour { get; set; }
         Vector2 DeltaRotationCanon { get; set; }
-        Vector2 AnglesIncréments { get; set; }
-        Vector2 AncienAnglesIncréments { get; set; }
         Matrix MondeTour { get; set; }
         Matrix MondeCanon { get; set; }
         float RotationYaw { get; set; }
@@ -70,9 +68,6 @@ namespace AtelierXNA
             ÉchelleCanon = 0.005f; // pour assurer la
             ÉchelleRoues = 0.05f; // cohérence des proportions
             Vie = 100;
-            RotationYaw = 0;
-            CompteurTir = 0;
-            TempsÉcouléMAJFumée = 0f;
         }
 
         public override void Update(GameTime gameTime)
@@ -86,7 +81,9 @@ namespace AtelierXNA
             GestionTirs();
             GestionFumée();
             GestionTirsRecus();
-            
+
+            Visible = !CaméraJeu.EstEnZoom;
+
             base.Update(gameTime);
         }
 
@@ -204,7 +201,7 @@ namespace AtelierXNA
 
                 // Utilisation d'une matrice
                 OrientationTank = Matrix.CreateRotationY(RotationYaw);
-                OrientationTank.Up = GestionnaireDeNormales.GetNormaleVec(nouvellesCoords);
+                OrientationTank.Up = TerrainJeu.Normales[nouvellesCoords.X, nouvellesCoords.Y];
                 OrientationTank.Right = Vector3.Normalize(Vector3.Cross(OrientationTank.Forward, OrientationTank.Up));
                 OrientationTank.Forward = Vector3.Normalize(Vector3.Cross(OrientationTank.Up, OrientationTank.Right));
                 OrientationTank *= Matrix.CreateScale(Échelle);
@@ -212,20 +209,6 @@ namespace AtelierXNA
             }
 
             CalculerMonde();
-        }
-
-        void TraitementNormales(Point coords, string axe)
-        {
-            switch (axe)
-            {
-                case "X":
-                    Rotation = new Vector3(AnglesIncréments.Y, Rotation.Y, Rotation.Z);
-                    break;
-
-                case "Y":
-                    Rotation = new Vector3(Rotation.X, Rotation.Y, AnglesIncréments.X);
-                    break;
-            }
         }
 
         void RotationTour()

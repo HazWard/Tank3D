@@ -22,6 +22,7 @@ namespace AtelierXNA
         protected float AspectRatio { get; set; }
         protected float DistancePlanRapproché { get; set; }
         protected float DistancePlanÉloigné { get; set; }
+        public virtual bool EstEnZoom { get; set; }
 
         public Caméra(Game jeu)
             : base(jeu)
