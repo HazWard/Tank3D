@@ -44,11 +44,9 @@ namespace AtelierXNA
         public MenuPrincipal()
         {
             PériphériqueGraphique = new GraphicsDeviceManager(this);
-            /*
             PériphériqueGraphique.IsFullScreen = true;
             PériphériqueGraphique.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
             PériphériqueGraphique.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
-            */
             Content.RootDirectory = "Content";
             PériphériqueGraphique.SynchronizeWithVerticalRetrace = false;
             IsFixedTimeStep = false;

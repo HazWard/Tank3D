@@ -198,7 +198,7 @@ namespace AtelierXNA
                 AncienneHauteurTerrain = NouvelleHauteurTerrain;
                 NouvelleHauteurTerrain = TerrainJeu.GetHauteur(nouvellesCoords);
                 Position = new Vector3(posXFinal, NouvelleHauteurTerrain + HAUTEUR_DÉFAULT, posZFinal);
-
+                #region Partie Starly
                 // Utilisation d'une matrice
                 OrientationTank = Matrix.CreateRotationY(RotationYaw);
                 OrientationTank.Up = TerrainJeu.Normales[nouvellesCoords.X, nouvellesCoords.Y];
@@ -206,6 +206,7 @@ namespace AtelierXNA
                 OrientationTank.Forward = Vector3.Normalize(Vector3.Cross(OrientationTank.Up, OrientationTank.Right));
                 OrientationTank *= Matrix.CreateScale(Échelle);
                 SphereCollision = new BoundingSphere(Position, RAYON_COLLISION);
+                #endregion
             }
 
             CalculerMonde();
@@ -275,6 +276,7 @@ namespace AtelierXNA
             return GestionInput.EstEnfoncée(touche) ? INCRÉMENT_DÉPLACEMENT : 0;
         }
 
+        #region Partie Starly
         Matrix TransformationsMeshes(float échelle, Vector3 rotation, Vector3 position)
         {
             Matrix monde = Matrix.CreateFromYawPitchRoll(rotation.Y, rotation.X, rotation.Z);
@@ -283,9 +285,10 @@ namespace AtelierXNA
 
             return monde;
         }
-
+        
         public override void Draw(GameTime gameTime)
         {
+            
             Matrix[] boneTransforms = new Matrix[Modèle.Bones.Count];
             Modèle.CopyAbsoluteBoneTransformsTo(boneTransforms);
 
@@ -317,8 +320,10 @@ namespace AtelierXNA
                     effect.PreferPerPixelLighting = true;
                 }
                 maille.Draw();
+            
             }
         }
+        #endregion
         #endregion
     }
 }
