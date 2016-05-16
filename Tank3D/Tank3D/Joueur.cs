@@ -1,3 +1,9 @@
+// Auteurs: Maxime Benoit et Starly Solon
+// Fichier: Joueur.cs
+// Date de création: 15 février 2016
+// Description: Classe s'occupant de la gestion du déplacement 
+//              et des habilités du tank de l'utilisateur
+
 using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
