@@ -1,3 +1,10 @@
+// Auteurs: Starly Solon
+// Fichier: AI.cs
+// Date de création: 16 février 2016
+// Description: Classe s'occupant de la gestion du déplacement 
+//              et des habilités des ennemis (intelligence
+//              artificielle)
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,9 +19,6 @@ using Microsoft.Xna.Framework.Media;
 
 namespace AtelierXNA
 {
-    /// <summary>
-    /// This is a game component that implements IUpdateable.
-    /// </summary>
     public class AI : ModèleMobile, IActivable, IModel
     {
         const float INCRÉMENT_DÉPLACEMENT_AI = 0.1f;
@@ -23,32 +27,19 @@ namespace AtelierXNA
         const int DÉLAI_MOUVEMENT = 5;
         const int DÉLAI_TIR = 71;
         Vector2 ÉTENDUE = new Vector2(100,17);
-        // const float INCRÉMENT_ROTATION = 0.05f;
         Joueur Cible { get; set; }
         GestionnaireEnnemis GestionEnnemis { get; set; }
-        bool estDétruit { get; set; }
         int NuméroAI { get; set; }
         float Distance { get; set; }
         int CompteurTir { get; set; }
         int CompteurMouvement { get; set; }
         Projectile ProjectileTank { get; set; }
-        Vector2 ObjectifAnglesNormales { get; set; }
         float Orientation { get; set; }
         int Compteur { get; set; }
         Game Jeu { get; set; }
         public BarreDeVie VieAI { get; set; }
-        public BarreDeVie VieAIFond { get; set; }
         float PourcentageVie { get; set; }
         int CompteurCollision { get; set; }
-
-        public Vector3 GetRotation
-        {
-            get
-            {
-                return Rotation;
-            }
-            private set { }
-        }
 
         public AI(Game jeu, string nomModèle, float échelleInitiale, Vector3 rotationInitiale, Vector3 positionInitiale, float intervalleMAJ, Joueur cible, int numéroAI, GestionnaireEnnemis gestionEnnemis)
             : base(jeu, nomModèle, échelleInitiale, rotationInitiale, positionInitiale, intervalleMAJ)
@@ -62,9 +53,7 @@ namespace AtelierXNA
             Jeu = jeu;
 
             VieAI = new BarreDeVie(jeu, échelleInitiale, rotationInitiale, new Vector3(positionInitiale.X, positionInitiale.Y + 15, positionInitiale.Z), new Vector2(100, 17), new Vector2(1, 1), "BarreDeVieRectangleComplète", IntervalleMAJ);
-
             GestionEnnemis = gestionEnnemis;
-           
 
             Game.Components.Add(VieAI);
         }
@@ -91,17 +80,17 @@ namespace AtelierXNA
                         {
                             GestionProjectile();
                         }
-                        GestionMouvements(false, "pas");
+                        GestionMouvements(false, "non");
                     }
                     else
                     {
                         
-                        GestionMouvements(true, "pas");
+                        GestionMouvements(true, "non");
                     }
                 }
                 else
                 {
-                    GestionMouvements(true, "collision");
+                    GestionMouvements(true, "oui");
                 }
 
                 if (AÉtéTiré)
@@ -164,10 +153,7 @@ namespace AtelierXNA
             VieAI.PositionJoueur = Cible.GetPosition;
 
         }
-        public void ModifierActivation()
-        {
-
-        }
+        public void ModifierActivation() { }
 
         #region Méthodes pour les mouvements
         void GestionProjectile()
@@ -178,25 +164,25 @@ namespace AtelierXNA
             Game.Components.Add(ProjectileTank);
         }
 
-        protected void GestionMouvements(bool seDéplace, string collisionOuPas)
+        protected void GestionMouvements(bool seDéplace, string collisionEffectuée)
         {
             ++CompteurMouvement;
-            switch (collisionOuPas)
+            switch (collisionEffectuée)
             {
-                case "collision":
-                    ModificationParamètres(Orientation, seDéplace, collisionOuPas);
+                case "oui":
+                    ModificationParamètres(Orientation, seDéplace, collisionEffectuée);
                     break;
-                case "pas":
+                case "non":
                     if (CompteurMouvement % DÉLAI_MOUVEMENT == 0)
                     {
                         // Recalcul de la rotation
                         Orientation = CalculOrientation(Cible.Coordonnées);
-                        ModificationParamètres(Orientation, seDéplace, collisionOuPas);
+                        ModificationParamètres(Orientation, seDéplace, collisionEffectuée);
                     }
                     else
                     {
                         // Déplacement normal
-                        ModificationParamètres(Orientation, seDéplace, collisionOuPas);
+                        ModificationParamètres(Orientation, seDéplace, collisionEffectuée);
                     }
                     break;
             }
@@ -229,7 +215,7 @@ namespace AtelierXNA
             return coeff + (float)Math.Atan(direction.X / direction.Y);
         }
 
-        void ModificationParamètres(float orientation, bool seDéplace, string collisionOuPas)
+        void ModificationParamètres(float orientation, bool seDéplace, string collisionEffectuée)
         {
             if (seDéplace)
             {
@@ -239,13 +225,13 @@ namespace AtelierXNA
                 float posZFinal = 0;
                 Vector2 déplacementFinal = new Vector2(posX, posY);
 
-                switch (collisionOuPas)
+                switch (collisionEffectuée)
                 {
-                    case "collision":
+                    case "oui":
                         posXFinal = Position.X + déplacementFinal.X;
                         posZFinal = Position.Z + déplacementFinal.Y;
                         break;
-                    case "pas":
+                    case "non":
                         posXFinal = Position.X - déplacementFinal.X;
                         posZFinal = Position.Z - déplacementFinal.Y;
                         break;
