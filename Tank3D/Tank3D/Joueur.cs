@@ -1,26 +1,13 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Audio;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Media;
 
 
 namespace AtelierXNA
 {
-    /// <summary>
-    /// This is a game component that implements IUpdateable.
-    /// </summary>
     public class Joueur : ModèleMobile, IActivable, IModel
     {
-        VertexPositionColor[] ListePointsColor { get; set; }
-        Vector3[] ListePoints { get; set; }
-        protected BasicEffect EffetDeBase { get; set; }
-
         // Constantes
         protected const float DISTANCE_POURSUITE = 20f;
         protected const float HAUTEUR_CAM_DÉFAULT = 10f;
@@ -48,11 +35,10 @@ namespace AtelierXNA
         float TempsÉcouléMAJFumée { get; set; }
         public bool EstMort { get; set; }
         Sprite Fumée { get; set; }
-        Matrix OrientationTank;
         int Vie { get; set; }
         public int Score { get; set; }
         int CompteurTir { get; set; }
-
+        Matrix OrientationTank;
         public Vector2 Coordonnées
         {
             get
@@ -68,18 +54,8 @@ namespace AtelierXNA
             }
         }
 
-        public BoundingSphere Sphere
-        {
-            get
-            {
-                return SphereCollision;
-            }
-        }
-
         public Joueur(Game jeu, string nomModèle, float échelleInitiale, Vector3 rotationInitiale, Vector3 positionInitiale, float intervalleMAJ)
-            : base(jeu, nomModèle, échelleInitiale, rotationInitiale, positionInitiale, intervalleMAJ)
-        {
-        }
+            : base(jeu, nomModèle, échelleInitiale, rotationInitiale, positionInitiale, intervalleMAJ) { }
 
         public override void Initialize()
         {
@@ -87,15 +63,12 @@ namespace AtelierXNA
             OrientationTank = Matrix.Identity;
             OrientationTank *= Matrix.CreateScale(Échelle);
             TexteScore = new TexteCentré(Game, Score.ToString(), "Arial20", new Rectangle(Game.Window.ClientBounds.Width / 12, Game.Window.ClientBounds.Height / 10, 100, 100), Color.Red, 0f);
-            ListePointsColor = new VertexPositionColor[8];
-            ListePoints = new Vector3[8];
-            EffetDeBase = new BasicEffect(GraphicsDevice);
             RotationYawTour = new Vector3(-MathHelper.PiOver2, 0, MathHelper.PiOver2);
             RotationPitchCanon = new Vector3(-MathHelper.PiOver2, 0.02f, MathHelper.PiOver2);
             SphereCollision = new BoundingSphere(Position, RAYON_COLLISION);
-            ÉchelleTour = 0.0035f;
-            ÉchelleCanon = 0.005f;
-            ÉchelleRoues = 0.05f;
+            ÉchelleTour = 0.0035f; // Valeurs prédéfinies
+            ÉchelleCanon = 0.005f; // pour assurer la
+            ÉchelleRoues = 0.05f; // cohérence des proportions
             Vie = 100;
             RotationYaw = 0;
             CompteurTir = 0;
@@ -116,6 +89,8 @@ namespace AtelierXNA
             
             base.Update(gameTime);
         }
+
+        public void ModifierActivation() { }
 
         #region Gestion des comportements du tank
         void GestionScore()
@@ -333,24 +308,24 @@ namespace AtelierXNA
 
             Matrix worldMatrix = OrientationTank * Matrix.CreateTranslation(Position);
 
-            foreach (ModelMesh mesh in Modèle.Meshes)
+            foreach (ModelMesh maille in Modèle.Meshes)
             {
                 Matrix mondeLocal;
 
-                if (mesh.Name == "Tour")
+                if (maille.Name == "Tour")
                 {
                     mondeLocal = MondeTour;
                 }
-                else if (mesh.Name == "Canon")
+                else if (maille.Name == "Canon")
                 {
                     mondeLocal = MondeCanon;
                 }
                 else
                 {
-                    mondeLocal = TransformationsModèle[mesh.ParentBone.Index] * worldMatrix; ;
+                    mondeLocal = TransformationsModèle[maille.ParentBone.Index] * worldMatrix; ;
                 }
 
-                foreach (BasicEffect effect in mesh.Effects)
+                foreach (BasicEffect effect in maille.Effects)
                 {
                     effect.View = CaméraJeu.Vue;
                     effect.Projection = CaméraJeu.Projection;
@@ -358,10 +333,9 @@ namespace AtelierXNA
                     effect.EnableDefaultLighting();
                     effect.PreferPerPixelLighting = true;
                 }
-                mesh.Draw();
+                maille.Draw();
             }
         }
         #endregion
-        public void ModifierActivation() { }
     }
 }
