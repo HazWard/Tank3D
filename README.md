@@ -1,3 +1,3 @@
 # Tank3D
 
-Jeu de Tank en 3D utilisant la biliothèque XNA de Microsoft
+Jeu de Tank en 3D utilisant la bibliothèque XNA de Microsoft
